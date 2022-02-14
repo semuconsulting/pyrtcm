@@ -11,8 +11,7 @@
 [Graphical Client](#gui) |
 [Author & License](#author)
 
-## !!! WORK IN PROGRESS - NOT YET FUNCTIONAL !!!
-## Missing many message definitions and may not get taken forward!
+## !!! WORK IN PROGRESS - NOT YET FULLY FUNCTIONAL !!!
 
 `pyrtcm` is an original Python 3 library for the RTCM 3 &copy; protocol.
 
@@ -35,7 +34,8 @@ This is an independent project and we have no affiliation whatsoever with RTCM.
 ![Contributors](https://img.shields.io/github/contributors/semuconsulting/pyrtcm.svg)
 ![Open Issues](https://img.shields.io/github/issues-raw/semuconsulting/pyrtcm)
 
-At time of writing the library implements a comprehensive set of ...
+Currently under development and not yet uploaded to PyPi Test or Prod. May or may not be taken forward depending on
+time constraints and availability of payload documentation and test resources. As it stands, only a limited subset of RTCM message types are defined, though these can be extended by adding appropriate definitions to `rtcmtypes_*.py` - contributions welcome!
 
 Sphinx API Documentation in HTML format is available at [https://www.semuconsulting.com/pyrtcm](https://www.semuconsulting.com/pyrtcm).
 
@@ -45,6 +45,8 @@ Contributions welcome - please refer to [CONTRIBUTING.MD](https://github.com/sem
 
 ---
 ## <a name="installation">Installation</a>
+
+**NB** NOT YET AVAILABLE IN PYPI PROD - I may post an Alpha to PyPi TEST if there's sufficient interest.
 
 `pyrtcm` is compatible with Python 3.6+ and has no third-party library dependencies.
 
@@ -198,7 +200,7 @@ The rtcm protocol is principally defined in the module `rtcmtypes_get.py` as a s
 
 ```
 1. attribute names must be unique within each message class
-2. attribute types must be one of the valid types (I1, U2, X4, etc.)
+2. attribute types must be one of the valid data field types (DF026, DF059, etc.)
 3. repeating or bitfield groups must be defined as a tuple ('numr', {dict}), where:
    'numr' is either:
      a. an integer representing a fixed number of repeats e.g. 32
