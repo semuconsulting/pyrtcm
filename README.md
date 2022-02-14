@@ -19,7 +19,7 @@ The `pyrtcm` homepage is located at [https://github.com/semuconsulting/pyrtcm](h
 
 This is an independent project and we have no affiliation whatsoever with RTCM.
 
-**FYI** There are companion libraries which handles standard NMEA 0183 &copy; and UBX &copy; (u-blox) GNSS/GPS messages.
+**FYI** There are companion libraries which handle standard NMEA 0183 &copy; and UBX &copy; (u-blox) GNSS/GPS messages.
 - [pynmeagps](http://github.com/semuconsulting/pynmeagps)
 - [pyubx2](http://github.com/semuconsulting/pyubx2)
 
@@ -88,11 +88,6 @@ or without a buffer wrapper).
 
 Individual input rtcm and/or NMEA messages can then be read using the `RTCMReader.read()` function, which returns both the raw binary data (as bytes) and the parsed data (as a `RTCMMessage`, via the `parse()` method). The function is thread-safe in so far as the incoming data stream object is thread-safe. `RTCMReader` also implements an iterator.
 
-The constructor accepts the following optional keyword arguments:
-
-* `quitonerror`: 0 = ignore errors, 1 = log errors and continue (default), 2 = (re)raise errors and terminate
-* `validate`: VALCKSUM (0x01) = validate checksum (default), VALNONE (0x00) = ignore invalid checksum or length
-
 Example -  Serial input. This example will output both rtcm and NMEA messages:
 ```python
 >>> from serial import Serial
@@ -106,7 +101,7 @@ Example -  Serial input. This example will output both rtcm and NMEA messages:
 Example - File input (using iterator).
 ```python
 >>> from pyrtcm import RTCMReader
->>> stream = open('rtcmdata.bin', 'rb')
+>>> stream = open('rtcmdata.log', 'rb')
 >>> rtr = rtcmReader(stream)
 >>> for (raw_data, parsed_data) in rtr: print(parsed_data)
 ...
@@ -115,9 +110,9 @@ Example - File input (using iterator).
 ---
 ## <a name="parsing">Parsing</a>
 
-You can parse individual rtcm messages using the static `RTCMReader.parse(data)` function, which takes a bytes array containing a binary rtcm message payload and returns a `RTCMMessage` object.
+You can parse individual RTCM messages using the static `RTCMReader.parse(data)` function, which takes a bytes array containing a binary RTCM message payload and returns a `RTCMMessage` object.
 
-**NB:** Once instantiated, a `RTCMMessage` object is immutable.
+**NB:** Once instantiated, an `RTCMMessage` object is immutable.
 
 Example:
 ```python
@@ -127,7 +122,7 @@ Example:
 <RTCM(1005, DF002=1005, DF003=0, DF021=0, DF022=1, DF023=1, DF024=1, DF141=0, DF025=44440308028, DF142=1, DF001_1=0, DF026=30856712349, DF001_2=0, DF027=33666582560)>
 ```
 
-The `RTCMMessage` object exposes different public attributes depending on its message type or 'identity',
+The `RTCMMessage` object exposes different public attributes depending on its message type or 'identity'. 
 e.g. the `1005` message has the following attributes:
 
 ```python
@@ -139,18 +134,19 @@ e.g. the `1005` message has the following attributes:
 1
 ```
 
+A helper method `datadesc(datafield)` is available to convert a data field type to a meaningful string,
+e.g. "DF004" -> "GPS Epoch Time (TOW)"
+
 Attributes within repeating groups are parsed with a two-digit suffix (svid_01, svid_02, etc.). The `payload` attribute always contains the raw payload as bytes.
 
 ---
 ## <a name="generating">Generating</a>
 
-(see [below](#configinterface) for special methods relating to the rtcm configuration interface)
-
 ```
 class pyrtcm.rtcmmessage.RTCMMessage(payload, **kwargs)
 ```
 
-You can create a `rtcmMessage` object by calling the constructor with the following parameters:
+You can create an `RTCMMessage` object by calling the constructor with the following parameters:
 1. payload as bytes
 
 Example:
@@ -167,7 +163,7 @@ Example:
 
 The `RTCMMessage` class implements a `serialize()` method to convert a `RTCMMessage` object to a bytes array suitable for writing to an output stream.
 
-e.g. to create and send a `CFG-MSG` command which sets the NMEA GLL (*msgClass 0xf0, msgID 0x01*) message rate to 1 on the receiver's UART1 and USB ports:
+e.g. to create and send a `1005` message type:
 
 ```python
 >>> from serial import Serial
@@ -185,6 +181,10 @@ b'\xd3\x00\x13>\xd0\x00\x03\x8aX\xd9I<\x87/4\x10\x9d\x07\xd6\xafH Z\xd7\xf7'
 ---
 ## <a name="examples">Examples</a>
 
+The following examples are available in the /examples folder:
+
+1. `rtcmfile.py` - stream RTCM data from binary log file.
+2. `rtcmserial.py` - stream RTCM data from serial/UART port.
 
 ---
 ## <a name="extensibility">Extensibility</a>
