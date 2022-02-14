@@ -115,20 +115,16 @@ Example - File input (using iterator).
 ---
 ## <a name="parsing">Parsing</a>
 
-You can parse individual rtcm messages using the static `RTCMReader.parse(data)` function, which takes a bytes array containing a binary rtcm message and returns a `RTCMMessage` object.
+You can parse individual rtcm messages using the static `RTCMReader.parse(data)` function, which takes a bytes array containing a binary rtcm message payload and returns a `RTCMMessage` object.
 
 **NB:** Once instantiated, a `RTCMMessage` object is immutable.
-
-The `parse()` method accepts the following optional keyword arguments:
-
-* `validate`: VALCKSUM (0x01) = validate checksum (default), VALNONE (0x00) = ignore invalid checksum or length
 
 Example:
 ```python
 >>> from pyrtcm import RTCMReader
->>> msg = RTCMReader.parse(b">\xd0\x00\x03\x8aX\xd9I<\x87/4\x10\x9d\x07\xd6\xafH ")
+>>> msg = RTCMReader.parse(b"\xd3\x00\x13>\xd0\x00\x03\x8aX\xd9I<\x87/4\x10\x9d\x07\xd6\xafH Z\xd7\xf7")
 >>> print(msg)
-<rtcm(NAV-VELNED, iTOW=16:01:48, velN=-3, velE=-15, velD=-4, speed=16, gSpeed=15, heading=1.28387, sAcc=65, cAcc=80.5272)>
+<RTCM(1005, DF002=1005, DF003=0, DF021=0, DF022=1, DF023=1, DF024=1, DF141=0, DF025=44440308028, DF142=1, DF001_1=0, DF026=30856712349, DF001_2=0, DF027=33666582560)>
 ```
 
 The `RTCMMessage` object exposes different public attributes depending on its message type or 'identity',
@@ -136,13 +132,11 @@ e.g. the `1005` message has the following attributes:
 
 ```python
 >>> print(msg)
-<RTCM(1005, iTOW=16:01:54, lon=-2.1601284, lat=52.6206345, height=86327, hMSL=37844, hAcc=38885, vAcc=16557)>
+<RTCM(1005, DF002=1005, DF003=0, DF021=0, DF022=1, DF023=1, DF024=1, DF141=0, DF025=44440308028, DF142=1, DF001_1=0, DF026=30856712349, DF001_2=0, DF027=33666582560)>
 >>> msg.identity
 '1005'
->>> msg.lat, msg.lon
-(52.6206345, -2.1601284)
->>> msg.hMSL/10**3
-37.844
+>>> msg.DF024
+1
 ```
 
 Attributes within repeating groups are parsed with a two-digit suffix (svid_01, svid_02, etc.). The `payload` attribute always contains the raw payload as bytes.
@@ -158,7 +152,6 @@ class pyrtcm.rtcmmessage.RTCMMessage(payload, **kwargs)
 
 You can create a `rtcmMessage` object by calling the constructor with the following parameters:
 1. payload as bytes
-2. (optional) a series of keyword parameters representing the message payload
 
 Example:
 

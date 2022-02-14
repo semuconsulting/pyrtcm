@@ -12,7 +12,7 @@ RTCM3 transport layer bit format:
                           |<- payload; length x 8 ->|
 
 Returns both the raw binary data (as bytes) and the parsed data
-(as a rtcmMessage, NMEAMessage or stub RTCMMessage object).
+(as RTCMMessage object).
 
 Created on 14 Feb 2022
 
@@ -133,7 +133,7 @@ class RTCMReader:
         :rtype: tuple
         """
 
-        # read the rest of the rtcm message from the buffer
+        # read the rest of the UBX message from the buffer
         byten = self._read_bytes(4)
         clsid = byten[0:1]
         msgid = byten[1:2]
@@ -183,7 +183,7 @@ class RTCMReader:
         if self._validate & rtt.VALCKSUM:
             if calc_crc24q(raw_data):
                 raise rte.RTCMParseError(f"RTCM3 message invalid - failed CRC: {crc}")
-        parsed_data = self.parse(payload)
+        parsed_data = self.parse(raw_data)
         return (raw_data, parsed_data)
 
     def _read_bytes(self, size: int) -> bytes:
@@ -253,16 +253,14 @@ class RTCMReader:
     @staticmethod
     def parse(message: bytes, **kwargs) -> object:
         """
-        Parse RTCM byte stream to RTCMMessage object.
+        Parse RTCM message to RTCMMessage object.
 
-        Includes option to validate incoming payload length and checksum
-        (the rtcmMessage constructor can calculate and assign its own values anyway).
-
-        :param bytes message: RTCM payload bytes
+        :param bytes message: RTCM raw message bytes
         :return: RTCMMessage object
         :rtype: RTCMMessage
         :raises: RTCMParseError (if data stream contains invalid data or unknown message type)
 
         """
 
-        return RTCMMessage(message)
+        payload = message[3:-3]
+        return RTCMMessage(payload)

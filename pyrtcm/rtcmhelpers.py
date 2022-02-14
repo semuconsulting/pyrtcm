@@ -59,7 +59,7 @@ def len_2_bytes(payload: bytes) -> bytes:
     constructing RTCM message transport.
 
     :param bytes payload: message payload (i.e. _without_ header, length or CRC)
-    :return: CRC as 2 bytes
+    :return: payload length as 2 bytes padded with leading zeros
     :rtype: bytes
     """
 

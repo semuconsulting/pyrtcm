@@ -1,5 +1,4 @@
-import struct
-from pyrtcm import RTCMMessage
+from pyrtcm import RTCMMessage, RTCMReader
 
 
 def get_bit(data: bytes, num: int) -> int:
@@ -32,12 +31,15 @@ def bits_2_val(bits: list) -> int:
     return val
 
 
-payload = b">\xd0\x00\x03\x8aX\xd9I<\x87/4\x10\x9d\x07\xd6\xafH "
-msg = RTCMMessage(payload)
-print(f"Message: {msg}")
 raw = b"\xd3\x00\x13>\xd0\x00\x03\x8aX\xd9I<\x87/4\x10\x9d\x07\xd6\xafH Z\xd7\xf7"
-print(f"Serialised: {msg.serialize()}\nShould be:  {raw}")
-print(f"Messages match? {msg.serialize() == raw}")
+payload = raw[3:-3]
+msg1 = RTCMReader.parse(raw)
+msg2 = RTCMMessage(payload)
+print(f"Message from RTCMReader.parse():\n{msg1}")
+print(f"Message from RTCMMessage():\n{msg2}")
+
+print(f"Serialised: {msg2.serialize()}\nShould be:  {raw}")
+print(f"Messages match? {msg2.serialize() == raw}")
 
 
 # first two bytes should be 00111110 11010000
