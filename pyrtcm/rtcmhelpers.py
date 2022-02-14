@@ -161,18 +161,18 @@ def bits_2_val(bits: list) -> int:
     return val
 
 
-def itow2utc(itow: int) -> datetime.time:
+def tow2utc(tow: int) -> datetime.time:
     """
     Convert GPS Time Of Week to UTC time
     (UTC = GPS - 18 seconds; correct as from 1/1/2017).
 
-    :param int itow: GPS Time Of Week
+    :param int tow: GPS Time Of Week
     :return: UTC time hh.mm.ss
     :rtype: datetime.time
 
     """
 
-    utc = datetime(1980, 1, 6) + timedelta(seconds=(itow / 1000) - 18)
+    utc = datetime(1980, 1, 6) + timedelta(seconds=(tow / 1000) - 18)
     return utc.time()
 
 

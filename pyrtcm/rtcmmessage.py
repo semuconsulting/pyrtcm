@@ -21,7 +21,7 @@ from pyrtcm.rtcmhelpers import (
     get_bitarray,
     bits_2_val,
     datasiz,
-    itow2utc,
+    tow2utc,
 )
 
 LOGGING = logging.WARNING
@@ -227,8 +227,8 @@ class RTCMMessage:
         for i, att in enumerate(self.__dict__):
             if att[0] != "_":  # only show public attributes
                 val = self.__dict__[att]
-                if att == "iTOW":  # attribute is a GPS Time of Week
-                    val = itow2utc(val)  # show time in UTC format
+                if att == "DF004":  # attribute is a GPS Time of Week
+                    val = tow2utc(val)  # show time in UTC format
                 stg += att + "=" + str(val)
                 if i < len(self.__dict__) - 1:
                     stg += ", "
