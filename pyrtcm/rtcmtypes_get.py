@@ -3,7 +3,7 @@ RTCM Protocol payload definitions
 
 Created on 14 Feb 2022
 
-Information sourced from RTCM STANDARD 10403.1 © 2006 RTCM
+Information sourced from RTCM STANDARD 10403.2 © 2013 RTCM
 
 :author: semuadmin
 """
