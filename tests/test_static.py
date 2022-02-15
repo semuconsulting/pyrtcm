@@ -115,13 +115,27 @@ class StaticTest(unittest.TestCase):
         res = get_bitarray(b)
         self.assertEqual(res, EXPECTED_RESULT)
 
-    def testbits2val(self):  # test bits2val TODO needs refinement for other att types
+    def testbits2val(self):  # test bits2val for all data types
         b = b"\xaa\xbb\xcc"
         bitfield = get_bitarray(b)
-        res = bits2val("UNT008", bitfield)
+        res = bits2val("UNT008", bitfield)  # UINT
         res2 = int.from_bytes(b, "big")
         self.assertEqual(res, 11189196)
         self.assertEqual(res, res2)
+        res = bits2val(rtt.INTS5, [0, 0, 1, 0, 1])  # +ve INTS
+        self.assertEqual(res, 5)
+        res = bits2val(rtt.INTS5, [1, 0, 1, 0, 1])  # -ve INTS
+        self.assertEqual(res, -5)
+        res = bits2val(rtt.CHAR8, [0, 1, 0, 0, 0, 0, 0, 1])  # CHAR8
+        self.assertEqual(res, "A")
+        res = bits2val(rtt.INT8, [0, 1, 1, 1, 1, 1, 1, 1])  # +ve 2's comp INT
+        self.assertEqual(res, 127)
+        res = bits2val(rtt.INT8, [1, 0, 0, 0, 0, 0, 0, 1])  # -ve 2's comp INT
+        self.assertEqual(res, -127)
+        res = bits2val(rtt.INT8, [0, 0, 1, 0, 1, 1, 0, 1])  # +ve 2's comp INT
+        self.assertEqual(res, 45)
+        res = bits2val(rtt.INT8, [1, 1, 0, 1, 0, 0, 1, 1])  # -ve 2's comp INT
+        self.assertEqual(res, -45)
 
     def testcrc2bytes(self):  # test crc2bytes
         raw = (

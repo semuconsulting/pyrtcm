@@ -84,7 +84,7 @@ You can create a `RTCMReader` object by calling the constructor with an active s
 The stream object can be any data stream which supports a `read(n) -> bytes` method (e.g. File or Serial, with 
 or without a buffer wrapper).
 
-Individual input rtcm and/or NMEA messages can then be read using the `RTCMReader.read()` function, which returns both the raw binary data (as bytes) and the parsed data (as a `RTCMMessage`, via the `parse()` method). The function is thread-safe in so far as the incoming data stream object is thread-safe. `RTCMReader` also implements an iterator.
+Individual RTCM messages can then be read using the `RTCMReader.read()` function, which returns both the raw binary data (as bytes) and the parsed data (as a `RTCMMessage`, via the `parse()` method). The function is thread-safe in so far as the incoming data stream object is thread-safe. `RTCMReader` also implements an iterator.
 
 Example -  Serial input. This example will output both rtcm and NMEA messages:
 ```python
@@ -135,7 +135,7 @@ e.g. the `1005` message has the following attributes:
 A helper method `datadesc(datafield)` is available to convert a data field type to a meaningful string,
 e.g. "DF004" -> "GPS Epoch Time (TOW)"
 
-Attributes within repeating groups are parsed with a two-digit suffix (svid_01, svid_02, etc.). The `payload` attribute always contains the raw payload as bytes.
+Attributes within repeating groups are parsed with a two-digit suffix (DF030_01, DF030_02, etc.). The `payload` attribute always contains the raw payload as bytes.
 
 ---
 ## <a name="generating">Generating</a>
@@ -199,7 +199,7 @@ The rtcm protocol is principally defined in the module `rtcmtypes_get.py` as a s
    {dict} is the nested dictionary of repeating items or bitfield group
 ```
 
-Repeating attribute names are parsed with a two-digit suffix (svid_01, svid_02, etc.). Nested repeating groups are supported.
+Repeating attribute names are parsed with a two-digit suffix (DF030_01, DF030_02, etc.). Nested repeating groups are supported.
 
 ---
 ## <a name="cli">Command Line Utility</a>

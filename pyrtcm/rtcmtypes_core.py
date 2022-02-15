@@ -216,7 +216,6 @@ RTCM_DATA_TYPES = {
     "DF140": (UTF8, "UTF-8 Character Code Units"),
     "DF141": (BIT1, "Reference-Station Indicator"),
     "DF142": (BIT1, "Single Receiver Oscillator Indicator"),
-    "NYI": (CHAR8, "Not Yet Implemented"),
 }
 
 # ***************************************************************************

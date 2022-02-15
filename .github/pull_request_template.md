@@ -2,7 +2,7 @@
 
 ## Description
 
-Please include a summary of the change and which issue is fixed. Please also include relevant motivation and context and, where applicable, any u-blox documentation sources you have used. List any dependencies that are required for this change.
+Please include a summary of the change and which issue is fixed. Please also include relevant motivation and context and, where applicable, any RTCM documentation sources you have used. List any dependencies that are required for this change.
 
 Fixes # (issue)
 
@@ -18,7 +18,7 @@ Please describe any test cases you have amended or added to this suite to mainta
 
 - [ ] My code follows the style guidelines of this project (see `CONTRIBUTING.MD`).
 - [ ] I have performed a self-review of my own code.
-- [ ] (*if appropriate*) I have cited my u-blox documentation source(s).
+- [ ] (*if appropriate*) I have cited my RTCM documentation source(s).
 - [ ] I have commented my code, particularly in hard-to-understand areas.
 - [ ] I have made corresponding changes to the documentation.
 - [ ] (*if appropriate*) I have added test cases to the `tests/test_*.py` unittest suite to maintain >= 99% code coverage.

@@ -63,3 +63,12 @@ bits = ba[offset : offset + atts]
 print(f"identity = {str(payload[0] << 4 | payload[1] >> 4)}")
 print(f"bits = {bits}, value = {bits_2_val(bits)}")
 offset += atts
+
+bitfield = [1, 0, 1, 0, 1]
+sign = -1 if bitfield[0] else 1
+print(bitfield[0], sign, bitfield[1:])
+val = 0
+for bit in bitfield[1:]:
+    val = (val << 1) | bit
+
+print(val * sign)

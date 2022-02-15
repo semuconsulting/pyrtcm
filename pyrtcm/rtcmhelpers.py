@@ -10,6 +10,7 @@ Created on 14 Feb 2022
 """
 # pylint: disable=invalid-name
 
+import logging
 from datetime import datetime, timedelta
 from pyrtcm.rtcmtypes_core import RTCM_DATA_TYPES
 
@@ -23,25 +24,26 @@ def bits2val(att: str, bitfield: list) -> object:
     :return: value
     :rtype: object (int, float, char, bool)
     """
-    # TODO needs refinement for non-UINT data types
 
     typ = atttyp(att)
     siz = attsiz(att)
-    # convert bits to unsigned integer (big-endian)
-    val = 0
-    for bit in bitfield:
-        val = (val << 1) | bit
+    logging.debug("Att type %s, size: %s", typ, siz)
 
-    if typ == "INT":
-        return val
-    elif typ == "SNT":
-        return val
-    elif typ == "BIT":
-        return val
-    elif typ == "CHA":
-        return chr(val)
-    else:
-        return val
+    val = 0
+    if typ == "SNT":  # int, MSB indicates sign
+        for bit in bitfield[1:]:
+            val = (val << 1) | bit
+        if bitfield[0]:
+            val *= -1
+    else:  # all other types
+        for bit in bitfield:
+            val = (val << 1) | bit
+    if typ == "INT" and bitfield[0]:  # 2's compliment -ve int
+        val = val - (1 << siz)
+    elif typ in ("CHA", "UTF"):  # ASCII or UTF-8 character
+        val = chr(val)
+
+    return val
 
 
 def calc_crc24q(message: bytes) -> int:

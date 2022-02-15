@@ -31,7 +31,7 @@ A clear and concise description of what you expected to happen.
 
 **Desktop (please complete the following information):**
 
- - The operating system you're using [e.g. Windows 10, MacOS Big Sur, Ubuntu Bionic]
+ - The operating system you're using [e.g. Windows 10, MacOS Monterey, Ubuntu Bionic]
  - The type of serial connection [e.g. USB, UART1, I2C]
 
 **GNSS/GPS Device (please complete the following information as best you can):**
@@ -41,8 +41,6 @@ A clear and concise description of what you expected to happen.
  - Protocol: [e.g. 32.00]
  
 This information is typically output by the device at startup via a series of NMEA TXT messages. 
-It can also be found by polling the device with a rtcm MON-VER message. If you're using the 
-PyGPSClient GUI, a screenshot of the rtcmConfig window should suffice.
 
 **Additional context**
 

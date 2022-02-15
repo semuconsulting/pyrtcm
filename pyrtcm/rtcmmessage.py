@@ -86,22 +86,10 @@ class RTCMMessage:
                     offset, pdict, key, index, **kwargs
                 )
 
-        except (
-            AttributeError,
-            struct.error,
-            TypeError,
-            ValueError,
-        ) as err:
+        except Exception as err:
             raise rte.RTCMTypeError(
                 (
-                    f"Incorrect type for attribute '{key}' "
-                    f"in message type {self.identity}"
-                )
-            ) from err
-        except (OverflowError,) as err:
-            raise rte.RTCMTypeError(
-                (
-                    f"Overflow error for attribute '{key}' "
+                    f"Error processing attribute '{key}' "
                     f"in message type {self.identity}"
                 )
             ) from err
