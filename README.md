@@ -25,8 +25,8 @@ This is an independent project and we have no affiliation whatsoever with RTCM.
 
 ## <a name="currentstatus">Current Status</a>
 
-![Status](https://img.shields.io/pypi/status/pyrtcm)
-![Release](https://img.shields.io/github/v/release/semuconsulting/pyrtcm)
+<!--![Status](https://img.shields.io/pypi/status/pyrtcm)-->
+![Release](https://img.shields.io/github/v/release/semuconsulting/pyrtcm?include_prereleases)
 ![Build](https://img.shields.io/github/workflow/status/semuconsulting/pyrtcm/pyrtcm)
 ![Codecov](https://img.shields.io/codecov/c/github/semuconsulting/pyrtcm)
 ![Release Date](https://img.shields.io/github/release-date-pre/semuconsulting/pyrtcm)
@@ -44,6 +44,12 @@ Contributions welcome - please refer to [CONTRIBUTING.MD](https://github.com/sem
 
 ---
 ## <a name="installation">Installation</a>
+
+<!--
+![Python version](https://img.shields.io/pypi/pyversions/pyrtcm.svg?style=flat)
+[![PyPI version](https://img.shields.io/pypi/v/pyrtcm.svg?style=flat)](https://testpypi.org/project/pyrtcm/)
+![PyPI downloads](https://img.shields.io/pypi/dm/pyrtcm.svg?style=flat)
+-->
 
 **NB** Not yet uploaded to PyPi PROD for remote installation via `pip`. Alpha will be uploaded to PyPi TEST in due course. For the time being, local installation is available, assuming you have `setuptools` and `wheel` installed.
 
