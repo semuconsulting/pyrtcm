@@ -51,16 +51,24 @@ Contributions welcome - please refer to [CONTRIBUTING.MD](https://github.com/sem
 ![PyPI downloads](https://img.shields.io/pypi/dm/pyrtcm.svg?style=flat)
 -->
 
-**NB** Not yet uploaded to PyPi PROD for remote installation via `pip`. Alpha will be uploaded to PyPi TEST in due course. For the time being, local installation is available, assuming you have `setuptools` and `wheel` installed.
+**NB** Not yet uploaded to PyPi PROD for remote installation via `pip`. An Alpha has been uploaded to PyPi TEST. Local installation is available, assuming you have the Python packages `setuptools` and `wheel` installed.
 
 `pyrtcm` is compatible with Python 3.6+ and has no third-party library dependencies.
 
 In the following, `python` & `pip` refer to the Python 3 executables. You may need to type 
 `python3` or `pip3`, depending on your particular environment.
 
+To install latest Alpha from TEST PyPi using pip:
 
 ```shell
-cd <project_root>
+python -m pip install --upgrade --index-url https://test.pypi.org/simple/ pyrtcm
+```
+
+To clone, build and install locally (*requires setuptools and wheel*):
+
+```shell
+git clone https://github.com/semuconsulting/pyrtcm.git
+cd pyrtcm
 python setup.py sdist bdist_wheel
 python -m pip install dist/pyrtcm-0.1.0.tar.gz --user --force_reinstall
 ```
