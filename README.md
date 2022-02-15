@@ -34,8 +34,7 @@ This is an independent project and we have no affiliation whatsoever with RTCM.
 ![Contributors](https://img.shields.io/github/contributors/semuconsulting/pyrtcm.svg)
 ![Open Issues](https://img.shields.io/github/issues-raw/semuconsulting/pyrtcm)
 
-Currently under development and not yet uploaded to PyPi Test or Prod. May or may not be taken forward depending on
-time constraints and availability of payload documentation and test resources. As it stands, only a limited subset of RTCM message types are defined, though these can be extended by adding appropriate definitions to `rtcmtypes_*.py` - contributions welcome!
+Currently under development, subject to volunteer time constraints and availability of payload documentation and test resources. As it stands, only a limited subset of RTCM message types are defined, though these can be extended by adding appropriate definitions to `rtcmtypes_*.py` - contributions welcome!
 
 Sphinx API Documentation in HTML format is available at [https://www.semuconsulting.com/pyrtcm](https://www.semuconsulting.com/pyrtcm).
 
@@ -46,33 +45,18 @@ Contributions welcome - please refer to [CONTRIBUTING.MD](https://github.com/sem
 ---
 ## <a name="installation">Installation</a>
 
-**NB** NOT YET AVAILABLE IN PYPI PROD - I may post an Alpha to PyPi TEST if there's sufficient interest.
+**NB** Not yet uploaded to PyPi PROD for remote installation via `pip`. Alpha will be uploaded to PyPi TEST in due course. For the time being, local installation is available, assuming you have `setuptools` and `wheel` installed.
 
 `pyrtcm` is compatible with Python 3.6+ and has no third-party library dependencies.
 
 In the following, `python` & `pip` refer to the Python 3 executables. You may need to type 
 `python3` or `pip3`, depending on your particular environment.
 
-![Python version](https://img.shields.io/pypi/pyversions/pyrtcm.svg?style=flat)
-[![PyPI version](https://img.shields.io/pypi/v/pyrtcm.svg?style=flat)](https://pypi.org/project/pyrtcm/)
-![PyPI downloads](https://img.shields.io/pypi/dm/pyrtcm.svg?style=flat)
-
-The recommended way to install the latest version of `pyrtcm` is with
-[pip](http://pypi.python.org/pypi/pip/):
 
 ```shell
-python -m pip install --upgrade pyrtcm
-```
-
-If required, `pyrtcm` can also be installed into a virtual environment, e.g.:
-
-```shell
-python -m pip install --user --upgrade virtualenv
-python -m virtualenv env
-source env/bin/activate (or env\Scripts\activate on Windows)
-(env) python -m pip install --upgrade pyrtcm
-...
-deactivate
+cd <project_root>
+python setup.py sdist bdist_wheel
+python -m pip install dist/pyrtcm-0.1.0.tar.gz --user --force_reinstall
 ```
 
 ---
