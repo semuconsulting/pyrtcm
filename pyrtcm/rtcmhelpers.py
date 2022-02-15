@@ -39,7 +39,7 @@ def bits2val(att: str, bitfield: list) -> object:
     elif typ == "BIT":
         return val
     elif typ == "CHA":
-        return val
+        return chr(val)
     else:
         return val
 

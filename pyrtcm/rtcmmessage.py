@@ -66,7 +66,10 @@ class RTCMMessage:
         index = []  # array of (nested) group indices
         self._payload_bits = get_bitarray(self._payload)  # payload as bit array
         logging.debug(
-            "Payload bits: %s, length: %s", self._payload_bits, len(self._payload)
+            "Payload identity %s, bits: %s, length: %s",
+            self.identity,
+            self._payload_bits,
+            len(self._payload),
         )
 
         try:
@@ -119,8 +122,8 @@ class RTCMMessage:
 
         """
 
-        # att = pdict[key]  # get attribute type
-        att = key
+        att = pdict[key]  # get attribute type
+        # att = key
         if isinstance(att, tuple):  # repeating group of attributes
             (offset, index) = self._set_attribute_group(att, offset, index, **kwargs)
         else:  # single attribute
