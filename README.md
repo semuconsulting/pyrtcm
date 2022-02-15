@@ -11,8 +11,6 @@
 [Graphical Client](#gui) |
 [Author & License](#author)
 
-## !!! WORK IN PROGRESS - NOT YET FULLY FUNCTIONAL !!!
-
 `pyrtcm` is an original Python 3 library for the RTCM 3 &copy; protocol.
 
 The `pyrtcm` homepage is located at [https://github.com/semuconsulting/pyrtcm](https://github.com/semuconsulting/pyrtcm).
@@ -34,7 +32,7 @@ This is an independent project and we have no affiliation whatsoever with RTCM.
 ![Contributors](https://img.shields.io/github/contributors/semuconsulting/pyrtcm.svg)
 ![Open Issues](https://img.shields.io/github/issues-raw/semuconsulting/pyrtcm)
 
-Currently under development, subject to volunteer time constraints and availability of payload documentation and test resources. As it stands, only a limited subset of RTCM message types are defined, though these can be extended by adding appropriate definitions to `rtcmtypes_*.py` - contributions welcome!
+Currently under development, subject to volunteer time constraints and availability of payload documentation and test resources. At time of writing, core parsing functionality is there but only a limited subset of RTCM message types have been defined. Missing message types can be added to the `RTCM_PAYLOADS_GET` dictionary in `rtcmtypes_get.py` (see [Extensibility](#extensibility)). Contributions welcome!
 
 Sphinx API Documentation in HTML format is available at [https://www.semuconsulting.com/pyrtcm](https://www.semuconsulting.com/pyrtcm).
 
@@ -51,7 +49,7 @@ Contributions welcome - please refer to [CONTRIBUTING.MD](https://github.com/sem
 ![PyPI downloads](https://img.shields.io/pypi/dm/pyrtcm.svg?style=flat)
 -->
 
-**NB** Not yet uploaded to PyPi PROD for remote installation via `pip`. An Alpha has been uploaded to PyPi TEST. Local installation is available, assuming you have the Python packages `setuptools` and `wheel` installed.
+The latest Alpha version is available in TEST PyPi and can be installed using `pip`. Local installation is also available, provided you have the Python packages `setuptools` and `wheel` installed.
 
 `pyrtcm` is compatible with Python 3.6+ and has no third-party library dependencies.
 
