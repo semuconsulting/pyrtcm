@@ -166,7 +166,7 @@ class StaticTest(unittest.TestCase):
 
     def testdatadesc(self):  # test datadesc
         dt = "DF054"
-        self.assertEqual(datadesc(dt), "Leap Seconds,  GPS-UTC")
+        self.assertEqual(datadesc(dt), "Leap Seconds, GPS-UTC")
         dt = "DF037"
         self.assertEqual(datadesc(dt), "GLONASS Smoothing Interval")
 

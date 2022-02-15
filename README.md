@@ -68,7 +68,7 @@ To clone, build and install locally (*requires setuptools and wheel*):
 git clone https://github.com/semuconsulting/pyrtcm.git
 cd pyrtcm
 python setup.py sdist bdist_wheel
-python -m pip install dist/pyrtcm-0.1.0.tar.gz --user --force_reinstall
+python -m pip install dist/pyrtcm-0.1.1.tar.gz --user --force_reinstall
 ```
 
 ---
