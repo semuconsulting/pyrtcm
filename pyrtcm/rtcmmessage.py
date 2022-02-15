@@ -16,10 +16,10 @@ import pyrtcm.rtcmtypes_core as rtt
 import pyrtcm.rtcmtypes_get as rtg
 from pyrtcm.rtcmhelpers import (
     calc_crc24q,
-    crc_2_bytes,
-    len_2_bytes,
+    crc2bytes,
+    len2bytes,
     get_bitarray,
-    bits_2_val,
+    bits2val,
     datasiz,
     tow2utc,
 )
@@ -75,13 +75,10 @@ class RTCMMessage:
                 self._get_dict()
             )  # get payload definition dict for this message identity
             if pdict is None:  # unknown (or not yet implemented) message identity
-                logging.debug("Unknown message identity: %s", self.identity)
+                self._do_unknown(self._payload)
                 return
             for key in pdict:  # process each attribute in dict
                 logging.debug("Key: %s", key)
-                if key == rtt.NYI:
-                    setattr(self, "status", pdict[key])
-                    continue
                 (offset, index) = self._set_attribute(
                     offset, pdict, key, index, **kwargs
                 )
@@ -192,9 +189,10 @@ class RTCMMessage:
 
         # get value of required number of bits at current payload offset
         atts = datasiz(key)
+        att, _ = rtt.RTCM_DATA_TYPES[key]
         bitfield = self._payload_bits[offset : offset + atts]
         logging.debug("Bitfield: %s, size: %s", bitfield, atts)
-        val = bits_2_val(bitfield)
+        val = bits2val(att, bitfield)
 
         setattr(self, keyr, val)
         offset += atts
@@ -212,6 +210,17 @@ class RTCMMessage:
 
         return rtg.RTCM_PAYLOADS_GET.get(self.identity, None)
 
+    def _do_unknown(self, payload: bytes):
+        """
+        Handle unknown message type.
+
+        :param bytes payload: raw payload
+        """
+
+        setattr(self, "DF002", self.identity)
+        setattr(self, "status", "Not_Yet_Implemented")
+        logging.debug("Unknown message identity: %s", self.identity)
+
     def __str__(self) -> str:
         """
         Human readable representation.
@@ -219,9 +228,6 @@ class RTCMMessage:
         :return: human readable representation
         :rtype: str
         """
-
-        if self.payload is None:
-            return f"<RTCM({self.identity})>"
 
         stg = f"<RTCM({self.identity}, "
         for i, att in enumerate(self.__dict__):
@@ -272,9 +278,9 @@ class RTCMMessage:
         :rtype: bytes
         """
 
-        size = len_2_bytes(self._payload)
+        size = len2bytes(self._payload)
         message = rtt.RTCM_HDR + size + self._payload
-        crc = crc_2_bytes(message)
+        crc = crc2bytes(message)
         return message + crc
 
     @property

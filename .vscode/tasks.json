@@ -185,8 +185,8 @@
                 "Format",
                 "PylintError",
                 "Build",
-                //"Test", 
-                //"Coverage Report", 
+                "Test",
+                "Coverage Report",
                 "Sphinx HTML"
             ],
             "problemMatcher": []

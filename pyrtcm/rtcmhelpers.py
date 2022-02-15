@@ -14,6 +14,36 @@ from datetime import datetime, timedelta
 from pyrtcm.rtcmtypes_core import RTCM_DATA_TYPES
 
 
+def bits2val(att: str, bitfield: list) -> object:
+    """
+    Convert bit array to value for this attribute type.
+
+    :param str att: attribute type e.g. "UNT008"
+    :param list bitfield: array of bits representing attribute
+    :return: value
+    :rtype: object (int, float, char, bool)
+    """
+    # TODO needs refinement for non-UINT data types
+
+    typ = atttyp(att)
+    siz = attsiz(att)
+    # convert bits to unsigned integer (big-endian)
+    val = 0
+    for bit in bitfield:
+        val = (val << 1) | bit
+
+    if typ == "INT":
+        return val
+    elif typ == "SNT":
+        return val
+    elif typ == "BIT":
+        return val
+    elif typ == "CHA":
+        return val
+    else:
+        return val
+
+
 def calc_crc24q(message: bytes) -> int:
     """
     Perform CRC24Q cyclic redundancy check.
@@ -40,7 +70,7 @@ def calc_crc24q(message: bytes) -> int:
     return crc & 0xFFFFFF
 
 
-def crc_2_bytes(message: bytes) -> bytes:
+def crc2bytes(message: bytes) -> bytes:
     """
     Generate CRC as 3 bytes, suitable for
     constructing RTCM message transport.
@@ -53,7 +83,7 @@ def crc_2_bytes(message: bytes) -> bytes:
     return calc_crc24q(message).to_bytes(3, "big")
 
 
-def len_2_bytes(payload: bytes) -> bytes:
+def len2bytes(payload: bytes) -> bytes:
     """
     Generate payload length as 2 bytes, suitable for
     constructing RTCM message transport.
@@ -136,7 +166,7 @@ def get_bit(data: bytes, num: int) -> int:
 
 def get_bitarray(data: bytes) -> list:
     """
-    Convert data bytes to bit array.
+    Convert data bytes (big-endian) to bit array.
 
     :param bytes data: data
     :return: bit array
@@ -144,21 +174,6 @@ def get_bitarray(data: bytes) -> list:
     """
 
     return [get_bit(data, i) for i in range(len(data) * 8)]
-
-
-def bits_2_val(bits: list) -> int:
-    """
-    Convert bit array to integer.
-
-    :param list bits: bit array
-    :return: integer value
-    :rtype: int
-    """
-
-    val = 0
-    for bit in bits:
-        val = (val << 1) | bit
-    return val
 
 
 def tow2utc(tow: int) -> datetime.time:

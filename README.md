@@ -79,7 +79,7 @@ deactivate
 ## <a name="reading">Reading (Streaming)</a>
 
 ```
-class pyrtcm.rtcmreader.RTCMReader(stream, *args, **kwargs)
+class pyrtcm.rtcmreader.RTCMReader(stream, **kwargs)
 ```
 
 You can create a `RTCMReader` object by calling the constructor with an active stream object. 

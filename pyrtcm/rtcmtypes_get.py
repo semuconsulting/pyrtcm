@@ -417,38 +417,6 @@ RTCM_PAYLOADS_GET = {
         "DF135": "GLONASS-M τGPS",
         "DF136": "GLONASS-M ln (fifth string)",
     },
-    "1021": {
-        "DF002": "Message Identity",
-        "NYI": "Not Yet Implemented",
-    },
-    "1022": {
-        "DF002": "Message Identity",
-        "NYI": "Not Yet Implemented",
-    },
-    "1023": {
-        "DF002": "Message Identity",
-        "NYI": "Not Yet Implemented",
-    },
-    "1024": {
-        "DF002": "Message Identity",
-        "NYI": "Not Yet Implemented",
-    },
-    "1025": {
-        "DF002": "Message Identity",
-        "NYI": "Not Yet Implemented",
-    },
-    "1026": {
-        "DF002": "Message Identity",
-        "NYI": "Not Yet Implemented",
-    },
-    "1027": {
-        "DF002": "Message Identity",
-        "NYI": "Not Yet Implemented",
-    },
-    "1028": {
-        "DF002": "Message Identity",
-        "NYI": "Not Yet Implemented",
-    },
     "1029": {
         "DF002": "Message Identity",
         "DF003": "Reference Station ID",
@@ -462,29 +430,5 @@ RTCM_PAYLOADS_GET = {
                 "DF140": "UTF-8 Character Code Units",
             },
         ),
-    },
-    "1077": {
-        "DF002": "Message Identity",
-        "NYI": "Not_Yet_Implemented",
-    },
-    "1087": {
-        "DF002": "Message Identity",
-        "NYI": "Not_Yet_Implemented",
-    },
-    "1097": {
-        "DF002": "Message Identity",
-        "NYI": "Not_Yet_Implemented",
-    },
-    "1127": {
-        "DF002": "Message Identity",
-        "NYI": "Not_Yet_Implemented",
-    },
-    "1230": {
-        "DF002": "Message Identity",
-        "NYI": "Not_Yet_Implemented",
-    },
-    "4072": {
-        "DF002": "Message Identity",
-        "NYI": "Not_Yet_Implemented",
     },
 }

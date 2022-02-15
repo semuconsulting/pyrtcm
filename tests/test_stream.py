@@ -12,48 +12,73 @@ Created on 3 Oct 2020
 import os
 import unittest
 
-# from pyrtcm import (
-#     RTCMReader,
-# )
-# from pyrtcm.exceptions import RTCMStreamError, RTCMParseError
-# import pyrtcm.rtcmtypes_core as rtt
+from pyrtcm import RTCMReader, RTCMMessage
+import pyrtcm.exceptions as rte
+import pyrtcm.rtcmtypes_core as rtt
 
 
 class StreamTest(unittest.TestCase):
     def setUp(self):
         self.maxDiff = None
         dirname = os.path.dirname(__file__)
-        # self.testdump = open(os.path.join(dirname, "testdump.log"), "wb")
+        self._raw = (
+            b"\xd3\x00\x13>\xd0\x00\x03\x8aX\xd9I<\x87/4\x10\x9d\x07\xd6\xafH Z\xd7\xf7"
+        )
 
     def tearDown(self):
-        # self.testdump.close()
         pass
 
-    # def testMIXEDRTCM(
-    #     self,
-    # ):  # test mixed stream of NMEA, rtcm & RTCM messages with protfilter = 7
-    #     EXPECTED_RESULTS = (
-    #         "<NMEA(GNGLL, lat=32.0658325, NS=N, lon=34.773819, EW=E, time=08:41:58, status=A, posMode=D)>",
-    #         "<RTCM3(1005)>",
-    #         "<RTCM3(4072)>",
-    #         "<RTCM3(1077)>",
-    #         "<RTCM3(1087)>",
-    #         "<RTCM3(1097)>",
-    #         "<RTCM3(1127)>",
-    #         "<RTCM3(1230)>",
-    #         "<rtcm(NAV-PVT, iTOW=08:41:59, year=2022, month=2, day=8, hour=8, min=41, second=59, validDate=1, validTime=1, fullyResolved=1, validMag=0, tAcc=21, nano=360400, fixType=5, gnssFixOk=1, difSoln=1, psmState=0, headVehValid=0, carrSoln=0, confirmedAvai=1, confirmedDate=1, confirmedTime=1, numSV=31, lon=34.773819, lat=32.0658325, height=72134, hMSL=54642, hAcc=685, vAcc=484, velN=0, velE=0, velD=0, gSpeed=0, headMot=290.13822, sAcc=10, headAcc=20.15693, pDOP=99.99, invalidLlh=0, lastCorrectionAge=0, reserved0=860200482, headVeh=0.0, magDec=0.0, magAcc=0.0)>",
-    #         "<NMEA(GNRMC, time=08:41:59, status=A, lat=32.0658325, NS=N, lon=34.773819, EW=E, spd=0.0, cog=, date=2022-02-08, mv=, mvEW=, posMode=D, navStatus=V)>",
-    #     )
-    #     dirname = os.path.dirname(__file__)
-    #     stream = open(os.path.join(dirname, "pygpsdata-MIXED-RTCM3.log"), "rb")
-    #     i = 0
-    #     raw = 0
-    #     ubr = rtcmReader(stream, protfilter=7)
-    #     for (raw, parsed) in ubr.iterate(quitonerror=ubt.ERR_RAISE):
-    #         if raw is not None:
-    #             self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
-    #             i += 1
-    #     stream.close()
+    def testMIXEDRTCM(
+        self,
+    ):  # test mixed stream of NMEA, UBX & RTCM messages TODO when fully implemented
+        EXPECTED_RESULTS = (
+            "<RTCM(1005, DF002=1005, DF003=0, DF021=0, DF022=1, DF023=1, DF024=1, DF141=0, DF025=44440308028, DF142=1, DF001_1=0, DF026=30856712349, DF001_2=0, DF027=33666582560)>",
+            "<RTCM(4072, DF002=4072, status=Not_Yet_Implemented)>",
+            "<RTCM(1077, DF002=1077, status=Not_Yet_Implemented)>",
+            "<RTCM(1087, DF002=1087, status=Not_Yet_Implemented)>",
+            "<RTCM(1097, DF002=1097, status=Not_Yet_Implemented)>",
+            "<RTCM(1127, DF002=1127, status=Not_Yet_Implemented)>",
+            "<RTCM(1230, DF002=1230, status=Not_Yet_Implemented)>",
+        )
+        dirname = os.path.dirname(__file__)
+        stream = open(os.path.join(dirname, "pygpsdata-MIXED-RTCM3.log"), "rb")
+        i = 0
+        raw = 0
+        rtr = RTCMReader(stream)
+        for (raw, parsed) in rtr.iterate():
+            if raw is not None:
+                self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
+                i += 1
+        stream.close()
+
+    def testSerialize(self):  # test serialize()
+        payload = self._raw[3:-3]
+        msg1 = RTCMReader.parse(self._raw)
+        msg2 = RTCMMessage(payload)
+        res = msg1.serialize()
+        self.assertEqual(res, self._raw)
+        res1 = msg2.serialize()
+        self.assertEqual(res, self._raw)
+
+    def testsetattr(self):  # test immutability
+        EXPECTED_ERROR = (
+            "Object is immutable. Updates to DF002 not permitted after initialisation."
+        )
+        with self.assertRaisesRegex(rte.RTCMMessageError, EXPECTED_ERROR):
+            msg = RTCMReader.parse(self._raw)
+            msg.DF002 = 9999
+
+    def testrepr(self):  # test repr, check eval recreates original object
+        EXPECTED_RESULT = "RTCMMessage(b'>\\xd0\\x00\\x03\\x8aX\\xd9I<\\x87/4\\x10\\x9d\\x07\\xd6\\xafH ')"
+        msg1 = RTCMReader.parse(self._raw)
+        self.assertEqual(repr(msg1), EXPECTED_RESULT)
+        msg2 = eval(repr(msg1))
+        self.assertEqual(str(msg1), str(msg2))
+
+    def testpayload(self):  # test payload getter
+        msg = RTCMReader.parse(self._raw)
+        payload = self._raw[3:-3]
+        self.assertEqual(msg.payload, payload)
 
 
 if __name__ == "__main__":
