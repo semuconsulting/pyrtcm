@@ -41,7 +41,7 @@ class StreamTest(unittest.TestCase):
             "<RTCM(1087, DF002=1087, status=Not_Yet_Implemented)>",
             "<RTCM(1097, DF002=1097, status=Not_Yet_Implemented)>",
             "<RTCM(1127, DF002=1127, status=Not_Yet_Implemented)>",
-            "<RTCM(1230, DF002=1230, status=Not_Yet_Implemented)>",
+            "<RTCM(1230, DF002=1230, DF003=0, DF421=1, DF001_3=0, DF422=0, )>",  # TODO this may not be right
             "<RTCM(1007, DF002=1007, DF003=1234, DF029=3, DF030_01=A, DF030_02=B, DF030_03=C, DF031=234)>",
         )
         dirname = os.path.dirname(__file__)

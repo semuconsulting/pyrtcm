@@ -102,6 +102,7 @@ UTF8 = "UTF008"  # Unicode UTF-8 Code Unit
 RTCM_DATA_TYPES = {
     "DF001_1": (BIT1, "Reserved 1 bit"),
     "DF001_2": (BIT2, "Reserved 2 bits"),
+    "DF001_3": (BIT3, "Reserved 3 bits"),
     "DF002": (UINT12, "Message Number"),
     "DF003": (UINT12, "Reference Station ID"),
     "DF004": (UINT30, "GPS Epoch Time (TOW)"),

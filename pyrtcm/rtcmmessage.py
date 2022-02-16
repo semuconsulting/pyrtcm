@@ -189,11 +189,14 @@ class RTCMMessage:
         setattr(self, keyr, val)
         offset += atts
 
-        # add special private attributes for MSM message sat and sig counts
+        # add special private attributes to keep track of
+        # MSM / 1230 message group ranges
         if key == "DF394":  # num of satellites in MSM message
             setattr(self, "_NSats", num_setbits(bitfield))
         if key == "DF395":  # num of signals in MSM message
             setattr(self, "_NSigs", num_setbits(bitfield))
+        if key == "DF422":  # num of bias entries in 1230 message
+            setattr(self, "_NBias", num_setbits(bitfield))
 
         return offset
 

@@ -342,10 +342,6 @@ RTCM_PAYLOADS_GET = {
             },
         ),
     },
-    "1018": {
-        "DF002": "Message Identity",
-        "NYI": "Not Yet Implemented",
-    },
     "1019": {
         "DF002": "Message Identity",
         "DF009": "GPS Satellite ID",
@@ -428,6 +424,35 @@ RTCM_PAYLOADS_GET = {
             "DF139",
             {
                 "DF140": "UTF-8 Character Code Units",
+            },
+        ),
+    },
+    "1027": {
+        "DF002": "Message Number ",
+        "DF147": "System Identification Number",
+        "DF170": "Projection Type",
+        "DF182": "Rectification Flag",
+        "DF183": "LaPC - Latitude of Projection Center",
+        "DF184": "LoPC - Longitude of Projection Center",
+        "DF185": "AzIL - Azimuth of Initial Line",
+        "DF186": "Diff ARSG - Difference, Angle from Rectified to Skew Grid",
+        "DF187": "Add SIL - Scale factor on Initial Line",
+        "DF188": "EPC - Easting at Projection Center",
+        "DF189": "NPC - Northing at Projection Center",
+    },
+    "1230": {  # TODO does this only ever contain one type of bias?
+        "DF002": "Message Number",
+        "DF003": "Reference Station ID",
+        "DF421": "GLONASS Code-Phase bias indicator",
+        "DF001_3": "Reserved",
+        "DF422": "GLONASS FDMA signals mask",  # _NBias = num bits set
+        "group": (
+            "_NBias",
+            {
+                "DF423": "GLONASS L1 C/A Code-Phase Bias",
+                # "DF424": "GLONASS L1 P Code-Phase Bias",
+                # "DF425": "GLONASS L2 C/A Code-Phase Bias",
+                # "DF426": "GLONASS L2 P Code-Phase Bias",
             },
         ),
     },
