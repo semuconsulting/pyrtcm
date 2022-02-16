@@ -224,7 +224,7 @@ RTCM_DATA_TYPES = {
     "DF121": (INTS11, "GLONASS n(tb)"),
     "DF122": (BIT2, "GLONASS-M P"),
     "DF123": (BIT1, "GLONASS-M ln (third string) "),
-    "DF124 ": (INTS22, "GLONASS n(tb)"),
+    "DF124": (INTS22, "GLONASS n(tb)"),
     "DF125": (INTS5, "GLONASS-M Δn "),
     "DF126": (UINT5, "GLONASS En"),
     "DF127": (BIT1, "GLONASS-M P4"),
