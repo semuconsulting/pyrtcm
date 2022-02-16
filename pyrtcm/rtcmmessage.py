@@ -22,6 +22,7 @@ from pyrtcm.rtcmhelpers import (
     bits2val,
     datasiz,
     tow2utc,
+    num_setbits,
 )
 
 LOGGING = logging.WARNING
@@ -187,6 +188,12 @@ class RTCMMessage:
 
         setattr(self, keyr, val)
         offset += atts
+
+        # add special private attributes for MSM message sat and sig counts
+        if key == "DF394":  # num of satellites in MSM message
+            setattr(self, "_NSats", num_setbits(bitfield))
+        if key == "DF395":  # num of signals in MSM message
+            setattr(self, "_NSigs", num_setbits(bitfield))
 
         return offset
 

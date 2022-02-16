@@ -28,6 +28,7 @@ from pyrtcm.rtcmhelpers import (
     attsiz,
     atttyp,
     tow2utc,
+    num_setbits,
 )
 
 
@@ -136,6 +137,14 @@ class StaticTest(unittest.TestCase):
         self.assertEqual(res, 45)
         res = bits2val(rtt.INT8, [1, 1, 0, 1, 0, 0, 1, 1])  # -ve 2's comp INT
         self.assertEqual(res, -45)
+
+    def testnum_setbits(self):  # test num_setbits
+        res = num_setbits([1, 0, 1, 0, 1, 1, 0, 1])
+        self.assertEqual(res, 5)
+        res = num_setbits([0, 0, 0, 0, 1, 1, 0, 1])
+        self.assertEqual(res, 3)
+        res = num_setbits([0, 0, 0, 0, 0, 0, 0, 0])
+        self.assertEqual(res, 0)
 
     def testcrc2bytes(self):  # test crc2bytes
         raw = (

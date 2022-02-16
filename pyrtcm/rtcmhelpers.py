@@ -46,6 +46,22 @@ def bits2val(att: str, bitfield: list) -> object:
     return val
 
 
+def num_setbits(bitfield: list) -> int:
+    """
+    Get number of set bits in bitfield.
+
+    :param list bitfield: array of bits
+    :return: number of bits set
+    :rtype: int
+    """
+
+    n = 0
+    for i in range(len(bitfield)):
+        if bitfield[i]:
+            n += 1
+    return n
+
+
 def calc_crc24q(message: bytes) -> int:
     """
     Perform CRC24Q cyclic redundancy check.
