@@ -51,7 +51,6 @@ class StreamTest(unittest.TestCase):
         rtr = RTCMReader(stream)
         for (raw, parsed) in rtr.iterate():
             if raw is not None:
-                print(parsed)
                 self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
                 i += 1
         stream.close()
