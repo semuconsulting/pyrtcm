@@ -184,7 +184,7 @@ class RTCMMessage:
         # get value of required number of bits at current payload offset
         att, _ = rtt.RTCM_DATA_TYPES[key]
         if key == "DF396":  # this MSM attribute has variable length
-            atts = getattr(self, "_NCell")
+            atts = getattr(self, NCELL)
         else:
             atts = attsiz(att)
         bitfield = self._payload_bits[offset : offset + atts]
