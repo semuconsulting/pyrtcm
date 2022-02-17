@@ -1,10 +1,15 @@
 # pyrtcm Release Notes
 
-## RELEASE 0.1.1
+### RELEASE 0.1.2-alpha
 
-1. Initial Alpha release. Core parsing functionality is there, but lacks comprehensive RTCM payload definitions. In theory, these simply need adding to the `RTCM_PAYLOADS_GET` dictionary in `rtcmtypes_get.py` - no code changes should be necessary in `RTCMReader` or `RTCMMessage` (*subject to more comprehensive testing*). 
+1. MSM (Multiple Signal Messages) message handling added (message types 1071 - 1127).
+
+### RELEASE 0.1.1-alpha
+
+1. Initial Alpha release. Core parsing functionality is there, but only a limited number of message types
+are currently implemented and test. Missing types simply require appropriate defintions added to the `RTCM_PAYLOADS_GET` dictionary in `rtcmtypes_get.py` (** subject to further testing **)
 2. In the meantime, will return `<RTCM(nnnn, DF002=nnnn, status=Not_Yet_Implemented)>` for any RTCM messages types not yet defined.
 
-### RELEASE 0.1.0
+### RELEASE 0.1.0-alpha
 
-1. initial release 
+1. Initial release 

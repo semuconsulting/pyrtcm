@@ -10,22 +10,24 @@ Created on 14 Feb 2022
 # pylint: disable=invalid-name
 
 import logging
-import struct
 import pyrtcm.exceptions as rte
 import pyrtcm.rtcmtypes_core as rtt
 import pyrtcm.rtcmtypes_get as rtg
 from pyrtcm.rtcmhelpers import (
-    calc_crc24q,
     crc2bytes,
     len2bytes,
     get_bitarray,
     bits2val,
-    datasiz,
+    attsiz,
     tow2utc,
     num_setbits,
 )
 
 LOGGING = logging.WARNING
+NSAT = "NSat"
+NSIG = "NSig"
+NCELL = "_NCell"
+NBIAS = "_NBias"
 
 
 class RTCMMessage:
@@ -180,8 +182,11 @@ class RTCMMessage:
                 keyr += f"_{i:02d}"
 
         # get value of required number of bits at current payload offset
-        atts = datasiz(key)
         att, _ = rtt.RTCM_DATA_TYPES[key]
+        if key == "DF396":  # this MSM attribute has variable length
+            atts = getattr(self, "_NCell")
+        else:
+            atts = attsiz(att)
         bitfield = self._payload_bits[offset : offset + atts]
         logging.debug("Bitfield: %s, size: %s", bitfield, atts)
         val = bits2val(att, bitfield)
@@ -189,14 +194,18 @@ class RTCMMessage:
         setattr(self, keyr, val)
         offset += atts
 
-        # add special private attributes to keep track of
-        # MSM / 1230 message group ranges
+        # add special attributes to keep track of
+        # MSM / 1230 message group sizes
+        # NB: This is predicated on MSM payload dictionaries
+        # always having attributes DF394, DF395 and DF396
+        # in that order
         if key == "DF394":  # num of satellites in MSM message
-            setattr(self, "_NSats", num_setbits(bitfield))
+            setattr(self, NSAT, num_setbits(bitfield))
         if key == "DF395":  # num of signals in MSM message
-            setattr(self, "_NSigs", num_setbits(bitfield))
+            setattr(self, NSIG, num_setbits(bitfield))
+            setattr(self, NCELL, getattr(self, NSAT) * getattr(self, NSIG))
         if key == "DF422":  # num of bias entries in 1230 message
-            setattr(self, "_NBias", num_setbits(bitfield))
+            setattr(self, NBIAS, num_setbits(bitfield))
 
         return offset
 

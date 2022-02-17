@@ -23,7 +23,6 @@ RTCM3_PROTOCOL = 4
 ERR_RAISE = 2
 ERR_LOG = 1
 ERR_IGNORE = 0
-NYI = "NYI"  # not yet implemented flag
 
 # ***************************************************
 # THESE ARE THE RTCM PROTOCOL DATA TYPES
@@ -33,6 +32,7 @@ BIT2 = "BIT002"  # 2 bit bit field
 BIT3 = "BIT003"  # 3 bit bit field
 BIT4 = "BIT004"  # 4 bit bit field
 BIT6 = "BIT006"  # 6 bit bit field
+BIT7 = "BIT007"  # 7 bit bit field
 BIT8 = "BIT008"  # 8 bit bit field
 BIT10 = "BIT010"  # 10 bit bit field
 BIT12 = "BIT012"  # 12 bit bit field
@@ -103,6 +103,7 @@ RTCM_DATA_TYPES = {
     "DF001_1": (BIT1, "Reserved 1 bit"),
     "DF001_2": (BIT2, "Reserved 2 bits"),
     "DF001_3": (BIT3, "Reserved 3 bits"),
+    "DF001_7": (BIT7, "Reserved 7 bits"),
     "DF002": (UINT12, "Message Number"),
     "DF003": (UINT12, "Reference Station ID"),
     "DF004": (UINT30, "GPS Epoch Time (TOW)"),
@@ -417,6 +418,8 @@ RTCM_DATA_TYPES = {
     "DF424": (INT16, "GLONASS L1 P Code-Phase Bias"),
     "DF425": (INT16, "GLONASS L2 C/A Code-Phase Bias"),
     "DF426": (INT16, "GLONASS L2 P Code-Phase Bias"),
+    "GNSSSpecific": (UINT4, "Extended Satellite Information"),
+    "GNSSEpoch": (UINT30, "GNSS Epoch Time"),
 }
 
 # ***************************************************************************

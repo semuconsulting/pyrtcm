@@ -9,6 +9,297 @@ Information sourced from RTCM STANDARD 10403.2 © 2013 RTCM
 """
 # pylint: disable=too-many-lines, line-too-long
 
+# *************************************************************
+# MSM MESSAGE PAYLOAD DEFINITIONS
+# attribute names holding size of MSM repeating groups
+NSAT = "NSat"
+NSIG = "NSig"
+NCELL = "_NCell"
+NBIAS = "_NBias"
+
+# MSM message component sections
+MSM_HDR = {
+    "DF002": "Message number",
+    "DF003": "Reference station ID",
+    "GNSSEpoch": "GNSS Epoch Time",
+    "DF393": "Multiple Message Bit",
+    "DF409": "IODS - Issue of Data Station ",
+    "DF001_7": "Reserved",
+    "DF411": "Clock Steering Indicator",
+    "DF412": "External Clock Indicator",
+    "DF417": "GNSS Divergence-free Smoothing Indicator",
+    "DF418": "GNSS Smoothing Interval",
+    "DF394": "GNSS Satellite Mask ",  # NSAT = num of set bits
+    "DF395": "GNSS Signal Mask ",  # NSIG = num of set bits
+    "DF396": "GNSS Cell Mask ",  # size = NCELL = NSAT * NSIG
+}
+
+MSM_SAT_123 = {
+    "group": (
+        NSAT,
+        {
+            "DF398": "GNSS Satellite rough ranges modulo 1 millisecond",
+        },
+    ),
+}
+
+MSM_SAT_46 = {
+    "group1": (
+        NSAT,
+        {
+            "DF397": "Number of int millisecs in GNSS Satellite roughranges",
+        },
+    ),
+    "group2": (
+        NSAT,
+        {
+            "DF398": "GNSS Satellite rough ranges modulo 1 millisecond",
+        },
+    ),
+}
+
+
+MSM_SAT_57 = {
+    "group1": (
+        NSAT,
+        {
+            "DF397": "The number of integer milliseconds in GNSS Satellite rough ranges",
+        },
+    ),
+    "group2": (
+        NSAT,
+        {
+            "GNSSSpecific": "Extended Satellite Information",
+        },
+    ),
+    "group3": (
+        NSAT,
+        {
+            "DF398": "GNSS Satellite rough ranges modulo 1 millisecond",
+        },
+    ),
+    "group4": (
+        NSAT,
+        {
+            "DF399": "GNSS Satellite rough PhaseRangeRates ",
+        },
+    ),
+}
+
+
+MSM_SIG_1 = {
+    "group1": (
+        NCELL,
+        {
+            "DF400": "GNSS signal fine Pseudoranges",
+        },
+    ),
+}
+
+MSM_SIG_2 = {
+    "group1": (
+        NCELL,
+        {
+            "DF401": "GNSS signal fine PhaseRange data",
+        },
+    ),
+    "group2": (
+        NCELL,
+        {
+            "DF402": "GNSS PhaseRange Lock",
+        },
+    ),
+    "group3": (
+        NCELL,
+        {
+            "DF420",
+            "Half-cycle ambiguity indicator",
+        },
+    ),
+}
+
+MSM_SIG_3 = {
+    "group1": (
+        NCELL,
+        {
+            "DF400": "GNSS signal fine Pseudoranges",
+        },
+    ),
+    "group2": (
+        NCELL,
+        {
+            "DF401": "GNSS signal fine PhaseRange data",
+        },
+    ),
+    "group3": (
+        NCELL,
+        {
+            "DF402": "GNSS PhaseRange Lock",
+        },
+    ),
+    "group4": (
+        NCELL,
+        {
+            "DF420": "Half-cycle ambiguity indicator",
+        },
+    ),
+}
+
+MSM_SIG_4 = {
+    "group1": (
+        NCELL,
+        {
+            "DF400": "GNSS signal fine Pseudoranges",
+        },
+    ),
+    "group2": (
+        NCELL,
+        {
+            "DF401": "GNSS signal fine PhaseRange data",
+        },
+    ),
+    "group3": (
+        NCELL,
+        {
+            "DF402": "GNSS PhaseRange Lock",
+        },
+    ),
+    "group4": (
+        NCELL,
+        {
+            "DF420": "Half-cycle ambiguity indicator",
+        },
+    ),
+    "group5": (
+        NCELL,
+        {
+            "DF403": "GNSS signal CNRs",
+        },
+    ),
+}
+
+MSM_SIG_5 = {
+    "group1": (
+        NCELL,
+        {
+            "DF400": "GNSS signal fine Pseudoranges",
+        },
+    ),
+    "group2": (
+        NCELL,
+        {
+            "DF401": "GNSS signal fine PhaseRange data",
+        },
+    ),
+    "group3": (
+        NCELL,
+        {
+            "DF402": "GNSS PhaseRange Lock",
+        },
+    ),
+    "group4": (
+        NCELL,
+        {
+            "DF420": "Half-cycle ambiguity indicator",
+        },
+    ),
+    "group5": (
+        NCELL,
+        {
+            "DF403": "GNSS signal CNRs",
+        },
+    ),
+    "group6": (
+        NCELL,
+        {
+            "DF404": "GNSS signal fine PhaseRangeRates ",
+        },
+    ),
+}
+
+MSM_SIG_6 = {
+    "group1": (
+        NCELL,
+        {
+            "DF405": "GNSS signal fine",
+        },
+    ),
+    "group2": (
+        NCELL,
+        {
+            "DF406": "GNSS signal fine PhaseRange data with extended resolution",
+        },
+    ),
+    "group3": (
+        NCELL,
+        {
+            "DF407": "GNSS PhaseRange Lock",
+        },
+    ),
+    "group4": (
+        NCELL,
+        {
+            "DF420": "Half-cycle ambiguity indicator",
+        },
+    ),
+    "group5": (
+        NCELL,
+        {
+            "DF408": "GNSS signal CNRs with extended resolution",
+        },
+    ),
+}
+
+MSM_SIG_7 = {
+    "group1": (
+        NCELL,
+        {
+            "DF405": "GNSS signal fine",
+        },
+    ),
+    "group2": (
+        NCELL,
+        {
+            "DF406": "GNSS signal fine PhaseRange data with extended resolution",
+        },
+    ),
+    "group3": (
+        NCELL,
+        {
+            "DF407": "GNSS PhaseRange Lock",
+        },
+    ),
+    "group4": (
+        NCELL,
+        {
+            "DF420": "Half-cycle ambiguity indicator",
+        },
+    ),
+    "group5": (
+        NCELL,
+        {
+            "DF408": "GNSS signal CNRs with extended resolution",
+        },
+    ),
+    "group6": (
+        NCELL,
+        {
+            "DF404": "GNSS signal fine PhaseRangeRates",
+        },
+    ),
+}
+
+# concatenate MSM sections in to a single dict
+# NB: Python >=3.9 supports the more intuitive | (union)
+# operation for this, but earlier versions don't.
+MSM1 = {**MSM_HDR, **MSM_SAT_123, **MSM_SIG_1}
+MSM2 = {**MSM_HDR, **MSM_SAT_123, **MSM_SIG_2}
+MSM3 = {**MSM_HDR, **MSM_SAT_123, **MSM_SIG_3}
+MSM4 = {**MSM_HDR, **MSM_SAT_46, **MSM_SIG_4}
+MSM5 = {**MSM_HDR, **MSM_SAT_57, **MSM_SIG_5}
+MSM6 = {**MSM_HDR, **MSM_SAT_46, **MSM_SIG_6}
+MSM7 = {**MSM_HDR, **MSM_SAT_57, **MSM_SIG_7}
+# *************************************************************
 
 RTCM_PAYLOADS_GET = {
     "1001": {
@@ -440,14 +731,54 @@ RTCM_PAYLOADS_GET = {
         "DF188": "EPC - Easting at Projection Center",
         "DF189": "NPC - Northing at Projection Center",
     },
-    "1230": {  # TODO does this only ever contain one type of bias?
+    # GPS
+    "1071": MSM1,
+    "1072": MSM2,
+    "1073": MSM3,
+    "1074": MSM4,
+    "1075": MSM5,
+    "1076": MSM6,
+    "1077": MSM7,
+    # GLONASS
+    "1081": MSM1,
+    "1082": MSM2,
+    "1083": MSM3,
+    "1084": MSM4,
+    "1085": MSM5,
+    "1086": MSM6,
+    "1087": MSM7,
+    # Galileo
+    "1091": MSM1,
+    "1092": MSM2,
+    "1093": MSM3,
+    "1094": MSM4,
+    "1095": MSM5,
+    "1096": MSM6,
+    "1097": MSM7,
+    # QZSS
+    "1111": MSM1,
+    "1112": MSM2,
+    "1113": MSM3,
+    "1114": MSM4,
+    "1115": MSM5,
+    "1116": MSM6,
+    "1117": MSM7,
+    # BeiDou
+    "1121": MSM1,
+    "1122": MSM2,
+    "1123": MSM3,
+    "1124": MSM4,
+    "1125": MSM5,
+    "1126": MSM6,
+    "1127": MSM7,
+    "1230": {
         "DF002": "Message Number",
         "DF003": "Reference Station ID",
         "DF421": "GLONASS Code-Phase bias indicator",
         "DF001_3": "Reserved",
         "DF422": "GLONASS FDMA signals mask",  # _NBias = num bits set
         "group": (
-            "_NBias",
+            NBIAS,  # TODO does this only ever contain one grouped bias?
             {
                 "DF423": "GLONASS L1 C/A Code-Phase Bias",
                 # "DF424": "GLONASS L1 P Code-Phase Bias",

@@ -9,7 +9,7 @@ RTCM3 transport layer bit format:
 | 0xd3  | 000000 | length |  type  |    content     |  crc   |
 +-------+--------+--------+--------+----------------+--------+
 |<- 8 ->|<- 6 -->|<- 10 ->|<- 12 ->|<-- variable -->|<- 24 ->|
-                          |<- payload; length x 8 ->|
+|                         |<- payload; length x 8 ->|        |
 
 Returns both the raw binary data (as bytes) and the parsed data
 (as RTCMMessage object).

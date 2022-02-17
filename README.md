@@ -32,7 +32,7 @@ This is an independent project and we have no affiliation whatsoever with RTCM.
 ![Contributors](https://img.shields.io/github/contributors/semuconsulting/pyrtcm.svg)
 ![Open Issues](https://img.shields.io/github/issues-raw/semuconsulting/pyrtcm)
 
-Currently under development, subject to volunteer time constraints and availability of payload documentation and test resources. At time of writing, core parsing functionality is there but only a limited subset of RTCM message types have been defined. Missing message types can be added to the `RTCM_PAYLOADS_GET` dictionary in `rtcmtypes_get.py` (see [Extensibility](#extensibility)). Contributions welcome!
+Currently under development, subject to volunteer time and test resource availability. At time of writing, core parsing functionality is pretty solid (**subject to further testing**) but only a limited subset of RTCM message types has been implemented. The missing message types will be added to the `RTCM_PAYLOADS_GET` dictionary in `rtcmtypes_get.py` as and when time permits (see [Extensibility](#extensibility)) - contributions welcome!
 
 Sphinx API Documentation in HTML format is available at [https://www.semuconsulting.com/pyrtcm](https://www.semuconsulting.com/pyrtcm).
 
