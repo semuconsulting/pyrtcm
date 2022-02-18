@@ -46,32 +46,29 @@ Contributions welcome - please refer to [CONTRIBUTING.MD](https://github.com/sem
 ---
 ## <a name="installation">Installation</a>
 
-<!--
-![Python version](https://img.shields.io/pypi/pyversions/pyrtcm.svg?style=flat)
-[![PyPI version](https://img.shields.io/pypi/v/pyrtcm.svg?style=flat)](https://testpypi.org/project/pyrtcm/)
-![PyPI downloads](https://img.shields.io/pypi/dm/pyrtcm.svg?style=flat)
--->
-
-The latest Alpha version is available in TEST PyPi and can be installed using `pip`. Local installation is also available, provided you have the Python packages `setuptools` and `wheel` installed.
-
 `pyrtcm` is compatible with Python 3.6+ and has no third-party library dependencies.
 
 In the following, `python` & `pip` refer to the Python 3 executables. You may need to type 
 `python3` or `pip3`, depending on your particular environment.
 
-To install latest Alpha from TEST PyPi using pip:
+![Python version](https://img.shields.io/pypi/pyversions/pyrtcm.svg?style=flat)
+[![PyPI version](https://img.shields.io/pypi/v/pyrtcm.svg?style=flat)](https://pypi.org/project/pyrtcm/)
+![PyPI downloads](https://img.shields.io/pypi/dm/pyrtcm.svg?style=flat)
+
+The recommended way to install the latest version of `pyrtcm` is with
+[pip](http://pypi.python.org/pypi/pip/):
 
 ```shell
-python -m pip install --upgrade --index-url https://test.pypi.org/simple/ pyrtcm
+python -m pip install --upgrade pyrtcm
 ```
 
-To clone, build and install locally (*requires setuptools and wheel*):
+Local installation is also available, provided you have the Python packages `setuptools` and `wheel` installed:
 
 ```shell
 git clone https://github.com/semuconsulting/pyrtcm.git
 cd pyrtcm
 python setup.py sdist bdist_wheel
-python -m pip install dist/pyrtcm-0.1.1.tar.gz --user --force_reinstall
+python -m pip install dist/pyrtcm-0.1.3.tar.gz --user --force_reinstall
 ```
 
 ---
