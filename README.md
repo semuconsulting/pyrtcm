@@ -11,13 +11,16 @@
 [Graphical Client](#gui) |
 [Author & License](#author)
 
-`pyrtcm` is an original Python 3 library for the RTCM 3 &copy; protocol.
+`pyrtcm` is an original Python 3 library for the RTCM3 &copy; GPS/GNSS protocol, or more properly
+the "RTCM STANDARD 10403.n DIFFERENTIAL GNSS (GLOBAL NAVIGATION SATELLITE SYSTEMS) SERVICES – VERSION 3".
+
+RTCM3 is a proprietary GPS/GNSS protocol published by the Radio Technical Commission for Maritime Services.
 
 The `pyrtcm` homepage is located at [https://github.com/semuconsulting/pyrtcm](https://github.com/semuconsulting/pyrtcm).
 
-This is an independent project and we have no affiliation whatsoever with RTCM.
+This is an independent project and we have no affiliation whatsoever with the Radio Technical Commission for Maritime Services.
 
-**FYI** There are companion libraries which handle standard NMEA 0183 &copy; and UBX &copy; (u-blox) GNSS/GPS messages.
+**FYI** There are companion libraries which handle standard NMEA 0183 &copy; and UBX &copy; (u-blox) GNSS/GPS messages:
 - [pynmeagps](http://github.com/semuconsulting/pynmeagps)
 - [pyubx2](http://github.com/semuconsulting/pyubx2)
 
