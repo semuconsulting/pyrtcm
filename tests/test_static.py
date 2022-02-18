@@ -174,10 +174,15 @@ class StaticTest(unittest.TestCase):
             self.assertEqual(ds, EXPECTED_RESULT[i])
 
     def testdatadesc(self):  # test datadesc
-        dt = "DF054"
-        self.assertEqual(datadesc(dt), "Leap Seconds, GPS-UTC")
-        dt = "DF037"
-        self.assertEqual(datadesc(dt), "GLONASS Smoothing Interval")
+        dtw = ["DF054", "DF037", "DF001_01"]
+        EXPECTED_RESULT = [
+            "Leap Seconds, GPS-UTC",
+            "GLONASS Smoothing Interval",
+            "Reserved Field",
+        ]
+        for i, dt in enumerate(dtw):
+            ds = datadesc(dt)
+            self.assertEqual(ds, EXPECTED_RESULT[i])
 
     def testattsiz(self):  # test attsiz
         ats = [rtt.BIT8, rtt.INT23, rtt.UINT16, rtt.INTS32]

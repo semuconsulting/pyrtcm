@@ -163,7 +163,7 @@ def datadesc(datafield: str) -> str:
     :rtype: str
     """
 
-    (_, desc) = RTCM_DATA_FIELDS[datafield]
+    (_, desc) = RTCM_DATA_FIELDS[datafield[0:5]]
     return desc
 
 

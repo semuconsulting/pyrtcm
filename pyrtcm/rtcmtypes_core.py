@@ -101,6 +101,7 @@ UTF8 = "UTF008"  # Unicode UTF-8 Code Unit
 # THESE ARE THE RTCM PROTOCOL DATA FIELDS
 # ***************************************************
 RTCM_DATA_FIELDS = {
+    "DF001": (BIT1, "Reserved Field"),
     "DF001_1": (BIT1, "Reserved 1 bit"),
     "DF001_2": (BIT2, "Reserved 2 bits"),
     "DF001_3": (BIT3, "Reserved 3 bits"),

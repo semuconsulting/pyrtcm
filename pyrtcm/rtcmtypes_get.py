@@ -933,7 +933,7 @@ RTCM_PAYLOADS_GET = {
             {
                 "DF068": "GPS Satellite ID",
                 "DF379": "No. of Code Biases Processed",
-                "groupbias": (  # TODO check this nesting works
+                "groupbias": (  # nested group
                     "DF379",
                     {
                         "DF380": "GPS Signal and Tracking Mode Indicator",
@@ -1061,7 +1061,7 @@ RTCM_PAYLOADS_GET = {
             {
                 "DF384": "GLONASS Satellite ID",
                 "DF379": "No. of Code Biases Processed",
-                "groupbias": (  # TODO check this nesting works
+                "groupbias": (  # nested group
                     "DF379",
                     {
                         "DF381": "GLONASS Signal and Tracking Mode Indicator",

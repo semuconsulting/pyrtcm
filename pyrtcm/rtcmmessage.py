@@ -39,8 +39,8 @@ class RTCMMessage:
         :param bytes payload : message payload
         :param kwargs: optional payload key/value pairs
         :raises: RTCMMessageError
-
         """
+        # pylint: disable=unused-argument
 
         logging.basicConfig(
             format="%(asctime)-15s [%(levelname)s] %(funcName)s: %(message)s",
@@ -52,17 +52,15 @@ class RTCMMessage:
 
         self._payload = payload
 
-        self._do_attributes(**kwargs)
+        self._do_attributes()
 
         self._immutable = True  # once initialised, object is immutable
 
-    def _do_attributes(self, **kwargs):
+    def _do_attributes(self):
         """
         Populate RTCMMessage attributes from payload.
 
-        :param kwargs: optional payload key/value pairs
         :raises: RTCMTypeError
-
         """
 
         offset = 0  # payload offset in bits
@@ -85,9 +83,7 @@ class RTCMMessage:
                 return
             for key in pdict:  # process each attribute in dict
                 logging.debug("Key: %s", key)
-                (offset, index) = self._set_attribute(
-                    offset, pdict, key, index, **kwargs
-                )
+                (offset, index) = self._set_attribute(offset, pdict, key, index)
 
         except Exception as err:
             raise rte.RTCMTypeError(
@@ -97,9 +93,7 @@ class RTCMMessage:
                 )
             ) from err
 
-    def _set_attribute(
-        self, offset: int, pdict: dict, key: str, index: list, **kwargs
-    ) -> tuple:
+    def _set_attribute(self, offset: int, pdict: dict, key: str, index: list) -> tuple:
         """
         Recursive routine to set individual or grouped payload attributes.
 
@@ -107,7 +101,6 @@ class RTCMMessage:
         :param dict pdict: dict representing payload definition
         :param str key: attribute keyword
         :param list index: repeating group index array
-        :param kwargs: optional payload key/value pairs
         :return: (offset, index[])
         :rtype: tuple
 
@@ -116,50 +109,53 @@ class RTCMMessage:
         att = pdict[key]  # get attribute type
         # att = key
         if isinstance(att, tuple):  # repeating group of attributes
-            (offset, index) = self._set_attribute_group(att, offset, index, **kwargs)
+            (offset, index) = self._set_attribute_group(att, offset, index)
         else:  # single attribute
-            offset = self._set_attribute_single(att, offset, key, index, **kwargs)
+            offset = self._set_attribute_single(att, offset, key, index)
 
         return (offset, index)
 
-    def _set_attribute_group(
-        self, att: tuple, offset: int, index: list, **kwargs
-    ) -> tuple:
+    def _set_attribute_group(self, att: tuple, offset: int, index: list) -> tuple:
         """
         Process (nested) group of attributes.
 
         :param tuple att: attribute group - tuple of (num repeats, attribute dict)
         :param int offset: payload offset in bits
         :param list index: repeating group index array
-        :param kwargs: optional payload key/value pairs
         :return: (offset, index[])
         :rtype: tuple
 
         """
 
-        index.append(0)  # add a (nested) group index
         numr, attd = att  # number of repeats, attribute dictionary
-
         # derive or retrieve number of items in group
         if isinstance(numr, int):  # fixed number of repeats
             rng = numr
         else:  # number of repeats is defined in named attribute
+            # if attribute is within a group
+            # append group index to name e.g. "DF379_01"
+            if numr == "DF379":
+                numr += f"_{index[-1]:02d}"
             rng = getattr(self, numr)
+
+        index.append(0)  # add a (nested) group index level
         # recursively process each group attribute,
         # incrementing the payload offset and index as we go
         for i in range(rng):
             index[-1] = i + 1
             for key1 in attd:
-                (offset, index) = self._set_attribute(
-                    offset, attd, key1, index, **kwargs
-                )
+                (offset, index) = self._set_attribute(offset, attd, key1, index)
 
         index.pop()  # remove this (nested) group index
 
         return (offset, index)
 
     def _set_attribute_single(
-        self, att: object, offset: int, key: str, index: list, **kwargs
+        self,
+        att: object,
+        offset: int,
+        key: str,
+        index: list,
     ) -> int:
         """
         Set individual attribute value, applying scaling where appropriate.
@@ -168,7 +164,6 @@ class RTCMMessage:
         :param int offset: payload offset in bits
         :param str key: attribute keyword
         :param list index: repeating group index array
-        :param kwargs: optional payload key/value pairs
         :return: offset
         :rtype: int
 
