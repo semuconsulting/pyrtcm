@@ -353,6 +353,26 @@ CONTENT_1004 = {
     "DF020": "GPS L2 CNR",
 }
 
+HDR_1005_1006 = {
+    "DF002": "Message Number",
+    "DF003": "Reference Station ID",
+    "DF021": "Reserved for ITRF Realization Year",
+    "DF022": "GPS Indicator",
+    "DF023": "GLONASS Indicator",
+    "DF024": "Reserved for Galileo Indicator",
+    "DF141": "Reference-Station Indicator",
+    "DF025": "Antenna Reference Point ECEF-X",
+    "DF142": "Single Receiver Oscillator Indicator",
+    "DF001_1": "Reserved",
+    "DF026": "Antenna Reference Point ECEF-Y",
+    "DF364": "Quarter Cycle Indicator",
+    "DF027": "Antenna Reference Point ECEF-Z",
+}
+
+CONTENT_1006 = {
+    "DF028": "Antenna Height",
+}
+
 HDR_1009_1012 = {
     "DF002": "Message Number",
     "DF003": "Reference Station ID",
@@ -477,37 +497,8 @@ RTCM_PAYLOADS_GET = {
     "1002": {**HDR_1001_1004, **CONTENT_1002},
     "1003": {**HDR_1001_1004, **CONTENT_1003},
     "1004": {**HDR_1001_1004, **CONTENT_1004},
-    "1005": {
-        "DF002": "Message Number",
-        "DF003": "Reference Station ID",
-        "DF021": "Reserved for ITRF Realization Year",
-        "DF022": "GPS Indicator",
-        "DF023": "GLONASS Indicator",
-        "DF024": "Reserved for Galileo Indicator",
-        "DF141": "Reference-Station Indicator",
-        "DF025": "Antenna Reference Point ECEF-X",
-        "DF142": "Single Receiver Oscillator Indicator",
-        "DF001_1": "Reserved",
-        "DF026": "Antenna Reference Point ECEF-Y",
-        "DF364": "Quarter Cycle Indicator",
-        "DF027": "Antenna Reference Point ECEF-Z",
-    },
-    "1006": {
-        "DF002": "Message Number",
-        "DF003": "Reference Station ID",
-        "DF021": "Reserved for ITRF Realization Year",
-        "DF022": "GPS Indicator",
-        "DF023": "GLONASS Indicator",
-        "DF024": "Reserved for Galileo Indicator",
-        "DF141": "Reference-Station Indicator",
-        "DF025": "Antenna Reference Point ECEF-X",
-        "DF142": "Single Receiver Oscillator Indicator",
-        "DF001_1": "Reserved",
-        "DF026": "Antenna Reference Point ECEF-Y",
-        "DF364": "Quarter Cycle Indicator",
-        "DF027": "Antenna Reference Point ECEF-Z",
-        "DF028": "Antenna Height",
-    },
+    "1005": HDR_1005_1006,
+    "1006": {**HDR_1005_1006, **CONTENT_1006},
     "1007": {
         "DF002": "Message Number",
         "DF003": "Reference Station ID",
@@ -540,12 +531,14 @@ RTCM_PAYLOADS_GET = {
         "DF052": "Seconds of Day (UTC)",
         "DF053": "No. of Message ID Announcements to Follow (Nm)",
         "DF054": "Leap Seconds, GPS-UTC",
-        "DF055": "Message ID #1",
-        "DF056": "Message #1 Sync Flag",
-        "DF057": "Message #1 Transmission Interval",
-        "DF055": "Message ID #2",
-        "DF056": "Message #2 Sync Flag",
-        "DF057": "Message #2 Transmission Interval",
+        "group": (
+            "DF053",
+            {
+                "DF055": "Message ID",
+                "DF056": "Message Sync Flag",
+                "DF057": "Message Transmission Interval",
+            },
+        ),
     },
     "1014": {
         "DF002": "Message Number",
