@@ -7,6 +7,7 @@ Information sourced from RTCM STANDARD 10403.2 © 2013 RTCM
 
 :author: semuadmin
 """
+# pylint: disable=line-too-long
 
 NMEA_HDR = [b"\x24\x47", b"\x24\x50"]
 UBX_HDR = b"\xb5\x62"
@@ -451,8 +452,8 @@ RTCM_MSGIDS = {
     "1022": "Molodenski-Badekas Transformation Parameters",
     "1023": "Residuals, Ellipsoidal Grid Representation",
     "1024": "Residuals, Plane Grid Representation",
-    "1025": "Projection Parameters, Projection Types other than Lambert Conic Conformal  (2 SP) and Oblique Mercator",
-    "1026": "Projection Parameters, Projection Type LCC2SP (Lambert Conic Conformal  (2 SP))",
+    "1025": "Projection Parameters, Projection Types other than Lambert Conic Conformal (2 SP) and Oblique Mercator",
+    "1026": "Projection Parameters, Projection Type LCC2SP (Lambert Conic Conformal (2 SP))",
     "1027": "Projection Parameters, Projection Type OM (Oblique Mercator)",
     "1028": "(Reserved for Global to Plate-Fixed Transformation) ",
     "1029": "Unicode Text String",

@@ -84,7 +84,7 @@ or without a buffer wrapper).
 
 Individual RTCM messages can then be read using the `RTCMReader.read()` function, which returns both the raw binary data (as bytes) and the parsed data (as a `RTCMMessage`, via the `parse()` method). The function is thread-safe in so far as the incoming data stream object is thread-safe. `RTCMReader` also implements an iterator.
 
-Example -  Serial input. This example will output both rtcm and NMEA messages:
+Example -  Serial input:
 ```python
 >>> from serial import Serial
 >>> from pyrtcm import RTCMReader

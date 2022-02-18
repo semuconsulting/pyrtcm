@@ -81,7 +81,7 @@ class RTCMMessage:
                 self._get_dict()
             )  # get payload definition dict for this message identity
             if pdict is None:  # unknown (or not yet implemented) message identity
-                self._do_unknown(self._payload)
+                self._do_unknown()
                 return
             for key in pdict:  # process each attribute in dict
                 logging.debug("Key: %s", key)
@@ -220,11 +220,9 @@ class RTCMMessage:
 
         return rtg.RTCM_PAYLOADS_GET.get(self.identity, None)
 
-    def _do_unknown(self, payload: bytes):
+    def _do_unknown(self):
         """
         Handle unknown message type.
-
-        :param bytes payload: raw payload
         """
 
         setattr(self, "DF002", self.identity)
