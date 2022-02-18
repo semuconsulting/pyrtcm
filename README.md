@@ -115,22 +115,21 @@ Example:
 >>> from pyrtcm import RTCMReader
 >>> msg = RTCMReader.parse(b"\xd3\x00\x13>\xd0\x00\x03\x8aX\xd9I<\x87/4\x10\x9d\x07\xd6\xafH Z\xd7\xf7")
 >>> print(msg)
-<RTCM(1005, DF002=1005, DF003=0, DF021=0, DF022=1, DF023=1, DF024=1, DF141=0, DF025=44440308028, DF142=1, DF001_1=0, DF026=30856712349, DF001_2=0, DF027=33666582560)>
+<RTCM(1005, DF002=1005, DF003=0, DF021=0, DF022=1, DF023=1, DF024=1, DF141=0, DF025=44440308028, DF142=1, DF001_1=0, DF026=30856712349, DF364=0, DF027=33666582560)>
 ```
 
-The `RTCMMessage` object exposes different public attributes depending on its message type or 'identity'. 
-e.g. the `1005` message has the following attributes:
+The `RTCMMessage` object exposes different public attributes depending on its message type or 'identity'. Attributes are defined as data fields ("DF002", "DF003", etc.) e.g. the `1005` message contains the following dasa fields:
 
 ```python
 >>> print(msg)
-<RTCM(1005, DF002=1005, DF003=0, DF021=0, DF022=1, DF023=1, DF024=1, DF141=0, DF025=44440308028, DF142=1, DF001_1=0, DF026=30856712349, DF001_2=0, DF027=33666582560)>
+<RTCM(1005, DF002=1005, DF003=0, DF021=0, DF022=1, DF023=1, DF024=1, DF141=0, DF025=44440308028, DF142=1, DF001_1=0, DF026=30856712349, DF364=0, DF027=33666582560)>
 >>> msg.identity
 '1005'
 >>> msg.DF024
 1
 ```
 
-A helper method `datadesc(datafield)` is available to convert a data field type to a meaningful string,
+A helper method `datadesc(datafield)` is available to convert a data field to a descriptive string,
 e.g. "DF004" -> "GPS Epoch Time (TOW)"
 
 Attributes within repeating groups are parsed with a two-digit suffix (DF030_01, DF030_02, etc.). The `payload` attribute always contains the raw payload as bytes.
@@ -151,7 +150,7 @@ Example:
 >>> from pyrtcm import RTCMMessage
 >>> msg = RTCMMessage(b">\xd0\x00\x03\x8aX\xd9I<\x87/4\x10\x9d\x07\xd6\xafH ")
 >>> print(msg)
-<RTCM(1005, DF002=1005, DF003=0, DF021=0, DF022=1, DF023=1, DF024=1, DF141=0, DF025=44440308028, DF142=1, DF001_1=0, DF026=30856712349, DF001_2=0, DF027=33666582560)>
+<RTCM(1005, DF002=1005, DF003=0, DF021=0, DF022=1, DF023=1, DF024=1, DF141=0, DF025=44440308028, DF142=1, DF001_1=0, DF026=30856712349, DF364=0, DF027=33666582560)>
 ```
 
 ---
@@ -167,7 +166,7 @@ e.g. to create and send a `1005` message type:
 >>> from pyrtcm import RTCMMessage
 >>> msg = RTCMMessage(b">\xd0\x00\x03\x8aX\xd9I<\x87/4\x10\x9d\x07\xd6\xafH ")
 >>> print(msg)
-<RTCM(1005, DF002=1005, DF003=0, DF021=0, DF022=1, DF023=1, DF024=1, DF141=0, DF025=44440308028, DF142=1, DF001_1=0, DF026=30856712349, DF001_2=0, DF027=33666582560)>
+<RTCM(1005, DF002=1005, DF003=0, DF021=0, DF022=1, DF023=1, DF024=1, DF141=0, DF025=44440308028, DF142=1, DF001_1=0, DF026=30856712349, DF364=0, DF027=33666582560)>
 >>> output = msg.serialize()
 >>> output
 b'\xd3\x00\x13>\xd0\x00\x03\x8aX\xd9I<\x87/4\x10\x9d\x07\xd6\xafH Z\xd7\xf7'
@@ -185,11 +184,11 @@ The following examples are available in the /examples folder:
 ---
 ## <a name="extensibility">Extensibility</a>
 
-The rtcm protocol is principally defined in the module `rtcmtypes_get.py` as a series of dictionaries. Message payload definitions must conform to the following rules:
+The RTCM protocol is principally defined in the modules `rtcmtypes_core.py` and `rtcmtypes_get.py` as a series of dictionaries. RTCM uses a series of pre-defined data fields ("DF002", DF003" etc.), each of which has a designated data type (UINT32, etc.). Message payload definitions must conform to the following rules:
 
 ```
 1. attribute names must be unique within each message class
-2. attribute types must be one of the valid data field types (DF026, DF059, etc.)
+2. attribute types must be one of the valid data fields (DF026, DF059, etc.)
 3. repeating or bitfield groups must be defined as a tuple ('numr', {dict}), where:
    'numr' is either:
      a. an integer representing a fixed number of repeats e.g. 32
