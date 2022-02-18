@@ -1,5 +1,9 @@
 # pyrtcm Release Notes
 
+### RELEASE 0.1.3-alpha
+
+1. Additional message types added (message types 1020 - 1068).
+
 ### RELEASE 0.1.2-alpha
 
 1. MSM (Multiple Signal Messages) message definitions & handling added (message types 1071 - 1127).
