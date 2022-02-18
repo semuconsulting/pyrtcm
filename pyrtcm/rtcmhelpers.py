@@ -12,7 +12,7 @@ Created on 14 Feb 2022
 
 import logging
 from datetime import datetime, timedelta
-from pyrtcm.rtcmtypes_core import RTCM_DATA_TYPES
+from pyrtcm.rtcmtypes_core import RTCM_DATA_FIELDS
 
 
 def bits2val(att: str, bitfield: list) -> object:
@@ -150,7 +150,7 @@ def datasiz(datafield: str) -> int:
 
     """
 
-    (att, _) = RTCM_DATA_TYPES[datafield]
+    (att, _) = RTCM_DATA_FIELDS[datafield]
     return attsiz(att)
 
 
@@ -163,7 +163,7 @@ def datadesc(datafield: str) -> str:
     :rtype: str
     """
 
-    (_, desc) = RTCM_DATA_TYPES[datafield]
+    (_, desc) = RTCM_DATA_FIELDS[datafield]
     return desc
 
 
