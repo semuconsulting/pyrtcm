@@ -1,5 +1,12 @@
 # pyrtcm Release Notes
 
+### RELEASE 0.1.4-alpha
+
+FIXES:
+
+1. Fix 1013 message payload definition.
+2. Fix nested group handling for messages 1059 & 1065.
+
 ### RELEASE 0.1.3-alpha
 
 1. Additional message types added (message types 1020 - 1068).

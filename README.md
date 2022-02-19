@@ -98,7 +98,7 @@ Example - File input (using iterator).
 ```python
 >>> from pyrtcm import RTCMReader
 >>> stream = open('rtcmdata.log', 'rb')
->>> rtr = rtcmReader(stream)
+>>> rtr = RTCMReader(stream)
 >>> for (raw_data, parsed_data) in rtr: print(parsed_data)
 ...
 ```
