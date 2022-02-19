@@ -106,7 +106,7 @@ Example - File input (using iterator).
 ---
 ## <a name="parsing">Parsing</a>
 
-You can parse individual RTCM messages using the static `RTCMReader.parse(data)` function, which takes a bytes array containing a binary RTCM message payload and returns a `RTCMMessage` object.
+You can parse individual RTCM messages using the static `RTCMReader.parse(data)` function, which takes a bytes array containing a binary RTCM message and returns a `RTCMMessage` object.
 
 **NB:** Once instantiated, an `RTCMMessage` object is immutable.
 

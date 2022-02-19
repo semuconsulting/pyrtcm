@@ -36,8 +36,8 @@ class RTCMMessage:
     def __init__(self, payload: bytes, **kwargs):
         """Constructor.
 
-        :param bytes payload : message payload
-        :param kwargs: optional payload key/value pairs
+        :param bytes payload: message payload
+        :param kwargs: optional keyword arguments (currently unused)
         :raises: RTCMMessageError
         """
         # pylint: disable=unused-argument
