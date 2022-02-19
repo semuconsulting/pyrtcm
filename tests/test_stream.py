@@ -26,6 +26,9 @@ class StreamTest(unittest.TestCase):
         )
         self._raw1007 = b"\xd3\x00\x08>\xf4\xd2\x03ABC\xeapo\xc7"
         # 00111110 11110100 11010010 00000011 01000001 01000010 01000011 11101010
+        self._raw1065 = (
+            b"\xd3\x00\x12B\x91\x81\xc9\x84\x00\x04B\xb8\x88\x008\x80\t\xd0F\x00(\xf0kf"
+        )
         self._payload1007 = self._raw1007[3:-3]
 
     def tearDown(self):
@@ -85,12 +88,17 @@ class StreamTest(unittest.TestCase):
         payload = self._raw1005[3:-3]
         self.assertEqual(msg.payload, payload)
 
-    def testgroups(self):  # test message with repeating group
+    def testgroups(self):  # test message with repeating group (1007)
         EXPECTED_RESULT = "<RTCM(1007, DF002=1007, DF003=1234, DF029=3, DF030_01=A, DF030_02=B, DF030_03=C, DF031=234)>"
         msg1 = RTCMMessage(self._payload1007)
         msg2 = RTCMReader.parse(self._raw1007)
         self.assertEqual(str(msg1), EXPECTED_RESULT)
         self.assertEqual(str(msg2), EXPECTED_RESULT)
+
+    def testnestedgroups(self):  # test message with nested repeating group (1059, 1065)
+        EXPECTED_RESULT = "<RTCM(1065, DF002=1065, DF386=12345, DF391=3, DF388=0, DF413=1, DF414=1, DF415=1, DF387=2, DF384_01=23, DF379_01=2, DF381_01_01=4, DF383_01_01=7, DF381_01_02=2, DF383_01_02=9, DF384_02=26, DF379_02=1, DF381_02_01=3, DF383_02_01=5)>"
+        msg = RTCMReader.parse(self._raw1065)
+        self.assertEqual(str(msg), EXPECTED_RESULT)
 
 
 if __name__ == "__main__":
