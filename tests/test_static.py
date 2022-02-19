@@ -12,7 +12,7 @@ Created on 3 Oct 2020
 import os
 import unittest
 
-from pyrtcm import RTCMMessage, RTCMReader
+from pyrtcm import RTCMMessage, RTCMReader, RTCM_DATA_FIELDS
 import pyrtcm.rtcmtypes_core as rtt
 import pyrtcm.rtcmtypes_get as rtg
 from pyrtcm.rtcmhelpers import (
@@ -24,6 +24,7 @@ from pyrtcm.rtcmhelpers import (
     crc2bytes,
     len2bytes,
     datasiz,
+    datares,
     datadesc,
     attsiz,
     atttyp,
@@ -119,23 +120,23 @@ class StaticTest(unittest.TestCase):
     def testbits2val(self):  # test bits2val for all data types
         b = b"\xaa\xbb\xcc"
         bitfield = get_bitarray(b)
-        res = bits2val("UNT008", bitfield)  # UINT
+        res = bits2val("UNT008", 1, bitfield)  # UINT
         res2 = int.from_bytes(b, "big")
         self.assertEqual(res, 11189196)
         self.assertEqual(res, res2)
-        res = bits2val(rtt.INTS5, [0, 0, 1, 0, 1])  # +ve INTS
+        res = bits2val(rtt.INTS5, 1, [0, 0, 1, 0, 1])  # +ve INTS
         self.assertEqual(res, 5)
-        res = bits2val(rtt.INTS5, [1, 0, 1, 0, 1])  # -ve INTS
+        res = bits2val(rtt.INTS5, 1, [1, 0, 1, 0, 1])  # -ve INTS
         self.assertEqual(res, -5)
-        res = bits2val(rtt.CHAR8, [0, 1, 0, 0, 0, 0, 0, 1])  # CHAR8
+        res = bits2val(rtt.CHAR8, 1, [0, 1, 0, 0, 0, 0, 0, 1])  # CHAR8
         self.assertEqual(res, "A")
-        res = bits2val(rtt.INT8, [0, 1, 1, 1, 1, 1, 1, 1])  # +ve 2's comp INT
+        res = bits2val(rtt.INT8, 1, [0, 1, 1, 1, 1, 1, 1, 1])  # +ve 2's comp INT
         self.assertEqual(res, 127)
-        res = bits2val(rtt.INT8, [1, 0, 0, 0, 0, 0, 0, 1])  # -ve 2's comp INT
+        res = bits2val(rtt.INT8, 1, [1, 0, 0, 0, 0, 0, 0, 1])  # -ve 2's comp INT
         self.assertEqual(res, -127)
-        res = bits2val(rtt.INT8, [0, 0, 1, 0, 1, 1, 0, 1])  # +ve 2's comp INT
+        res = bits2val(rtt.INT8, 1, [0, 0, 1, 0, 1, 1, 0, 1])  # +ve 2's comp INT
         self.assertEqual(res, 45)
-        res = bits2val(rtt.INT8, [1, 1, 0, 1, 0, 0, 1, 1])  # -ve 2's comp INT
+        res = bits2val(rtt.INT8, 1, [1, 1, 0, 1, 0, 0, 1, 1])  # -ve 2's comp INT
         self.assertEqual(res, -45)
 
     def testnum_setbits(self):  # test num_setbits
@@ -172,6 +173,20 @@ class StaticTest(unittest.TestCase):
         for i, dt in enumerate(dtw):
             ds = datasiz(dt)
             self.assertEqual(ds, EXPECTED_RESULT[i])
+
+    def testdatares(self):  # test datares
+        dtw = ["DF034", "DF156", "DF185"]
+        EXPECTED_RESULT = [
+            1,
+            0.001,
+            0.000000011,
+        ]
+        for i, dt in enumerate(dtw):
+            ds = datares(dt)
+            self.assertEqual(ds, EXPECTED_RESULT[i])
+        # double check all the defined res are numbers
+        for (_, res, _) in RTCM_DATA_FIELDS.values():
+            self.assertIsInstance(res, (int, float))
 
     def testdatadesc(self):  # test datadesc
         dtw = ["DF054", "DF037", "DF001_01"]

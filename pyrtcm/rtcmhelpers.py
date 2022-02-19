@@ -15,11 +15,12 @@ from datetime import datetime, timedelta
 from pyrtcm.rtcmtypes_core import RTCM_DATA_FIELDS
 
 
-def bits2val(att: str, bitfield: list) -> object:
+def bits2val(att: str, res: float, bitfield: list) -> object:
     """
     Convert bit array to value for this attribute type.
 
     :param str att: attribute type e.g. "UNT008"
+    :param float res: resolution (where defined)
     :param list bitfield: array of bits representing attribute
     :return: value
     :rtype: object (int, float, char, bool)
@@ -40,6 +41,7 @@ def bits2val(att: str, bitfield: list) -> object:
             val = (val << 1) | bit
     if typ == "INT" and bitfield[0]:  # 2's compliment -ve int
         val = val - (1 << siz)
+    # TODO apply any scaling factor (res) here?
     elif typ in ("CHA", "UTF"):  # ASCII or UTF-8 character
         val = chr(val)
 
@@ -144,26 +146,39 @@ def datasiz(datafield: str) -> int:
     """
     Get data field size in bits.
 
-    :param str datafield: attribute type e.g. 'UNT012'
+    :param str datafield: datafield e.g. 'DF234'
     :return: size of data field in bits
     :rtype: int
 
     """
 
-    (att, _) = RTCM_DATA_FIELDS[datafield]
+    (att, _, _) = RTCM_DATA_FIELDS[datafield]
     return attsiz(att)
+
+
+def datares(datafield: str) -> float:
+    """
+    Get resolution (scaling factor) of data field.
+
+    :param str datafield: datafield e.g. 'DF234'
+    :return: datafield resolution
+    :rtype: float
+    """
+
+    (_, res, _) = RTCM_DATA_FIELDS[datafield[0:5]]
+    return res
 
 
 def datadesc(datafield: str) -> str:
     """
     Get description of data field.
 
-    :param str datafield: attribute type e.g. 'UNT012'
+    :param str datafield: datafield e.g. 'DF234'
     :return: datafield description
     :rtype: str
     """
 
-    (_, desc) = RTCM_DATA_FIELDS[datafield[0:5]]
+    (_, _, desc) = RTCM_DATA_FIELDS[datafield[0:5]]
     return desc
 
 
