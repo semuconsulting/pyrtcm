@@ -51,7 +51,7 @@ class RTCMMessage:
         super().__setattr__("_immutable", False)
 
         self._payload = payload
-
+        self._unknown = False
         self._do_attributes()
 
         self._immutable = True  # once initialised, object is immutable
@@ -221,7 +221,7 @@ class RTCMMessage:
         """
 
         setattr(self, "DF002", self.identity)
-        setattr(self, "status", "Not_Yet_Implemented")
+        self._unknown = True
         logging.debug("Unknown message identity: %s", self.identity)
 
     def __str__(self) -> str:
@@ -236,11 +236,11 @@ class RTCMMessage:
         for i, att in enumerate(self.__dict__):
             if att[0] != "_":  # only show public attributes
                 val = self.__dict__[att]
-                if att == "DF004":  # attribute is a GPS Time of Week
-                    val = tow2utc(val)  # show time in UTC format
                 stg += att + "=" + str(val)
                 if i < len(self.__dict__) - 1:
                     stg += ", "
+        if self._unknown:
+            stg += ", Not_Yet_Implemented"
         stg += ")>"
 
         return stg
