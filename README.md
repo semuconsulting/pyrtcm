@@ -180,6 +180,7 @@ The following examples are available in the /examples folder:
 
 1. `rtcmfile.py` - stream RTCM data from binary log file.
 2. `rtcmserial.py` - stream RTCM data from serial/UART port.
+3. `rtcmbuild.py` - construct RTCM payload from constituent datafields.
 
 ---
 ## <a name="extensibility">Extensibility</a>
