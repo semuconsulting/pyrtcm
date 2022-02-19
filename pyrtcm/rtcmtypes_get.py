@@ -1185,9 +1185,9 @@ RTCM_PAYLOADS_GET = {
         "DF003": "Reference Station ID",
         "DF421": "GLONASS Code-Phase bias indicator",
         "DF001_3": "Reserved",
-        "DF422": "GLONASS FDMA signals mask",  # _NBias = num bits set
-        # TODO does each iteration of this group only ever contain one of
-        # either DF423, DF424, DF425 or FD426?
+        "DF422": "GLONASS FDMA signals mask",  # NBIAS = num bits set
+        # TODO verify that each iteration of this group only ever contains
+        # one of either DF423, DF424, DF425 or FD426?
         "group": (
             NBIAS,
             {

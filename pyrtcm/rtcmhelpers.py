@@ -93,7 +93,7 @@ def crc2bytes(message: bytes) -> bytes:
     Generate CRC as 3 bytes, suitable for
     constructing RTCM message transport.
 
-    :param bytes message: message _without_ CRC
+    :param bytes message: message including header & length but _without_ CRC
     :return: CRC as 3 bytes
     :rtype: bytes
     """
@@ -184,7 +184,7 @@ def get_bit(data: bytes, num: int) -> int:
 
 def get_bitarray(data: bytes) -> list:
     """
-    Convert data bytes (big-endian) to bit array.
+    Convert data bytes to bit array.
 
     :param bytes data: data
     :return: bit array

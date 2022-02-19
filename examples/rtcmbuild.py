@@ -27,7 +27,7 @@ def df2payload(datafields: list) -> bytes:
         bits += f"{val:0{datasiz(dfd)}b}"
     print(f"\nbitstream = {bits}")
 
-    # convert bitarray to octets
+    # convert bit stream to octets
     octets = [f"0b{bits[i : i + 8]:0<8}" for i in range(0, len(bits), 8)]
     print(f"\noctets = {octets}")
 

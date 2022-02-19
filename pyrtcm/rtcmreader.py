@@ -36,21 +36,12 @@ class RTCMReader:
         """Constructor.
 
         :param datastream stream: input data stream
-        :param int quitonerror: (kwarg) 0 = ignore errors,  1 = log errors and continue, 2 = (re)raise errors (1)
-        :param int protfilter: (kwarg) protocol filter 1 = NMEA, 2 = rtcm, 4 = RTCM3 (3)
+        :param int quitonerror: (kwarg) 0 = ignore,  1 = log and continue, 2 = (re)raise (1)
         :param int validate: (kwarg) 0 = ignore invalid checksum, 1 = validate checksum (1)
-        :param int msgmode: (kwarg) 0=GET, 1=SET, 2=POLL (0)
-        :param bool parsebitfield: (kwarg) 1 = parse bitfields, 0 = leave as bytes (1)
-        :raises: rtcmStreamError (if mode is invalid)
-
+        :raises: RTCMStreamError (if mode is invalid)
         """
 
         self._stream = datastream
-        self._protfilter = int(
-            kwargs.get(
-                "protfilter", rtt.NMEA_PROTOCOL | rtt.UBX_PROTOCOL | rtt.RTCM3_PROTOCOL
-            )
-        )
         self._quitonerror = int(kwargs.get("quitonerror", rtt.ERR_LOG))
         self._validate = int(kwargs.get("validate", rtt.VALCKSUM))
 
@@ -66,7 +57,6 @@ class RTCMReader:
         :return: tuple of (raw_data as bytes, parsed_data as rtcmMessage)
         :rtype: tuple
         :raises: StopIteration
-
         """
 
         (raw_data, parsed_data) = self.read()
@@ -163,14 +153,12 @@ class RTCMReader:
         parsed_data = None
         return (raw_data, parsed_data)
 
-    def _parse_rtcm3(self, hdr: bytes, **kwargs) -> tuple:
+    def _parse_rtcm3(self, hdr: bytes) -> tuple:
         """
         Parse any RTCM3 data in the stream.
-        NB: pyrtcm does not decode RTCM3 data; the
-        RTCMMessage object is simply a stub.
 
         :param bytes hdr: first 2 bytes of RTCM3 header
-        :param bool validate: (kwarg) validate crc Y/N
+        :param bool validate: (kwarg) validate CRC Y/N
         :return: tuple of (raw_data as bytes, parsed_stub as RTCMMessage)
         :rtype: tuple
         """
@@ -205,11 +193,11 @@ class RTCMReader:
         """
         Invoke the iterator within an exception handling framework.
 
-        :param int quitonerror: (kwarg) 0 = ignore errors,  1 = log errors and continue, 2 = (re)raise errors (1)
+        :param int quitonerror: (kwarg) 0 = ignore,  1 = log and continue, 2 = (re)raise (1)
         :param object errorhandler: (kwarg) Optional error handler (None)
-        :return: tuple of (raw_data as bytes, parsed_data as rtcmMessage or NMEAMessage)
+        :return: tuple of (raw_data as bytes, parsed_data as RTCMMessage)
         :rtype: tuple
-        :raises: rtcm/NMEA...Error (if quitonerror is set and stream is invalid)
+        :raises: RTCM... Error (if quitonerror is set and stream is invalid)
 
         """
 
@@ -256,11 +244,12 @@ class RTCMReader:
         Parse RTCM message to RTCMMessage object.
 
         :param bytes message: RTCM raw message bytes
+        :param kwargs: optional keyword arguments (currently unused)
         :return: RTCMMessage object
         :rtype: RTCMMessage
         :raises: RTCMParseError (if data stream contains invalid data or unknown message type)
-
         """
+        # pylint: disable=unused-argument
 
         payload = message[3:-3]
         return RTCMMessage(payload)
