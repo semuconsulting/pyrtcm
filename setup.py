@@ -15,21 +15,18 @@ setuptools.setup(
     version=VERSION,
     author="semuadmin",
     author_email="semuadmin@semuconsulting.com",
-    description="rtcm Protocol Parser",
+    description="RTCM3 Protocol Parser",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/semuconsulting/pyrtcm",
-    packages=setuptools.find_packages(exclude=["tests", "examples", "docs"]),
+    packages=setuptools.find_packages(
+        exclude=["tests", "examples", "references", "docs"]
+    ),
     install_requires=[
         "pyserial>=3.4",
     ],
-    entry_points={
-        "console_scripts": [
-            "gnssdump = pyrtcmcli.gnssdump:main",
-        ]
-    },
     license="BSD 3-Clause 'Modified' License",
-    keywords="pyrtcm GNSS GPS GLONASS rtcm NMEA GIS u-blox",
+    keywords="PYRTCM GNSS GPS RTCM RTCM3 GIS",
     platforms="Windows, MacOS, Linux",
     project_urls={
         "Bug Tracker": "https://github.com/semuconsulting/pyrtcm",
