@@ -56,7 +56,7 @@ def num_setbits(bitfield: list) -> int:
     """
 
     n = 0
-    for _, bf in enumerate(bitfield):
+    for bf in bitfield:
         if bf:
             n += 1
     return n
