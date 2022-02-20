@@ -1,5 +1,11 @@
 # pyrtcm Release Notes
 
+### RELEASE 0.1.5-alpha
+
+FIXES:
+
+1. Fix typo in payload definitions containing DF149.
+
 ### RELEASE 0.1.4-alpha
 
 FIXES:
