@@ -152,7 +152,7 @@ def datasiz(datafield: str) -> int:
 
     """
 
-    (att, _, _) = RTCM_DATA_FIELDS[datafield]
+    (att, _, _) = RTCM_DATA_FIELDS[datafield[0:5]]
     return attsiz(att)
 
 
@@ -161,7 +161,7 @@ def datares(datafield: str) -> float:
     Get resolution (scaling factor) of data field.
 
     :param str datafield: datafield e.g. 'DF234'
-    :return: datafield resolution
+    :return: datafield resolution or 0 if N/A
     :rtype: float
     """
 
