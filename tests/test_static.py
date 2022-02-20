@@ -124,10 +124,10 @@ class StaticTest(unittest.TestCase):
         res2 = int.from_bytes(b, "big")
         self.assertEqual(res, 11189196)
         self.assertEqual(res, res2)
-        res = bits2val(rtt.INTS5, 1, [0, 0, 1, 0, 1])  # +ve INTS
-        self.assertEqual(res, 5)
-        res = bits2val(rtt.INTS5, 1, [1, 0, 1, 0, 1])  # -ve INTS
-        self.assertEqual(res, -5)
+        res = bits2val(rtt.INTS5, 0.1, [0, 0, 1, 0, 1])  # +ve INTS with scaling 0.1
+        self.assertEqual(res, 0.5)
+        res = bits2val(rtt.INTS5, 0.01, [1, 0, 1, 0, 1])  # -ve INTS with scaling 0.01
+        self.assertEqual(res, -0.05)
         res = bits2val(rtt.CHAR8, 1, [0, 1, 0, 0, 0, 0, 0, 1])  # CHAR8
         self.assertEqual(res, "A")
         res = bits2val(rtt.INT8, 1, [0, 1, 1, 1, 1, 1, 1, 1])  # +ve 2's comp INT

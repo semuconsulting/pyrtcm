@@ -14,13 +14,15 @@ import logging
 from datetime import datetime, timedelta
 from pyrtcm.rtcmtypes_core import RTCM_DATA_FIELDS
 
+SCALEDP = 8
 
-def bits2val(att: str, res: float, bitfield: list) -> object:
+
+def bits2val(att: str, scale: float, bitfield: list) -> object:
     """
     Convert bit array to value for this attribute type.
 
     :param str att: attribute type e.g. "UNT008"
-    :param float res: resolution (where defined)
+    :param float scale: scaling factor (where defined)
     :param list bitfield: array of bits representing attribute
     :return: value
     :rtype: object (int, float, char, bool)
@@ -41,9 +43,12 @@ def bits2val(att: str, res: float, bitfield: list) -> object:
             val = (val << 1) | bit
     if typ == "INT" and bitfield[0]:  # 2's compliment -ve int
         val = val - (1 << siz)
-    # TODO apply any scaling factor (res) here?
-    elif typ in ("CHA", "UTF"):  # ASCII or UTF-8 character
+    if typ in ("CHA", "UTF"):  # ASCII or UTF-8 character
         val = chr(val)
+    # apply any scaling factor
+    else:
+        if scale not in (0, 1):
+            val = round(val * scale, SCALEDP)
 
     return val
 
