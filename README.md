@@ -132,14 +132,14 @@ Helper methods are available to interpret the individual datafields:
 
 ```python
 >>> from pyrtcm import RTCM_DATA_FIELDS, datasiz, datares, datadesc
->>> df = RTCM_DATA_FIELDS["DF012"]
->>> df
+>>> dfname = "DF012"
+>>> RTCM_DATA_FIELDS[dfname]
 (INT20, 0.0005, "GPS L1 PhaseRange - L1 Pseudorange")
->>> datasiz("DF012") # size in bits
+>>> datasiz(dfname) # size in bits
 20
->>> datares("DF012") # resolution
+>>> datares(dfname) # resolution
 0.0005
->>> datadesc"DF012" # description
+>>> datadesc(dfname) # description
 'GPS L1 PhaseRange - L1 Pseudorange'
 ```
 
