@@ -21,7 +21,7 @@ Created on 14 Feb 2022
 :license: BSD 3-Clause
 """
 
-from pyrtcm import RTCMMessage
+from pyrtcm.rtcmmessage import RTCMMessage
 from pyrtcm.rtcmhelpers import calc_crc24q
 import pyrtcm.rtcmtypes_core as rtt
 import pyrtcm.exceptions as rte

@@ -19,7 +19,6 @@ from pyrtcm.rtcmhelpers import (
     get_bitarray,
     bits2val,
     attsiz,
-    tow2utc,
     num_setbits,
 )
 
