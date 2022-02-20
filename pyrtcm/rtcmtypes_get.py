@@ -9,15 +9,16 @@ Information sourced from RTCM STANDARD 10403.2 © 2013 RTCM
 """
 # pylint: disable=too-many-lines, line-too-long
 
-# *************************************************************
-# MSM MESSAGE PAYLOAD DEFINITIONS
+
 # attribute names holding size of MSM repeating groups
 NSAT = "NSat"
 NSIG = "NSig"
 NCELL = "_NCell"
 NBIAS = "_NBias"
 
-# MSM message component sections
+# *************************************************************
+# MSM MESSAGE SUB-SECTION DEFINITIONS
+# *************************************************************
 MSM_HDR = {
     "DF002": "Message number",
     "DF003": "Reference station ID",
@@ -301,7 +302,9 @@ MSM6 = {**MSM_HDR, **MSM_SAT_46, **MSM_SIG_6}
 MSM7 = {**MSM_HDR, **MSM_SAT_57, **MSM_SIG_7}
 # *************************************************************
 
-
+# *************************************************************
+# RTCM3 MESSAGE SUB-SECTION DEFINITIONS
+# *************************************************************
 HDR_1001_1004 = {
     "DF002": "Message Number",
     "DF003": "Reference Station ID",
@@ -492,6 +495,9 @@ CONTENT_1039 = {
     "DF237": "GLONASS Ionospheric Carrier Phase Correction Difference",
 }
 
+# *************************************************************
+# RTCM3 MESSAGE PAYLOAD DEFINITIONS
+# *************************************************************
 RTCM_PAYLOADS_GET = {
     "1001": {**HDR_1001_1004, **CONTENT_1001},
     "1002": {**HDR_1001_1004, **CONTENT_1002},
@@ -696,8 +702,8 @@ RTCM_PAYLOADS_GET = {
         "DF193": "λ0 - Longitude of Origin of Grids",
         "DF194": "∆φ - N/S Grid Area Extension",
         "DF195": "∆λ - E/W Grid Area Extension",
-        "DF196 ": "Mean ∆φ - Mean Latitude Offset",
-        "DF197 ": "Mean ∆λ - Mean Longitude Offset",
+        "DF196": "Mean ∆φ - Mean Latitude Offset",
+        "DF197": "Mean ∆λ - Mean Longitude Offset",
         "DF198": "Mean ∆H - Mean Height Offset",
         "DF199": "φi - Latitude Residual",
         "DF200": "λi - Longitude Residual",
@@ -718,8 +724,8 @@ RTCM_PAYLOADS_GET = {
         "DF204": "∆N - N/S Grid Area Extension",
         "DF205": "∆E - E/W Grid Area Extension",
         "DF206": "Mean ∆N - Mean Local Northing Offset",
-        "DF207 ": "Mean ∆E - Mean Local Easting Offset",
-        "DF208 ": "Mean ∆h - Mean Local Height Offset",
+        "DF207": "Mean ∆E - Mean Local Easting Offset",
+        "DF208": "Mean ∆h - Mean Local Height Offset",
         "DF209": "Ni  - Residual in Local Northing",
         "DF210": "Ei - Residual in Local Easting",
         "DF211": "hi - Residual in Local Height",
