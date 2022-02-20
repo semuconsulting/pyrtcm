@@ -24,7 +24,7 @@ from pyrtcm.rtcmhelpers import (
     crc2bytes,
     len2bytes,
     datasiz,
-    datares,
+    datascale,
     datadesc,
     attsiz,
     atttyp,
@@ -174,7 +174,7 @@ class StaticTest(unittest.TestCase):
             ds = datasiz(dt)
             self.assertEqual(ds, EXPECTED_RESULT[i])
 
-    def testdatares(self):  # test datares
+    def testdatascale(self):  # test datascale
         dtw = ["DF034", "DF156", "DF185"]
         EXPECTED_RESULT = [
             1,
@@ -182,7 +182,7 @@ class StaticTest(unittest.TestCase):
             0.000000011,
         ]
         for i, dt in enumerate(dtw):
-            ds = datares(dt)
+            ds = datascale(dt)
             self.assertEqual(ds, EXPECTED_RESULT[i])
         # double check all the defined res are numbers
         for (_, res, _) in RTCM_DATA_FIELDS.values():

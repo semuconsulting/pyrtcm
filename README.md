@@ -131,14 +131,14 @@ The `RTCMMessage` object exposes different public attributes depending on its me
 Helper methods are available to interpret the individual datafields:
 
 ```python
->>> from pyrtcm import RTCM_DATA_FIELDS, datasiz, datares, datadesc
+>>> from pyrtcm import RTCM_DATA_FIELDS, datasiz, datascale, datadesc
 >>> dfname = "DF012"
 >>> RTCM_DATA_FIELDS[dfname]
-(INT20, 0.0005, "GPS L1 PhaseRange - L1 Pseudorange")
+(INT20, 0.0001, "GPS L1 PhaseRange - L1 Pseudorange")
 >>> datasiz(dfname) # size in bits
 20
->>> datares(dfname) # resolution
-0.0005
+>>> datascale(dfname) # scaling factor
+0.0001
 >>> datadesc(dfname) # description
 'GPS L1 PhaseRange - L1 Pseudorange'
 ```

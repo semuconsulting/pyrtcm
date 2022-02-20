@@ -100,8 +100,13 @@ UTF8 = "UTF008"  # Unicode UTF-8 Code Unit
 # ***************************************************
 # THESE ARE THE RTCM PROTOCOL DATA FIELDS
 #
-# DF key: (data_type, resolution, description)
+# DF key: (data_type, scale_factor, description)
+# scale_factor of 0 means N/A (no scaling)
 #
+# TODO Scale factor is not stated explicitly in
+# standard and apparently has to be inferred from
+# resolution? WHY?????
+# Original resolution quoted in comments
 # ***************************************************
 RTCM_DATA_FIELDS = {
     "DF001": (BIT1, 0, "Reserved Field"),
@@ -118,11 +123,11 @@ RTCM_DATA_FIELDS = {
     "DF008": (BIT3, 0, "GPS Smoothing Interval"),
     "DF009": (UINT6, 0, "GPS Satellite ID"),
     "DF010": (BIT1, 0, "GPS L1 Code Indicator"),
-    "DF011": (UINT24, 0.02, "GPS L1 Pseudorange"),
-    "DF012": (INT20, 0.0005, "GPS L1 PhaseRange - L1 Pseudorange"),
+    "DF011": (UINT24, 0.01, "GPS L1 Pseudorange"),  # 0.02
+    "DF012": (INT20, 0.0001, "GPS L1 PhaseRange - L1 Pseudorange"),  # 0.0005
     "DF013": (UINT7, 0, "GPS L1 Lock Time Indicator"),
     "DF014": (UINT8, 0, "GPS Integer L1 Pseudorange Modulus Ambiguity"),
-    "DF015": (UINT8, 0.25, "GPS L1 CNR"),
+    "DF015": (UINT8, 0.25, "GPS L1 CNR"),  # 0.25
     "DF016": (BIT2, 0, "GPS L2 Code Indicator"),
     "DF017": (INT14, 0.02, "GPS L2-L1 Pseudorange Difference"),
     "DF018": (INT20, 0.0005, "GPS L2 PhaseRange - L1 Pseudorange"),
@@ -221,7 +226,7 @@ RTCM_DATA_FIELDS = {
     "DF107": (BIT12, 0, "GLONASS tk"),
     "DF108": (BIT1, 0, "GLONASS MSB of Bn  word"),
     "DF109": (BIT1, 0, "GLONASS P2"),
-    "DF110": (UINT7, 15, "GLONASS tb"),
+    "DF110": (UINT7, 1, "GLONASS tb"),  # 15s
     "DF111": (INTS24, 2**-20, "GLONASS xn(tb), first derivative"),
     "DF112": (INTS27, 2**-11, "GLONASS xn(tb)"),
     "DF113": (INTS5, 2**-30, "GLONASS xn(tb), second derivative"),
@@ -263,17 +268,17 @@ RTCM_DATA_FIELDS = {
     "DF149": (UINT5, 0, "Plate Number"),
     "DF150": (UINT4, 0, "Computation Indicator"),
     "DF151": (UINT2, 0, "Height Indicator"),
-    "DF152": (INT19, 2, "ΦV"),
-    "DF153": (INT20, 2, "ΛV"),
-    "DF154": (UINT14, 2, "∆ΦV"),
-    "DF155": (UINT14, 2, "∆ΛV"),
+    "DF152": (INT19, 1, "ΦV"),  # 2
+    "DF153": (INT20, 1, "ΛV"),  # 2
+    "DF154": (UINT14, 1, "∆ΦV"),  # 2
+    "DF155": (UINT14, 1, "∆ΛV"),  # 2
     "DF156": (INT23, 0.001, "dX"),
     "DF157": (INT23, 0.001, "dY"),
     "DF158": (INT23, 0.001, "dZ"),
-    "DF159": (INT32, 0.00002, "R1"),
-    "DF160": (INT32, 0.00002, "R2"),
-    "DF161": (INT32, 0.00002, "R3"),
-    "DF162": (INT25, 0.00001, "dS"),
+    "DF159": (INT32, 0.00001, "R1"),  # 0.00002
+    "DF160": (INT32, 0.00001, "R2"),  # 0.00002
+    "DF161": (INT32, 0.00001, "R3"),  # 0.00002
+    "DF162": (INT25, 0.00001, "dS"),  # 0.00002
     "DF163": (INT35, 0.001, "XP"),
     "DF164": (INT35, 0.001, "YP"),
     "DF165": (INT35, 0.001, "ZP"),
@@ -310,8 +315,8 @@ RTCM_DATA_FIELDS = {
     "DF196": (INT8, 0.001, "Mean ∆φ"),
     "DF197": (INT8, 0.001, "Mean ∆λ"),
     "DF198": (INT15, 0.01, "Mean ∆H"),
-    "DF199": (INT9, 0.00003, "φi"),
-    "DF200": (INT9, 0.00003, "λi"),
+    "DF199": (INT9, 0.00001, "φi"),  # 0.00003
+    "DF200": (INT9, 0.00001, "λi"),  # 0.00003
     "DF201": (INT9, 0.001, "hi"),
     "DF202": (INT25, 10, "N0"),
     "DF203": (UINT26, 10, "E0"),
@@ -329,10 +334,10 @@ RTCM_DATA_FIELDS = {
     "DF215": (UINT3, 0, "Vertical Helmert/Molodenski Quality Indicator"),
     "DF216": (UINT3, 0, "Horizontal Grid Quality Indicator"),
     "DF217": (UINT3, 0, "Vertical Grid Quality Indicator"),
-    "DF218": (UINT8, 0.5, "soc"),
+    "DF218": (UINT8, 1, "soc"),  # 0.5
     "DF219": (UINT9, 0.01, "sod"),
     "DF220": (UINT6, 0.1, "soh"),
-    "DF221": (UINT10, 0.5, "sIc"),
+    "DF221": (UINT10, 1, "sIc"),  # 0.5
     "DF222": (UINT10, 0.01, "sId"),
     "DF223": (UINT7, 0, "N-Refs"),
     "DF224": (UINT20, 1, "GPS Residuals Epoch Time (TOW)"),
@@ -350,10 +355,10 @@ RTCM_DATA_FIELDS = {
     "DF236": (UINT3, 0, "GLONASS Non Sync Count"),
     "DF237": (
         INT17,
-        0.5,
+        1,
         "GLONASS Ionospheric Carrier Phase Correction Difference",
-    ),
-    "DF238": (INT17, 0.5, "GLONASS Geometric Carrier Phase Correction Difference"),
+    ),  # 0.5
+    "DF238": (INT17, 1, "GLONASS Geometric Carrier Phase Correction Difference"),  # 0.5
     "DF239": (BIT8, 0, "GLONASS IOD"),
     "DF240": (UINT20, 1, "GPS FKP Epoch Time"),
     "DF241": (UINT17, 1, "GLONASS FKP Epoch Time"),
@@ -437,10 +442,10 @@ RTCM_DATA_FIELDS = {
     "DF420": (BIT1, 0, "Half-cycle ambiguity indicator"),
     "DF421": (BIT1, 0, "GLONASS Code-Phase Bias Indicator"),
     "DF422": (BIT4, 0, "GLONASS FDMA Signals Mask"),
-    "DF423": (INT16, 0.02, "GLONASS L1 C/A Code-Phase Bias"),
-    "DF424": (INT16, 0.02, "GLONASS L1 P Code-Phase Bias"),
-    "DF425": (INT16, 0.02, "GLONASS L2 C/A Code-Phase Bias"),
-    "DF426": (INT16, 0.02, "GLONASS L2 P Code-Phase Bias"),
+    "DF423": (INT16, 0.01, "GLONASS L1 C/A Code-Phase Bias"),  # 0.02
+    "DF424": (INT16, 0.01, "GLONASS L1 P Code-Phase Bias"),  # 0.02
+    "DF425": (INT16, 0.01, "GLONASS L2 C/A Code-Phase Bias"),  # 0.02
+    "DF426": (INT16, 0.01, "GLONASS L2 P Code-Phase Bias"),  # 0.02
     "GNSSSpecific": (UINT4, 0, "Extended Satellite Information"),
     "GNSSEpoch": (UINT30, 0, "GNSS Epoch Time"),
 }

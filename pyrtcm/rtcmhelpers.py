@@ -161,12 +161,12 @@ def datasiz(datafield: str) -> int:
     return attsiz(att)
 
 
-def datares(datafield: str) -> float:
+def datascale(datafield: str) -> float:
     """
-    Get resolution (scaling factor) of data field.
+    Get scaling factor of data field.
 
     :param str datafield: datafield e.g. 'DF234'
-    :return: datafield resolution or 0 if N/A
+    :return: datafield scale factor or 0 if N/A
     :rtype: float
     """
 
