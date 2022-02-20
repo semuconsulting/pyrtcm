@@ -11,10 +11,9 @@
 [Graphical Client](#gui) |
 [Author & License](#author)
 
-`pyrtcm` is an original Python 3 parser for the RTCM3 &copy; GPS/GNSS protocol, or more properly
-the ["RTCM STANDARD 10403.n DIFFERENTIAL GNSS (GLOBAL NAVIGATION SATELLITE SYSTEMS) SERVICES – VERSION 3"](ttps://rtcm.myshopify.com/collections/differential-global-navigation-satellite-dgnss-standards/products/rtcm-10403-2-differential-gnss-global-navigation-satellite-systems-services-version-3-february-1-2013).
+`pyrtcm` is an original Python 3 parser for the RTCM3 &copy; GPS/GNSS protocol. RTCM3 is a proprietary GPS/GNSS [differential correction or DGPS](https://en.wikipedia.org/wiki/Differential_GPS) protocol published by the Radio Technical Commission for Maritime Services.
 
-RTCM3 is a proprietary GPS/GNSS protocol published by the Radio Technical Commission for Maritime Services.
+[RTCM STANDARD 10403.n DIFFERENTIAL GNSS (GLOBAL NAVIGATION SATELLITE SYSTEMS) SERVICES – VERSION 3](https://rtcm.myshopify.com/collections/differential-global-navigation-satellite-dgnss-standards/products/rtcm-10403-2-differential-gnss-global-navigation-satellite-systems-services-version-3-february-1-2013).
 
 The `pyrtcm` homepage is located at [https://github.com/semuconsulting/pyrtcm](https://github.com/semuconsulting/pyrtcm).
 
@@ -118,7 +117,7 @@ Example:
 <RTCM(1005, DF002=1005, DF003=0, DF021=0, DF022=1, DF023=1, DF024=1, DF141=0, DF025=44440308028, DF142=1, DF001_1=0, DF026=30856712349, DF364=0, DF027=33666582560)>
 ```
 
-The `RTCMMessage` object exposes different public attributes depending on its message type or 'identity'. Attributes are defined as data fields ("DF002", "DF003", etc.) e.g. the `1005` message contains the following dasa fields:
+The `RTCMMessage` object exposes different public attributes depending on its message type or 'identity'. Attributes are defined as data fields ("DF002", "DF003", etc.) e.g. the `1005` message contains the following data fields:
 
 ```python
 >>> print(msg)
@@ -144,7 +143,7 @@ Helper methods are available to interpret the individual datafields:
 'GPS L1 PhaseRange - L1 Pseudorange'
 ```
 
-Attributes within repeating groups are parsed with a two-digit suffix (DF030_01, DF030_02, etc.). The `payload` attribute always contains the raw payload as bytes.
+Attributes within repeating groups are parsed with a two-digit suffix ("DF030_01", "DF030_02", etc.). The `payload` attribute always contains the raw payload as bytes.
 
 ---
 ## <a name="generating">Generating</a>
