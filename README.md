@@ -11,8 +11,8 @@
 [Graphical Client](#gui) |
 [Author & License](#author)
 
-`pyrtcm` is an original Python 3 library for the RTCM3 &copy; GPS/GNSS protocol, or more properly
-the "RTCM STANDARD 10403.n DIFFERENTIAL GNSS (GLOBAL NAVIGATION SATELLITE SYSTEMS) SERVICES – VERSION 3".
+`pyrtcm` is an original Python 3 parser for the RTCM3 &copy; GPS/GNSS protocol, or more properly
+the ["RTCM STANDARD 10403.n DIFFERENTIAL GNSS (GLOBAL NAVIGATION SATELLITE SYSTEMS) SERVICES – VERSION 3"](ttps://rtcm.myshopify.com/collections/differential-global-navigation-satellite-dgnss-standards/products/rtcm-10403-2-differential-gnss-global-navigation-satellite-systems-services-version-3-february-1-2013).
 
 RTCM3 is a proprietary GPS/GNSS protocol published by the Radio Technical Commission for Maritime Services.
 
@@ -129,8 +129,20 @@ The `RTCMMessage` object exposes different public attributes depending on its me
 1
 ```
 
-A helper method `datadesc(datafield)` is available to convert a data field to a descriptive string,
-e.g. "DF004" -> "GPS Epoch Time (TOW)"
+Helper methods are available to interpret the individual datafields:
+
+```python
+>>> from pyrtcm import RTCM_DATA_FIELDS, datasiz, datares, datadesc
+>>> df = RTCM_DATA_FIELDS["DF012"]
+>>> df
+(INT20, 0.0005, "GPS L1 PhaseRange - L1 Pseudorange")
+>>> datasiz("DF012") # size in bits
+20
+>>> datares("DF012") # resolution
+0.0005
+>>> datadesc"DF012" # description
+'GPS L1 PhaseRange - L1 Pseudorange'
+```
 
 Attributes within repeating groups are parsed with a two-digit suffix (DF030_01, DF030_02, etc.). The `payload` attribute always contains the raw payload as bytes.
 
@@ -178,9 +190,9 @@ b'\xd3\x00\x13>\xd0\x00\x03\x8aX\xd9I<\x87/4\x10\x9d\x07\xd6\xafH Z\xd7\xf7'
 
 The following examples are available in the /examples folder:
 
-1. `rtcmfile.py` - stream RTCM data from binary log file.
-2. `rtcmserial.py` - stream RTCM data from serial/UART port.
-3. `rtcmbuild.py` - construct RTCM payload from constituent datafields.
+1. `rtcmfile.py` - illustrates how to stream RTCM data from binary log file.
+2. `rtcmserial.py` - illustrates how to stream RTCM data from serial/UART port.
+3. `rtcmbuild.py` - illustrates how to construct RTCM payload from constituent datafields.
 
 ---
 ## <a name="extensibility">Extensibility</a>
@@ -188,8 +200,8 @@ The following examples are available in the /examples folder:
 The RTCM protocol is principally defined in the modules `rtcmtypes_core.py` and `rtcmtypes_get.py` as a series of dictionaries. RTCM uses a series of pre-defined data fields ("DF002", DF003" etc.), each of which has a designated data type (UINT32, etc.). Message payload definitions must conform to the following rules:
 
 ```
-1. attribute names must be unique within each message class
-2. attribute types must be one of the valid data fields (DF026, DF059, etc.)
+1. datafield names must be unique within each message class
+2. datafield types must be one of the valid data fields ("DF026", "DF059", etc.)
 3. repeating or bitfield groups must be defined as a tuple ('numr', {dict}), where:
    'numr' is either:
      a. an integer representing a fixed number of repeats e.g. 32
@@ -197,12 +209,7 @@ The RTCM protocol is principally defined in the modules `rtcmtypes_core.py` and 
    {dict} is the nested dictionary of repeating items or bitfield group
 ```
 
-Repeating attribute names are parsed with a two-digit suffix (DF030_01, DF030_02, etc.). Nested repeating groups are supported.
-
----
-## <a name="cli">Command Line Utility</a>
-
-TODO
+Repeating attribute names are parsed with a two-digit suffix ("DF030_01", "DF030_02", etc.). Nested repeating groups are supported.
 
 ---
 ## <a name="gui">Graphical Client</a>
