@@ -1,5 +1,11 @@
 # pyrtcm Release Notes
 
+### RELEASE 0.1.6-alpha
+
+FIXES:
+
+1. Fix several grouped payload definitions for 1001-1004, 1009-1012, 1015-1017, 1021-1022, 1037-1039.
+
 ### RELEASE 0.1.5-alpha
 
 FIXES:
