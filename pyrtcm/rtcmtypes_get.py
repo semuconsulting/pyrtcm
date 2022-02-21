@@ -499,10 +499,34 @@ CONTENT_1039 = {
 # RTCM3 MESSAGE PAYLOAD DEFINITIONS
 # *************************************************************
 RTCM_PAYLOADS_GET = {
-    "1001": {**HDR_1001_1004, **CONTENT_1001},
-    "1002": {**HDR_1001_1004, **CONTENT_1002},
-    "1003": {**HDR_1001_1004, **CONTENT_1003},
-    "1004": {**HDR_1001_1004, **CONTENT_1004},
+    "1001": {
+        **HDR_1001_1004,
+        "group": (
+            "DF006",
+            {**CONTENT_1001},
+        ),
+    },
+    "1002": {
+        **HDR_1001_1004,
+        "group": (
+            "DF006",
+            {**CONTENT_1002},
+        ),
+    },
+    "1003": {
+        **HDR_1001_1004,
+        "group": (
+            "DF006",
+            {**CONTENT_1003},
+        ),
+    },
+    "1004": {
+        **HDR_1001_1004,
+        "group": (
+            "DF006",
+            {**CONTENT_1004},
+        ),
+    },
     "1005": HDR_1005_1006,
     "1006": {**HDR_1005_1006, **CONTENT_1006},
     "1007": {
@@ -521,15 +545,49 @@ RTCM_PAYLOADS_GET = {
         "DF002": "Message Number",
         "DF003": "Reference Station ID",
         "DF029": "Descriptor Counter N",
-        "DF030": "Antenna Descriptor",
+        "group1": (
+            "DF029",
+            {
+                "DF030": "Antenna Descriptor",
+            },
+        ),
         "DF031": "Antenna Setup ID",
         "DF032": "Serial Number Counter M",
-        "DF033": "Antenna Serial Number",
+        "group2": (
+            "DF032",
+            {
+                "DF033": "Antenna Serial Number",
+            },
+        ),
     },
-    "1009": {**HDR_1009_1012, **CONTENT_1009},
-    "1010": {**HDR_1009_1012, **CONTENT_1010},
-    "1011": {**HDR_1009_1012, **CONTENT_1011},
-    "1012": {**HDR_1009_1012, **CONTENT_1012},
+    "1009": {
+        **HDR_1009_1012,
+        "group": (
+            "DF035",
+            {**CONTENT_1009},
+        ),
+    },
+    "1010": {
+        **HDR_1009_1012,
+        "group": (
+            "DF035",
+            {**CONTENT_1010},
+        ),
+    },
+    "1011": {
+        **HDR_1009_1012,
+        "group": (
+            "DF035",
+            {**CONTENT_1011},
+        ),
+    },
+    "1012": {
+        **HDR_1009_1012,
+        "group": (
+            "DF035",
+            {**CONTENT_1012},
+        ),
+    },
     "1013": {
         "DF002": "Message Number",
         "DF003": "Reference Station ID",
@@ -557,9 +615,28 @@ RTCM_PAYLOADS_GET = {
         "DF063": "Aux-Master Delta Longitude",
         "DF064": "Aux-Master Delta Height",
     },
-    "1015": {**HDR_1015_1017, **CONTENT_1015},
-    "1016": {**HDR_1015_1017, **CONTENT_1016},
-    "1017": {**HDR_1015_1017, **CONTENT_1017},
+    "1015": {
+        **HDR_1015_1017,
+        "group": (
+            "DF067",
+            {**CONTENT_1015},
+        ),
+    },
+    "1016": {
+        **HDR_1015_1017,
+        "group": (
+            "DF067",
+            {**CONTENT_1016},
+        ),
+    },
+    "1017": {
+        **HDR_1015_1017,
+        "group": (
+            "DF067",
+            {**CONTENT_1017},
+        ),
+    },
+    # "1018": {RESERVED for Alt Ionospheric Correction Diff Msg},
     "1019": {
         "DF002": "Message Number",
         "DF009": "GPS Satellite ID",
@@ -635,9 +712,19 @@ RTCM_PAYLOADS_GET = {
     "1021": {
         "DF002": "Message Number",
         "DF143": "Source-Name Counter",
-        "DF144": "Source-Name",
+        "group1": (
+            "DF143",
+            {
+                "DF144": "Source-Name",
+            },
+        ),
         "DF145": "Target-Name Counter",
-        "DF146": "Target-Name",
+        "group2": (
+            "DF145",
+            {
+                "DF146": "Target-Name",
+            },
+        ),
         "DF147": "System Identification Number",
         "DF148": "Utilized Transformation Message Indicator",
         "DF149": "Plate Number",
@@ -664,9 +751,19 @@ RTCM_PAYLOADS_GET = {
     "1022": {
         "DF002": "Message Number",
         "DF143": "Source-Name Counter",
-        "DF144": "Source-Name",
+        "group1": (
+            "DF143",
+            {
+                "DF144": "Source-Name",
+            },
+        ),
         "DF145": "Target-Name Counter",
-        "DF146": "Target-Name",
+        "group2": (
+            "DF145",
+            {
+                "DF146": "Target-Name",
+            },
+        ),
         "DF147": "System Identification Number",
         "DF148": "Utilized Transformation Message Indicator",
         "DF149": "Plate Number",
@@ -769,7 +866,7 @@ RTCM_PAYLOADS_GET = {
         "DF188": "EPC - Easting at Projection Center",
         "DF189": "NPC - Northing at Projection Center",
     },
-    # "1028": {Reserved},
+    # "1028": {RESERVED for Global Plate-Fixed XFormation},
     "1029": {
         "DF002": "Message Number",
         "DF003": "Reference Station ID",
@@ -833,16 +930,41 @@ RTCM_PAYLOADS_GET = {
         "DF002": "Message Number",
         "DF003": "Reference Station ID",
         "DF029": "Antenna Descriptor Counter N",
-        "DF030": "Antenna Descriptor",
-        "DF031": "Antenna Setup ID",
+        "group1": (
+            "DF029",
+            {
+                "DF030": "Antenna Descriptor",
+                "DF031": "Antenna Setup ID",
+            },
+        ),
         "DF032": "Antenna Serial Number Counter M",
-        "DF033": "Antenna Serial Number",
+        "group2": (
+            "DF032",
+            {
+                "DF033": "Antenna Serial Number",
+            },
+        ),
         "DF227": "Receiver Type Descriptor Counter I",
-        "DF228": "Receiver Type Descriptor",
+        "group3": (
+            "DF227",
+            {
+                "DF228": "Receiver Type Descriptor",
+            },
+        ),
         "DF229": "Receiver Firmware Version Counter J",
-        "DF230": "Receiver Firmware Version",
+        "group4": (
+            "DF229",
+            {
+                "DF230": "Receiver Firmware Version",
+            },
+        ),
         "DF231": "Receiver Serial Number Counter K",
-        "DF232": "Receiver Serial Number",
+        "group5": (
+            "DF231",
+            {
+                "DF232": "Receiver Serial Number",
+            },
+        ),
     },
     "1034": {
         "DF002": "Message Number",
@@ -879,9 +1001,27 @@ RTCM_PAYLOADS_GET = {
         ),
     },
     # "1036": {Not Used},
-    "1037": {**HDR_1037_1039, **CONTENT_1037},
-    "1038": {**HDR_1037_1039, **CONTENT_1038},
-    "1039": {**HDR_1037_1039, **CONTENT_1039},
+    "1037": {
+        **HDR_1037_1039,
+        "group": (
+            "DF234",
+            {**CONTENT_1037},
+        ),
+    },
+    "1038": {
+        **HDR_1037_1039,
+        "group": (
+            "DF234",
+            {**CONTENT_1038},
+        ),
+    },
+    "1039": {
+        **HDR_1037_1039,
+        "group": (
+            "DF234",
+            {**CONTENT_1039},
+        ),
+    },
     "1057": {
         "DF002": "Message Number",
         "DF385": "GPS Epoch Time 1s",
