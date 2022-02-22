@@ -21,6 +21,7 @@ class StreamTest(unittest.TestCase):
     def setUp(self):
         self.maxDiff = None
         dirname = os.path.dirname(__file__)
+        self._raw1005ex = b"\xD3\x00\x13\x3E\xD7\xD3\x02\x02\x98\x0E\xDE\xEF\x34\xB4\xBD\x62\xAC\x09\x41\x98\x6F\x33\x36\x0B\x98"
         self._raw1005 = (
             b"\xd3\x00\x13>\xd0\x00\x03\x8aX\xd9I<\x87/4\x10\x9d\x07\xd6\xafH Z\xd7\xf7"
         )
@@ -33,6 +34,16 @@ class StreamTest(unittest.TestCase):
 
     def tearDown(self):
         pass
+
+    def test1005example(
+        self,
+    ):  # test sample 1005 given in RTCM standard (without scaling applied at this point)
+        EXPECTED_RESULT = "<RTCM(1005, DF002=1005, DF003=2003, DF021=0, DF022=1, DF023=0, DF024=0, DF141=0, DF025=1114104.5999, DF142=0, DF001_1=0, DF026=-4850729.7108, DF364=0, DF027=3975521.4643)>"
+        msg = RTCMReader.parse(self._raw1005ex, noscaling=False)
+        self.assertEqual(str(msg), EXPECTED_RESULT)
+        self.assertEqual(msg.DF025, 1114104.5999)
+        self.assertEqual(msg.DF026, -4850729.7108)
+        self.assertEqual(msg.DF027, 3975521.4643)
 
     def testMIXEDRTCM(
         self,
@@ -54,7 +65,7 @@ class StreamTest(unittest.TestCase):
         rtr = RTCMReader(stream)
         for (raw, parsed) in rtr.iterate():
             if raw is not None:
-                # print(parsed)
+                print(parsed)
                 self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
                 i += 1
         stream.close()
@@ -62,7 +73,7 @@ class StreamTest(unittest.TestCase):
     def testSerialize(self):  # test serialize()
         payload = self._raw1005[3:-3]
         msg1 = RTCMReader.parse(self._raw1005)
-        msg2 = RTCMMessage(payload)
+        msg2 = RTCMMessage(payload=payload)
         res = msg1.serialize()
         self.assertEqual(res, self._raw1005)
         res1 = msg2.serialize()
@@ -77,7 +88,7 @@ class StreamTest(unittest.TestCase):
             msg.DF002 = 9999
 
     def testrepr(self):  # test repr, check eval recreates original object
-        EXPECTED_RESULT = "RTCMMessage(b'>\\xd0\\x00\\x03\\x8aX\\xd9I<\\x87/4\\x10\\x9d\\x07\\xd6\\xafH ')"
+        EXPECTED_RESULT = "RTCMMessage(payload=b'>\\xd0\\x00\\x03\\x8aX\\xd9I<\\x87/4\\x10\\x9d\\x07\\xd6\\xafH ')"
         msg1 = RTCMReader.parse(self._raw1005)
         self.assertEqual(repr(msg1), EXPECTED_RESULT)
         msg2 = eval(repr(msg1))
@@ -90,14 +101,14 @@ class StreamTest(unittest.TestCase):
 
     def testgroups(self):  # test message with repeating group (1007)
         EXPECTED_RESULT = "<RTCM(1007, DF002=1007, DF003=1234, DF029=3, DF030_01=A, DF030_02=B, DF030_03=C, DF031=234)>"
-        msg1 = RTCMMessage(self._payload1007)
+        msg1 = RTCMMessage(payload=self._payload1007)
         msg2 = RTCMReader.parse(self._raw1007)
         self.assertEqual(str(msg1), EXPECTED_RESULT)
         self.assertEqual(str(msg2), EXPECTED_RESULT)
 
     def testnestedgroups(self):  # test message with nested repeating group (1059, 1065)
-        EXPECTED_RESULT = "<RTCM(1065, DF002=1065, DF386=12345, DF391=3, DF388=0, DF413=1, DF414=1, DF415=1, DF387=2, DF384_01=23, DF379_01=2, DF381_01_01=4, DF383_01_01=7, DF381_01_02=2, DF383_01_02=9, DF384_02=26, DF379_02=1, DF381_02_01=3, DF383_02_01=5)>"
-        msg = RTCMReader.parse(self._raw1065)
+        EXPECTED_RESULT = "<RTCM(1065, DF002=1065, DF386=12345, DF391=3, DF388=0, DF413=1, DF414=1, DF415=1, DF387=2, DF384_01=23, DF379_01=2, DF381_01_01=4, DF383_01_01=0.07, DF381_01_02=2, DF383_01_02=0.09, DF384_02=26, DF379_02=1, DF381_02_01=3, DF383_02_01=0.05)>"
+        msg = RTCMReader.parse(self._raw1065, noscaling=False)
         self.assertEqual(str(msg), EXPECTED_RESULT)
 
 

@@ -32,11 +32,11 @@ NBIAS = "_NBias"
 class RTCMMessage:
     """RTCM Message Class."""
 
-    def __init__(self, payload: bytes, **kwargs):
+    def __init__(self, **kwargs):
         """Constructor.
 
-        :param bytes payload: message payload
-        :param kwargs: optional keyword arguments (currently unused)
+        :param bytes payload: (kwarg) message payload (mandatory)
+        :param bool noscaling: (kwarg) whether to apply attribute scaling True/False (False)
         :raises: RTCMMessageError
         """
         # pylint: disable=unused-argument
@@ -49,7 +49,10 @@ class RTCMMessage:
         # object is mutable during initialisation only
         super().__setattr__("_immutable", False)
 
-        self._payload = payload
+        self._payload = kwargs.get("payload", None)
+        if self._payload is None:
+            raise (rte.RTCMMessageError("Payload must be specified"))
+        self._noscaling = int(kwargs.get("noscaling", True))
         self._unknown = False
         self._do_attributes()
 
@@ -176,14 +179,16 @@ class RTCMMessage:
                 keyr += f"_{i:02d}"
 
         # get value of required number of bits at current payload offset
-        att, res, _ = rtt.RTCM_DATA_FIELDS[key]
+        att, scale, _ = rtt.RTCM_DATA_FIELDS[key]
+        if self._noscaling:
+            scale = 0
         if key == "DF396":  # this MSM attribute has variable length
             atts = getattr(self, NCELL)
         else:
             atts = attsiz(att)
         bitfield = self._payload_bits[offset : offset + atts]
         logging.debug("Bitfield: %s, size: %s", bitfield, atts)
-        val = bits2val(att, res, bitfield)
+        val = bits2val(att, scale, bitfield)
 
         setattr(self, keyr, val)
         offset += atts
@@ -254,7 +259,7 @@ class RTCMMessage:
         :rtype: str
         """
 
-        return f"RTCMMessage({self._payload})"
+        return f"RTCMMessage(payload={self._payload})"
 
     def __setattr__(self, name, value):
         """

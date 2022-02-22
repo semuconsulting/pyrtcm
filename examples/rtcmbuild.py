@@ -72,5 +72,5 @@ payload = df2payload(data)
 print(f"\npayload = {payload}")
 
 # create RTCM message from payload
-msg = RTCMMessage(payload)
+msg = RTCMMessage(payload=payload)
 print(f"\nmessage = {msg}")

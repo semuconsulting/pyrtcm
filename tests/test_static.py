@@ -24,7 +24,7 @@ from pyrtcm.rtcmhelpers import (
     crc2bytes,
     len2bytes,
     datasiz,
-    datares,
+    datascale,
     datadesc,
     attsiz,
     atttyp,
@@ -124,10 +124,10 @@ class StaticTest(unittest.TestCase):
         res2 = int.from_bytes(b, "big")
         self.assertEqual(res, 11189196)
         self.assertEqual(res, res2)
-        res = bits2val(rtt.INTS5, 1, [0, 0, 1, 0, 1])  # +ve INTS
-        self.assertEqual(res, 5)
-        res = bits2val(rtt.INTS5, 1, [1, 0, 1, 0, 1])  # -ve INTS
-        self.assertEqual(res, -5)
+        res = bits2val(rtt.INTS5, 0.1, [0, 0, 1, 0, 1])  # +ve INTS with scaling 0.1
+        self.assertEqual(res, 0.5)
+        res = bits2val(rtt.INTS5, 0.01, [1, 0, 1, 0, 1])  # -ve INTS with scaling 0.01
+        self.assertEqual(res, -0.05)
         res = bits2val(rtt.CHAR8, 1, [0, 1, 0, 0, 0, 0, 0, 1])  # CHAR8
         self.assertEqual(res, "A")
         res = bits2val(rtt.INT8, 1, [0, 1, 1, 1, 1, 1, 1, 1])  # +ve 2's comp INT
@@ -174,7 +174,7 @@ class StaticTest(unittest.TestCase):
             ds = datasiz(dt)
             self.assertEqual(ds, EXPECTED_RESULT[i])
 
-    def testdatares(self):  # test datares
+    def testdatascale(self):  # test datascale
         dtw = ["DF034", "DF156", "DF185"]
         EXPECTED_RESULT = [
             1,
@@ -182,7 +182,7 @@ class StaticTest(unittest.TestCase):
             0.000000011,
         ]
         for i, dt in enumerate(dtw):
-            ds = datares(dt)
+            ds = datascale(dt)
             self.assertEqual(ds, EXPECTED_RESULT[i])
         # double check all the defined res are numbers
         for (_, res, _) in RTCM_DATA_FIELDS.values():
