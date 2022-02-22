@@ -149,17 +149,17 @@ Attributes within repeating groups are parsed with a two-digit suffix ("DF030_01
 ## <a name="generating">Generating</a>
 
 ```
-class pyrtcm.rtcmmessage.RTCMMessage(payload, **kwargs)
+class pyrtcm.rtcmmessage.RTCMMessage(**kwargs)
 ```
 
-You can create an `RTCMMessage` object by calling the constructor with the following parameters:
+You can create an `RTCMMessage` object by calling the constructor with the following keyword arguments:
 1. payload as bytes
 
 Example:
 
 ```python
 >>> from pyrtcm import RTCMMessage
->>> msg = RTCMMessage(b">\xd0\x00\x03\x8aX\xd9I<\x87/4\x10\x9d\x07\xd6\xafH ")
+>>> msg = RTCMMessage(payload=b">\xd0\x00\x03\x8aX\xd9I<\x87/4\x10\x9d\x07\xd6\xafH ")
 >>> print(msg)
 <RTCM(1005, DF002=1005, DF003=0, DF021=0, DF022=1, DF023=1, DF024=1, DF141=0, DF025=44440308028, DF142=1, DF001_1=0, DF026=30856712349, DF364=0, DF027=33666582560)>
 ```
@@ -175,7 +175,7 @@ e.g. to create and send a `1005` message type:
 >>> from serial import Serial
 >>> serialOut = Serial('COM7', 38400, timeout=5)
 >>> from pyrtcm import RTCMMessage
->>> msg = RTCMMessage(b">\xd0\x00\x03\x8aX\xd9I<\x87/4\x10\x9d\x07\xd6\xafH ")
+>>> msg = RTCMMessage(payload=b">\xd0\x00\x03\x8aX\xd9I<\x87/4\x10\x9d\x07\xd6\xafH ")
 >>> print(msg)
 <RTCM(1005, DF002=1005, DF003=0, DF021=0, DF022=1, DF023=1, DF024=1, DF141=0, DF025=44440308028, DF142=1, DF001_1=0, DF026=30856712349, DF364=0, DF027=33666582560)>
 >>> output = msg.serialize()
