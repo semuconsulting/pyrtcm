@@ -36,7 +36,7 @@ class RTCMMessage:
         """Constructor.
 
         :param bytes payload: (kwarg) message payload (mandatory)
-        :param bool noscaling: (kwarg) whether to apply attribute scaling True/False (False)
+        :param bool scaling: (kwarg) whether to apply attribute scaling True/False (False)
         :raises: RTCMMessageError
         """
         # pylint: disable=unused-argument
@@ -52,7 +52,7 @@ class RTCMMessage:
         self._payload = kwargs.get("payload", None)
         if self._payload is None:
             raise (rte.RTCMMessageError("Payload must be specified"))
-        self._noscaling = int(kwargs.get("noscaling", True))
+        self._scaling = int(kwargs.get("scaling", False))
         self._unknown = False
         self._do_attributes()
 
@@ -180,7 +180,7 @@ class RTCMMessage:
 
         # get value of required number of bits at current payload offset
         att, scale, _ = rtt.RTCM_DATA_FIELDS[key]
-        if self._noscaling:
+        if not self._scaling:
             scale = 0
         if key == "DF396":  # this MSM attribute has variable length
             atts = getattr(self, NCELL)

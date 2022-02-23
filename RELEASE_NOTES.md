@@ -1,5 +1,20 @@
 # pyrtcm Release Notes
 
+### RELEASE 0.1.7-alpha
+
+CHANGES:
+
+1. RTCMMessage constructor uses keyword argument for payload for consistency with other SEMU GNSS libraries, i.e.:
+```python
+msg = RTCMMessage(payload=b">\xd0\x00\x03\x8aX\xd9I<\x87/4\x10\x9d\x07\xd6\xafH ")
+```
+rather than:
+```python
+msg = RTCMMessage(b">\xd0\x00\x03\x8aX\xd9I<\x87/4\x10\x9d\x07\xd6\xafH ")
+```
+
+2. `scaling` boolean keyword argument added to `RTCMReader` and `RTCMMessage` constructors and `RTCMReader.parse()` method to turn attribute scaling on or off. Defaults to False (no scaling) during current alpha testing (*refer to Sphinx API documentation for usage*); will default to True in final version once the correct scaling factors have been verified (the RTCM 10403.n standard itself does not appear to state the applied scaling factors explicitly, but only indirectly via the 'resolution' parameter).
+
 ### RELEASE 0.1.6-alpha
 
 FIXES:

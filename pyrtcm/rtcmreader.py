@@ -38,14 +38,14 @@ class RTCMReader:
         :param datastream stream: input data stream
         :param int quitonerror: (kwarg) 0 = ignore,  1 = log and continue, 2 = (re)raise (1)
         :param int validate: (kwarg) 0 = ignore invalid checksum, 1 = validate checksum (1)
-        :param bool noscaling: (kwarg) apply attribute scaling True/False (False)
+        :param bool scaling: (kwarg) apply attribute scaling True/False (False)
         :raises: RTCMStreamError (if mode is invalid)
         """
 
         self._stream = datastream
         self._quitonerror = int(kwargs.get("quitonerror", rtt.ERR_LOG))
         self._validate = int(kwargs.get("validate", rtt.VALCKSUM))
-        self._noscaling = int(kwargs.get("noscaling", True))
+        self._scaling = int(kwargs.get("scaling", False))
 
     def __iter__(self):
         """Iterator."""
@@ -173,7 +173,7 @@ class RTCMReader:
         if self._validate & rtt.VALCKSUM:
             if calc_crc24q(raw_data):
                 raise rte.RTCMParseError(f"RTCM3 message invalid - failed CRC: {crc}")
-        parsed_data = self.parse(raw_data, noscaling=self._noscaling)
+        parsed_data = self.parse(raw_data, scaling=self._scaling)
         return (raw_data, parsed_data)
 
     def _read_bytes(self, size: int) -> bytes:
@@ -246,13 +246,13 @@ class RTCMReader:
         Parse RTCM message to RTCMMessage object.
 
         :param bytes message: RTCM raw message bytes
-        :param bool noscaling: (kwargs) apply attribute scaling True/False (False)
+        :param bool scaling: (kwargs) apply attribute scaling True/False (False)
         :return: RTCMMessage object
         :rtype: RTCMMessage
         :raises: RTCMParseError (if data stream contains invalid data or unknown message type)
         """
         # pylint: disable=unused-argument
 
-        noscaling = int(kwargs.get("noscaling", True))
+        scaling = int(kwargs.get("scaling", False))
         payload = message[3:-3]
-        return RTCMMessage(payload=payload, noscaling=noscaling)
+        return RTCMMessage(payload=payload, scaling=scaling)

@@ -37,9 +37,9 @@ class StreamTest(unittest.TestCase):
 
     def test1005example(
         self,
-    ):  # test sample 1005 given in RTCM standard (without scaling applied at this point)
+    ):  # test sample 1005 given in RTCM standard (with scaling applied)
         EXPECTED_RESULT = "<RTCM(1005, DF002=1005, DF003=2003, DF021=0, DF022=1, DF023=0, DF024=0, DF141=0, DF025=1114104.5999, DF142=0, DF001_1=0, DF026=-4850729.7108, DF364=0, DF027=3975521.4643)>"
-        msg = RTCMReader.parse(self._raw1005ex, noscaling=False)
+        msg = RTCMReader.parse(self._raw1005ex, scaling=True)
         self.assertEqual(str(msg), EXPECTED_RESULT)
         self.assertEqual(msg.DF025, 1114104.5999)
         self.assertEqual(msg.DF026, -4850729.7108)
@@ -108,7 +108,7 @@ class StreamTest(unittest.TestCase):
 
     def testnestedgroups(self):  # test message with nested repeating group (1059, 1065)
         EXPECTED_RESULT = "<RTCM(1065, DF002=1065, DF386=12345, DF391=3, DF388=0, DF413=1, DF414=1, DF415=1, DF387=2, DF384_01=23, DF379_01=2, DF381_01_01=4, DF383_01_01=0.07, DF381_01_02=2, DF383_01_02=0.09, DF384_02=26, DF379_02=1, DF381_02_01=3, DF383_02_01=0.05)>"
-        msg = RTCMReader.parse(self._raw1065, noscaling=False)
+        msg = RTCMReader.parse(self._raw1065, scaling=True)
         self.assertEqual(str(msg), EXPECTED_RESULT)
 
 
