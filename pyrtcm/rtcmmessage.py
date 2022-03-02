@@ -51,7 +51,7 @@ class RTCMMessage:
 
         self._payload = kwargs.get("payload", None)
         if self._payload is None:
-            raise (rte.RTCMMessageError("Payload must be specified"))
+            raise rte.RTCMMessageError("Payload must be specified")
         self._scaling = int(kwargs.get("scaling", True))
         self._unknown = False
         self._do_attributes()

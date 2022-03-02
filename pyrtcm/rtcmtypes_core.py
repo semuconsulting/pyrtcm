@@ -123,10 +123,6 @@ UTF8 = "UTF008"  # Unicode UTF-8 Code Unit
 # DF key: (data_type, scale_factor, description)
 # scale_factor of 0 means N/A (no scaling)
 #
-# TODO Scale factor is not stated explicitly in
-# standard and apparently has to be inferred from
-# resolution? WHY?????
-# Original resolution quoted in comments
 # ***************************************************
 RTCM_DATA_FIELDS = {
     "DF001": (BIT1, 0, "Reserved Field"),
@@ -585,6 +581,9 @@ RTCM_MSGIDS = {
     "1127": "BeiDou MSM7",
     # "1128-1229":"Reserved MSM",
     "1230": "GLONASS L1 and L2 Code-Phase Biases",
+    #
+    # Proprietary messages have not yet been implemented
+    #
     # "4001-4079":"Proprietary Messages",
     "4080": "NavCom Technology, Inc.",
     "4081": "Seoul National University GNSS Lab",

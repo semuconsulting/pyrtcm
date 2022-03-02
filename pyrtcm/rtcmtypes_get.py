@@ -303,7 +303,7 @@ MSM7 = {**MSM_HDR, **MSM_SAT_57, **MSM_SIG_7}
 # *************************************************************
 
 # *************************************************************
-# RTCM3 MESSAGE SUB-SECTION DEFINITIONS
+# RTCM3 MESSAGE GROUP HEADER DEFINITIONS
 # *************************************************************
 HDR_1001_1004 = {
     "DF002": "Message Number",
@@ -313,47 +313,6 @@ HDR_1001_1004 = {
     "DF006": "No. of GPS Satellite Signals Processed",
     "DF007": "GPS Divergence-free Smoothing Indicator",
     "DF008": "GPS Smoothing Interval",
-}
-CONTENT_1001 = {
-    "DF009": "GPS Satellite ID",
-    "DF010": "GPS L1 Code Indicator",
-    "DF011": "GPS L1 Pseudorange",
-    "DF012": "GPS L1 PhaseRange - L1 Pseudorange",
-    "DF013": "GPS L1 Lock time Indicator",
-}
-CONTENT_1002 = {
-    "DF009": "GPS Satellite ID",
-    "DF010": "GPS L1 Code Indicator",
-    "DF011": "GPS L1 Pseudorange",
-    "DF012": "GPS L1 PhaseRange - L1 Pseudorange",
-    "DF013": "GPS L1 Lock time Indicator",
-    "DF014": "GPS Integer L1 Pseudorange Modulus Ambiguity",
-    "DF015": "GPS L1 CNR",
-}
-CONTENT_1003 = {
-    "DF009": "GPS Satellite ID",
-    "DF010": "GPS L1 Code Indicator",
-    "DF011": "GPS L1 Pseudorange",
-    "DF012": "GPS L1 PhaseRange - L1 Pseudorange",
-    "DF013": "GPS L1 Lock time Indicator",
-    "DF016": "GPS L2 Code Indicator",
-    "DF017": "GPS L2-L1 Pseudorange Difference",
-    "DF018": "GPS L2 PhaseRange - L1 Pseudorange",
-    "DF019": "GPS L2 Lock time Indicator",
-}
-CONTENT_1004 = {
-    "DF009": "GPS Satellite ID",
-    "DF010": "GPS L1 Code Indicator",
-    "DF011": "GPS L1 Pseudorange",
-    "DF012": "GPS L1 PhaseRange - L1 Pseudorange",
-    "DF013": "GPS L1 Lock time Indicator",
-    "DF014": "GPS Integer L1 Pseudorange Modulus Ambiguity",
-    "DF015": "GPS L1 CNR",
-    "DF016": "GPS L2 Code Indicator",
-    "DF017": "GPS L2-L1 Pseudorange Difference",
-    "DF018": "GPS L2 PhaseRange - L1 Pseudorange",
-    "DF019": "GPS L2 Lock time Indicator",
-    "DF020": "GPS L2 CNR",
 }
 
 HDR_1005_1006 = {
@@ -372,10 +331,6 @@ HDR_1005_1006 = {
     "DF027": "Antenna Reference Point ECEF-Z",
 }
 
-CONTENT_1006 = {
-    "DF028": "Antenna Height",
-}
-
 HDR_1009_1012 = {
     "DF002": "Message Number",
     "DF003": "Reference Station ID",
@@ -384,51 +339,6 @@ HDR_1009_1012 = {
     "DF035": "No. of GLONASS Satellite Signals Processed",
     "DF036": "GLONASS Divergence-free Smoothing Indicator",
     "DF037": "GLONASS Smoothing Interval",
-}
-CONTENT_1009 = {
-    "DF038": "GLONASS Satellite ID (Satellite Slot Number)",
-    "DF039": "GLONASS Code Indicator",
-    "DF040": "GLONASS Satellite Frequency Channel Number",
-    "DF041": "GLONASS L1 Pseudorange",
-    "DF042": "GLONASS L1 PhaseRange - L1 Pseudorange",
-    "DF043": "GLONASS L1 Lock time Indicator",
-}
-CONTENT_1010 = {
-    "DF038": "GLONASS Satellite ID (Satellite Slot Number)",
-    "DF039": "GLONASS L1 Code Indicator",
-    "DF040": "GLONASS Satellite Frequency Channel Number",
-    "DF041": "GLONASS L1 Pseudorange",
-    "DF042": "GLONASS L1 PhaseRange - L1 Pseudorange",
-    "DF043": "GLONASS L1 Lock time Indicator",
-    "DF044": "GLONASS Integer L1 Pseudorange Modulus Ambiguity",
-    "DF045": "GLONASS L1 CNR",
-}
-CONTENT_1011 = {
-    "DF038": "GLONASS Satellite ID (Satellite Slot Number)",
-    "DF039": "GLONASS L1 Code Indicator",
-    "DF040": "GLONASS Satellite Frequency Channel Number",
-    "DF041": "GLONASS L1 Pseudorange",
-    "DF042": "GLONASS L1 PhaseRange - L1 Pseudorange",
-    "DF043": "GLONASS L1 Lock time Indicator",
-    "DF046": "GLONASS L2 Code Indicator",
-    "DF047": "GLONASS L2-L1 Pseudorange Difference",
-    "DF048": "GLONASS L2 PhaseRange - L1 Pseudorange",
-    "DF049": "GLONASS L2 Lock time Indicator",
-}
-CONTENT_1012 = {
-    "DF038": "GLONASS Satellite ID (Satellite Slot Number)",
-    "DF039": "GLONASS L1 Code Indicator",
-    "DF040": "GLONASS Satellite Frequency Channel Number",
-    "DF041": "GLONASS L1 Pseudorange",
-    "DF042": "GLONASS L1 PhaseRange - L1 Pseudorange",
-    "DF043": "GLONASS L1 Lock time Indicator",
-    "DF044": "GLONASS Integer L1 Pseudorange Modulus Ambiguity",
-    "DF045": "GLONASS L1 CNR",
-    "DF046": "GLONASS L2 Code Indicator",
-    "DF047": "GLONASS L2-L1 Pseudorange Difference",
-    "DF048": "GLONASS L2 PhaseRange - L1 Pseudorange",
-    "DF049": "GLONASS L2 Lock time Indicator",
-    "DF050": "GLONASS L2 CNR",
 }
 
 HDR_1015_1017 = {
@@ -441,27 +351,6 @@ HDR_1015_1017 = {
     "DF061": "Auxiliary Reference Station ID",
     "DF067": "# of GPS Sats",
 }
-CONTENT_1015 = {
-    "DF068": "GPS Satellite ID",
-    "DF074": "GPS Ambiguity Status Flag",
-    "DF075": "GPS Non Sync Count",
-    "DF069": "GPS Ionospheric Carrier Phase Correction Difference",
-}
-CONTENT_1016 = {
-    "DF068": "GPS Satellite ID",
-    "DF074": "GPS Ambiguity Status Flag",
-    "DF075": "GPS Non Sync Count",
-    "DF070": "GPS Geometric Carrier Phase Correction Difference",
-    "DF071": "GPS IODE",
-}
-CONTENT_1017 = {
-    "DF068": "GPS Satellite ID",
-    "DF074": "GPS Ambiguity Status Flag",
-    "DF075": "GPS Non Sync Count",
-    "DF070": "GPS Geometric Carrier Phase Correction Difference",
-    "DF071": "GPS IODE",
-    "DF069": "GPS Ionospheric Carrier Phase Correction Difference",
-}
 
 HDR_1037_1039 = {
     "DF002": "Message Number",
@@ -473,27 +362,6 @@ HDR_1037_1039 = {
     "DF061": "Auxiliary Reference Station ID",
     "DF234": "# of GLONASS Data Entries",
 }
-CONTENT_1037 = {
-    "DF038": "GLONASS Satellite ID (Satellite Slot Number)",
-    "DF235": "GLONASS Ambiguity Status Flag",
-    "DF236": "GLONASS Non Sync Count",
-    "DF237": "GLONASS Ionospheric Carrier Phase Correction Difference",
-}
-CONTENT_1038 = {
-    "DF038": "GLONASS Satellite ID (Satellite Slot Number)",
-    "DF235": "GLONASS Ambiguity Status Flag",
-    "DF236": "GLONASS Non Sync Count",
-    "DF238": "GLONASS Geometric Carrier Phase Correction Difference",
-    "DF239": "GLONASS IOD",
-}
-CONTENT_1039 = {
-    "DF038": "GLONASS Satellite ID (Satellite Slot Number)",
-    "DF235": "GLONASS Ambiguity Status Flag",
-    "DF236": "GLONASS Non Sync Count",
-    "DF238": "GLONASS Geometric Carrier Phase Correction Difference",
-    "DF239": "GLONASS IOD",
-    "DF237": "GLONASS Ionospheric Carrier Phase Correction Difference",
-}
 
 # *************************************************************
 # RTCM3 MESSAGE PAYLOAD DEFINITIONS
@@ -503,32 +371,69 @@ RTCM_PAYLOADS_GET = {
         **HDR_1001_1004,
         "group": (
             "DF006",
-            {**CONTENT_1001},
+            {
+                "DF009": "GPS Satellite ID",
+                "DF010": "GPS L1 Code Indicator",
+                "DF011": "GPS L1 Pseudorange",
+                "DF012": "GPS L1 PhaseRange - L1 Pseudorange",
+                "DF013": "GPS L1 Lock time Indicator",
+            },
         ),
     },
     "1002": {
         **HDR_1001_1004,
         "group": (
             "DF006",
-            {**CONTENT_1002},
+            {
+                "DF009": "GPS Satellite ID",
+                "DF010": "GPS L1 Code Indicator",
+                "DF011": "GPS L1 Pseudorange",
+                "DF012": "GPS L1 PhaseRange - L1 Pseudorange",
+                "DF013": "GPS L1 Lock time Indicator",
+                "DF014": "GPS Integer L1 Pseudorange Modulus Ambiguity",
+                "DF015": "GPS L1 CNR",
+            },
         ),
     },
     "1003": {
         **HDR_1001_1004,
         "group": (
             "DF006",
-            {**CONTENT_1003},
+            {
+                "DF009": "GPS Satellite ID",
+                "DF010": "GPS L1 Code Indicator",
+                "DF011": "GPS L1 Pseudorange",
+                "DF012": "GPS L1 PhaseRange - L1 Pseudorange",
+                "DF013": "GPS L1 Lock time Indicator",
+                "DF016": "GPS L2 Code Indicator",
+                "DF017": "GPS L2-L1 Pseudorange Difference",
+                "DF018": "GPS L2 PhaseRange - L1 Pseudorange",
+                "DF019": "GPS L2 Lock time Indicator",
+            },
         ),
     },
     "1004": {
         **HDR_1001_1004,
         "group": (
             "DF006",
-            {**CONTENT_1004},
+            {
+                "DF009": "GPS Satellite ID",
+                "DF010": "GPS L1 Code Indicator",
+                "DF011": "GPS L1 Pseudorange",
+                "DF012": "GPS L1 PhaseRange - L1 Pseudorange",
+                "DF013": "GPS L1 Lock time Indicator",
+                "DF014": "GPS Integer L1 Pseudorange Modulus Ambiguity",
+                "DF015": "GPS L1 CNR",
+                "DF016": "GPS L2 Code Indicator",
+                "DF017": "GPS L2-L1 Pseudorange Difference",
+                "DF018": "GPS L2 PhaseRange - L1 Pseudorange",
+                "DF019": "GPS L2 Lock time Indicator",
+                "DF020": "GPS L2 CNR",
+            },
         ),
     },
     "1005": HDR_1005_1006,
-    "1006": {**HDR_1005_1006, **CONTENT_1006},
+    "1006": {**HDR_1005_1006, "DF028": "Antenna Height"},
     "1007": {
         "DF002": "Message Number",
         "DF003": "Reference Station ID",
@@ -564,28 +469,69 @@ RTCM_PAYLOADS_GET = {
         **HDR_1009_1012,
         "group": (
             "DF035",
-            {**CONTENT_1009},
+            {
+                "DF038": "GLONASS Satellite ID (Satellite Slot Number)",
+                "DF039": "GLONASS Code Indicator",
+                "DF040": "GLONASS Satellite Frequency Channel Number",
+                "DF041": "GLONASS L1 Pseudorange",
+                "DF042": "GLONASS L1 PhaseRange - L1 Pseudorange",
+                "DF043": "GLONASS L1 Lock time Indicator",
+            },
         ),
     },
     "1010": {
         **HDR_1009_1012,
         "group": (
             "DF035",
-            {**CONTENT_1010},
+            {
+                "DF038": "GLONASS Satellite ID (Satellite Slot Number)",
+                "DF039": "GLONASS L1 Code Indicator",
+                "DF040": "GLONASS Satellite Frequency Channel Number",
+                "DF041": "GLONASS L1 Pseudorange",
+                "DF042": "GLONASS L1 PhaseRange - L1 Pseudorange",
+                "DF043": "GLONASS L1 Lock time Indicator",
+                "DF044": "GLONASS Integer L1 Pseudorange Modulus Ambiguity",
+                "DF045": "GLONASS L1 CNR",
+            },
         ),
     },
     "1011": {
         **HDR_1009_1012,
         "group": (
             "DF035",
-            {**CONTENT_1011},
+            {
+                "DF038": "GLONASS Satellite ID (Satellite Slot Number)",
+                "DF039": "GLONASS L1 Code Indicator",
+                "DF040": "GLONASS Satellite Frequency Channel Number",
+                "DF041": "GLONASS L1 Pseudorange",
+                "DF042": "GLONASS L1 PhaseRange - L1 Pseudorange",
+                "DF043": "GLONASS L1 Lock time Indicator",
+                "DF046": "GLONASS L2 Code Indicator",
+                "DF047": "GLONASS L2-L1 Pseudorange Difference",
+                "DF048": "GLONASS L2 PhaseRange - L1 Pseudorange",
+                "DF049": "GLONASS L2 Lock time Indicator",
+            },
         ),
     },
     "1012": {
         **HDR_1009_1012,
         "group": (
             "DF035",
-            {**CONTENT_1012},
+            {
+                "DF038": "GLONASS Satellite ID (Satellite Slot Number)",
+                "DF039": "GLONASS L1 Code Indicator",
+                "DF040": "GLONASS Satellite Frequency Channel Number",
+                "DF041": "GLONASS L1 Pseudorange",
+                "DF042": "GLONASS L1 PhaseRange - L1 Pseudorange",
+                "DF043": "GLONASS L1 Lock time Indicator",
+                "DF044": "GLONASS Integer L1 Pseudorange Modulus Ambiguity",
+                "DF045": "GLONASS L1 CNR",
+                "DF046": "GLONASS L2 Code Indicator",
+                "DF047": "GLONASS L2-L1 Pseudorange Difference",
+                "DF048": "GLONASS L2 PhaseRange - L1 Pseudorange",
+                "DF049": "GLONASS L2 Lock time Indicator",
+                "DF050": "GLONASS L2 CNR",
+            },
         ),
     },
     "1013": {
@@ -619,21 +565,39 @@ RTCM_PAYLOADS_GET = {
         **HDR_1015_1017,
         "group": (
             "DF067",
-            {**CONTENT_1015},
+            {
+                "DF068": "GPS Satellite ID",
+                "DF074": "GPS Ambiguity Status Flag",
+                "DF075": "GPS Non Sync Count",
+                "DF069": "GPS Ionospheric Carrier Phase Correction Difference",
+            },
         ),
     },
     "1016": {
         **HDR_1015_1017,
         "group": (
             "DF067",
-            {**CONTENT_1016},
+            {
+                "DF068": "GPS Satellite ID",
+                "DF074": "GPS Ambiguity Status Flag",
+                "DF075": "GPS Non Sync Count",
+                "DF070": "GPS Geometric Carrier Phase Correction Difference",
+                "DF071": "GPS IODE",
+            },
         ),
     },
     "1017": {
         **HDR_1015_1017,
         "group": (
             "DF067",
-            {**CONTENT_1017},
+            {
+                "DF068": "GPS Satellite ID",
+                "DF074": "GPS Ambiguity Status Flag",
+                "DF075": "GPS Non Sync Count",
+                "DF070": "GPS Geometric Carrier Phase Correction Difference",
+                "DF071": "GPS IODE",
+                "DF069": "GPS Ionospheric Carrier Phase Correction Difference",
+            },
         ),
     },
     # "1018": {RESERVED for Alt Ionospheric Correction Diff Msg},
@@ -1005,21 +969,39 @@ RTCM_PAYLOADS_GET = {
         **HDR_1037_1039,
         "group": (
             "DF234",
-            {**CONTENT_1037},
+            {
+                "DF038": "GLONASS Satellite ID (Satellite Slot Number)",
+                "DF235": "GLONASS Ambiguity Status Flag",
+                "DF236": "GLONASS Non Sync Count",
+                "DF237": "GLONASS Ionospheric Carrier Phase Correction Difference",
+            },
         ),
     },
     "1038": {
         **HDR_1037_1039,
         "group": (
             "DF234",
-            {**CONTENT_1038},
+            {
+                "DF038": "GLONASS Satellite ID (Satellite Slot Number)",
+                "DF235": "GLONASS Ambiguity Status Flag",
+                "DF236": "GLONASS Non Sync Count",
+                "DF238": "GLONASS Geometric Carrier Phase Correction Difference",
+                "DF239": "GLONASS IOD",
+            },
         ),
     },
     "1039": {
         **HDR_1037_1039,
         "group": (
             "DF234",
-            {**CONTENT_1039},
+            {
+                "DF038": "GLONASS Satellite ID (Satellite Slot Number)",
+                "DF235": "GLONASS Ambiguity Status Flag",
+                "DF236": "GLONASS Non Sync Count",
+                "DF238": "GLONASS Geometric Carrier Phase Correction Difference",
+                "DF239": "GLONASS IOD",
+                "DF237": "GLONASS Ionospheric Carrier Phase Correction Difference",
+            },
         ),
     },
     "1057": {
