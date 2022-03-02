@@ -1,5 +1,11 @@
 # pyrtcm Release Notes
 
+### RELEASE 0.1.8-alpha
+
+CHANGES:
+
+1. Scaling now applied by default (`scaling=True`)
+
 ### RELEASE 0.1.7-alpha
 
 CHANGES:

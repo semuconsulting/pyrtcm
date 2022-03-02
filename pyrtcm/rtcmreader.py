@@ -45,7 +45,7 @@ class RTCMReader:
         self._stream = datastream
         self._quitonerror = int(kwargs.get("quitonerror", rtt.ERR_LOG))
         self._validate = int(kwargs.get("validate", rtt.VALCKSUM))
-        self._scaling = int(kwargs.get("scaling", False))
+        self._scaling = int(kwargs.get("scaling", True))
 
     def __iter__(self):
         """Iterator."""
@@ -253,6 +253,6 @@ class RTCMReader:
         """
         # pylint: disable=unused-argument
 
-        scaling = int(kwargs.get("scaling", False))
+        scaling = int(kwargs.get("scaling", True))
         payload = message[3:-3]
         return RTCMMessage(payload=payload, scaling=scaling)
