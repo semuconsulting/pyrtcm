@@ -99,7 +99,7 @@ class RTCMMessage:
         """
         Recursive routine to set individual or grouped payload attributes.
 
-        :param int offset: payload offset in bytes
+        :param int offset: payload offset in bits
         :param dict pdict: dict representing payload definition
         :param str key: attribute keyword
         :param list index: repeating group index array
@@ -109,7 +109,6 @@ class RTCMMessage:
         """
 
         att = pdict[key]  # get attribute type
-        # att = key
         if isinstance(att, tuple):  # repeating group of attributes
             (offset, index) = self._set_attribute_group(att, offset, index)
         else:  # single attribute
