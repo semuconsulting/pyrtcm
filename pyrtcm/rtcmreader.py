@@ -256,3 +256,36 @@ class RTCMReader:
         scaling = int(kwargs.get("scaling", True))
         payload = message[3:-3]
         return RTCMMessage(payload=payload, scaling=scaling)
+
+    @staticmethod
+    def parse_buffer(buf: bytearray) -> tuple:
+        """
+        Parses a bytearray buffer containing whole or partial RTCM3 messages
+        (e.g. an NTRIP server HTTP GET response) and returns the first raw
+        RTCM3 message and any remaining buffer. Based on, and thanks to:
+        https://github.com/jakepoz/deweeder/blob/main/src/ntrip.py
+
+        :param bytearray buf: buffer containing whole or partial RTCM3 messages
+        :return: tuple of (raw_data as bytes, buf_remain as bytes)
+        :rtype: tuple
+        """
+
+        start = 0
+
+        while start < len(buf):
+            if buf[start] != 0xD3:  # RTCM3 header
+                start += 1
+                continue
+
+            msglen = (buf[start + 1] & 0b00000011 > 8) | buf[start + 2]
+
+            if len(buf) < start + 3 + msglen + 3:
+                return (None, buf)
+
+            raw_data = buf[start : start + 3 + msglen + 3]
+            buf_remain = buf[start + 3 + msglen + 3 :]
+            if calc_crc24q(raw_data) == 0:  # valid checksum
+                return (raw_data, buf_remain)
+            return (None, buf_remain)
+
+        return (None, bytearray())

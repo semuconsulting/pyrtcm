@@ -26,7 +26,7 @@ setuptools.setup(
         "pyserial>=3.4",
     ],
     license="BSD 3-Clause 'Modified' License",
-    keywords="PYRTCM GNSS GPS RTCM RTCM3 GIS",
+    keywords="PYRTCM GNSS GPS RTCM RTCM3 GIS NTRIP",
     platforms="Windows, MacOS, Linux",
     project_urls={
         "Bug Tracker": "https://github.com/semuconsulting/pyrtcm",
@@ -36,7 +36,7 @@ setuptools.setup(
     },
     classifiers=[
         "Operating System :: OS Independent",
-        "Development Status :: 3 - Alpha",
+        "Development Status ::4 - Beta",
         "Environment :: MacOS X",
         "Environment :: Win32 (MS Windows)",
         "Environment :: X11 Applications",

@@ -10,7 +10,7 @@ Original MIT license here https://github.com/liukai-tech/NtripClient-Tools/blob/
 
 Usage:
 
-python3 ntripclient.py server=127.0.0.1 port=2101 mountpoint=RTMC32 user=myuser@domain.com password=mypassword
+python3 ntripclient.py server=127.0.0.1 port=2101 mountpoint=RTMC32 user=myuser password=mypassword
 
 NB: Please respect the terms and conditions of any public NTRIP service you use with this utility.
 
@@ -27,7 +27,6 @@ import socket
 import sys
 from datetime import datetime, timedelta
 from base64 import b64encode
-from typing import ByteString, Tuple
 from pynmeagps import NMEAMessage, GET, ddd2dmm
 from pyrtcm import RTCMReader, RTCMParseError, RTCMMessageError, ParameterError
 
@@ -65,9 +64,10 @@ NTRIPCLIENT_HELP = (
     + "  V2 - use NTRIP version 2 (True)\n"
     + "  user - user name (anon)\n"
     + "  password - user password (password)\n"
-    + "  lat - base latitude (53.0)\n"
-    + "  lon - base longitute (-2.0)\n"
-    + "  alt - base altitude (0.0)\n"
+    + "  sendGGA - send GGA sentence to server (False)\n"
+    + "  lat - base latitude for GGA (53.0)\n"
+    + "  lon - base longitute for GGA (-2.0)\n"
+    + "  alt - base altitude for GGA (0.0)\n"
     + "  verbose - verbose log messages (True)\n\n"
     + f"{GREEN}Type Ctrl-C to terminate.{NORMAL}\n\n"
     + f"{YELLOW}© 2022 SEMU Consulting BSD 3-Clause license\n"
@@ -87,40 +87,41 @@ class NTRIPClient:
 
         user = kwargs.get("user", "anon")
         password = kwargs.get("password", "password")
-        self.caster = kwargs.get("server", "3.23.52.207")  # 3.23.52.207 = RTK2Go
-        self.port = int(kwargs.get("port", 2101))
-        self.mountpoint = kwargs.get("mountpoint", None)
-        self.V2 = bool(kwargs.get("V2", True))
-        self.lat = float(kwargs.get("lat", 53.0))
-        self.lon = float(kwargs.get("lon", -2.0))
-        self.alt = kwargs.get("alt", 0)
-        self.verbose = bool(kwargs.get("verbose", True))
-        self.lastGGATime = datetime(1990, 1, 1, 1, 0, 0)
+        self._caster = kwargs.get("server", "3.23.52.207")  # 3.23.52.207 = RTK2Go
+        self._port = int(kwargs.get("port", 2101))
+        self._mountpoint = kwargs.get("mountpoint", None)
+        self._V2 = bool(kwargs.get("V2", True))
+        self._lat = float(kwargs.get("lat", 53.0))
+        self._lon = float(kwargs.get("lon", -2.0))
+        self._alt = float(kwargs.get("alt", 0))
+        self._sendGGA = int(kwargs.get("sendGGA", False))
+        self._verbose = bool(kwargs.get("verbose", True))
+        self._lastGGAtime = datetime(1990, 1, 1, 1, 0, 0)
 
         user = user + ":" + password
-        self.user = b64encode(user.encode(encoding="utf-8"))
+        self._user = b64encode(user.encode(encoding="utf-8"))
 
-        self.socket = None
+        self._socket = None
 
-    def formatGET(self):
+    def _formatGET(self):
         """
         Format HTTP GET Request.
         """
 
-        if self.mountpoint[0:1] != "/":
-            self.mountpoint = "/" + self.mountpoint
+        if self._mountpoint[0:1] != "/":
+            self._mountpoint = "/" + self._mountpoint
         req = (
-            f"GET {self.mountpoint} HTTP/1.1\r\n"
+            f"GET {self._mountpoint} HTTP/1.1\r\n"
             + f"User-Agent: {USERAGENT}\r\n"
-            + f"Authorization: Basic {self.user.decode(encoding='utf-8')}\r\n"
+            + f"Authorization: Basic {self._user.decode(encoding='utf-8')}\r\n"
         )
-        if self.V2:
+        if self._V2:
             req += "Ntrip-Version: Ntrip/2.0\r\n"
         req += "\r\n"
         self.doOutput(req)
         return req.encode(encoding="utf-8")
 
-    def formatGGA(self):
+    def _formatGGA(self):
         """
         Format NMEA GGA sentence using pynmeagps.
         """
@@ -129,59 +130,34 @@ class NTRIPClient:
             "GP",
             "GGA",
             GET,
-            lat=float(ddd2dmm(self.lat, "LA")),
-            NS="N" if self.lat > 0 else "S",
-            lon=float(ddd2dmm(self.lon, "LN")),
-            EW="E" if self.lon > 0 else "W",
+            lat=float(ddd2dmm(self._lat, "LA")),
+            NS="N" if self._lat > 0 else "S",
+            lon=float(ddd2dmm(self._lon, "LN")),
+            EW="E" if self._lon > 0 else "W",
             quality=1,
             numSV=15,
             HDOP=0.19,
-            alt=float(self.alt),
+            alt=self._alt,
             altUnit="M",
             sep=-8.992,
             sepUnit="M",
         )
-
-    def parse_rtcm(self, buf: ByteString) -> Tuple[ByteString, ByteString]:
-        """
-        Parses a bytearray and decodes RTCM messages one at a time.
-        Based on, and thanks to:
-        https://github.com/jakepoz/deweeder/blob/main/src/ntrip.py
-        """
-        start = 0
-
-        while start < len(buf):
-            if buf[start] != 0xD3:
-                start += 1
-                continue
-
-            msglen = (buf[start + 1] & 0b00000011 > 8) | buf[start + 2]
-
-            if len(buf) < start + 3 + msglen + 3:
-                return None, buf
-
-            return (
-                buf[start : start + 3 + msglen + 3],
-                buf[start + 3 + msglen + 3 :],
-            )
-
-        return None, bytearray()
 
     def doOutput(self, msg):
         """
         Output debug message according to verbosity setting.
         """
 
-        if self.verbose:
+        if self._verbose:
             print(msg)
 
-    def doHeader(self, sock):
+    def _doHeader(self, sock):
         """
         Parse response header lines.
         """
 
         header = "Initial header"
-        print("*** Start Of Header ***")
+        self.doOutput("*** Start Of Header ***")
         while header:
             try:
 
@@ -207,12 +183,12 @@ class NTRIPClient:
                         self.doOutput("Mountpoint does not exist\n")
                         sys.exit(2)
                     elif line.find("200 OK") >= 0:  # Request was valid
-                        self.doGGA(sock)
+                        self._doGGA(sock)
 
             except UnicodeDecodeError as err:
                 self.doOutput(f"Header decode error {err}")
 
-    def doData(self, sock):
+    def _doData(self, sock):
         """
         Parse RTCM3 data.
         """
@@ -228,36 +204,36 @@ class NTRIPClient:
 
                 # Parse the data into individual RTCM3 messages
                 while True:
-                    rtcm_msg, buf = self.parse_rtcm(buf)
+                    raw_data, buf = RTCMReader.parse_buffer(buf)
 
-                    if rtcm_msg:
-                        msg = RTCMReader.parse(rtcm_msg)
-                        print(f"{msg}\n")
-                        # if you wanted to forward this RTCM3 message to a GNSS device
-                        # via its serial port at this point, you could use something
-                        # like this:
+                    if raw_data is not None:
+                        parsed_data = RTCMReader.parse(raw_data)
+                        print(f"{parsed_data}\n")
+                        # if you wanted to forward this RTCM3 message to
+                        # a GNSS device via its serial port at this point,
+                        # you could use something like this:
                         #
                         # with Serial(port, baudrate, timeout=timeout) as serial:
-                        #    serial.write(msg.serialize())
+                        #    serial.write(parsed_data.serialize())
                         #
                     else:
                         break
 
-                self.doGGA(sock)
+                self._doGGA(sock)
 
             except (RTCMParseError, RTCMMessageError) as err:
                 self.doOutput(f"RTCM Parse Error {err}\n")
                 data = False
 
-    def doGGA(self, sock):
+    def _doGGA(self, sock):
         """
         Send GGA sentence periodically.
         """
 
-        if datetime.now() > self.lastGGATime + GGAINTERVAL:
-            gga = self.formatGGA()
+        if self._sendGGA and (datetime.now() > self._lastGGAtime + GGAINTERVAL):
+            gga = self._formatGGA()
             sock.sendall(gga.serialize())
-            self.lastGGATime = datetime.now()
+            self._lastGGAtime = datetime.now()
             self.doOutput(gga)
 
     def run(self):
@@ -268,13 +244,13 @@ class NTRIPClient:
         try:
 
             with socket.socket() as sock:
-                sock.connect((self.caster, self.port))
-                self.doOutput(f"Connected to: {self.caster}:{self.port}")
+                sock.connect((self._caster, self._port))
+                self.doOutput(f"Connected to: {self._caster}:{self._port}")
                 sock.settimeout(TIMEOUT)
-                sock.sendall(self.formatGET())
+                sock.sendall(self._formatGET())
                 while True:
-                    self.doHeader(sock)
-                    self.doData(sock)
+                    self._doHeader(sock)
+                    self._doData(sock)
 
         except socket.timeout as err:
             self.doOutput(f"Connection Timed Out {err}")

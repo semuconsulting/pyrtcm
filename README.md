@@ -101,7 +101,6 @@ Example - File input (using iterator).
 >>> for (raw_data, parsed_data) in rtr: print(parsed_data)
 ...
 ```
-
 ---
 ## <a name="parsing">Parsing</a>
 
@@ -126,6 +125,24 @@ The `RTCMMessage` object exposes different public attributes depending on its me
 '1005'
 >>> msg.DF024
 1
+```
+
+It is also possible to parse raw RTCM3 messages from a buffer using the `RTCMReader.parse_buffer(bytearray)` function, which takes a bytearray containing one or more whole or partial RTCM3 messages and returns the first complete raw RTCM3 message and any remaining buffer.
+
+Example - Reading successive RTCM3 messages from an NTRIP server socket.
+```python
+  buf = bytearray()
+  data = True
+  while data:
+    data = sock.recv(1024) # NTRIP server socket
+    buf += data
+    while True:
+      raw_data, buf = RTCMReader.parse_buffer(buf)
+      if raw_data is not None:
+        parsed_data = RTCMReader.parse(raw_data)
+        print(parsed_data)
+      else:
+        break
 ```
 
 Helper methods are available to interpret the individual datafields:
