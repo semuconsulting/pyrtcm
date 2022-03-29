@@ -1,5 +1,14 @@
 # pyrtcm Release Notes
 
+### RELEASE 0.2-beta
+
+CHANGES:
+
+1. Added `parse_buffer()` static method to `RTCMReader` to parse an individual RTCM3 message from a buffer
+containing whole or partial RTCM3 messages, and return any remaining buffer. Can be used to parse the output from an NTRIP server HTTP GET response, for example. Thanks to @jakepoz and @foxittt for suggestion & inspiration.
+2. Add simple NTRIP client example `ntripclient.py` which uses the new method above.
+3. Development status updated to beta
+
 ### RELEASE 0.1.8-alpha
 
 CHANGES:

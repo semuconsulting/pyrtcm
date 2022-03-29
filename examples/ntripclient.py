@@ -142,31 +142,6 @@ class NTRIPClient:
             sepUnit="M",
         )
 
-    def parse_rtcm(self, buf: ByteString) -> Tuple[ByteString, ByteString]:
-        """
-        Parses a bytearray and decodes RTCM messages one at a time.
-        Based on, and thanks to:
-        https://github.com/jakepoz/deweeder/blob/main/src/ntrip.py
-        """
-        start = 0
-
-        while start < len(buf):
-            if buf[start] != 0xD3:
-                start += 1
-                continue
-
-            msglen = (buf[start + 1] & 0b00000011 > 8) | buf[start + 2]
-
-            if len(buf) < start + 3 + msglen + 3:
-                return None, buf
-
-            return (
-                buf[start : start + 3 + msglen + 3],
-                buf[start + 3 + msglen + 3 :],
-            )
-
-        return None, bytearray()
-
     def doOutput(self, msg):
         """
         Output debug message according to verbosity setting.
@@ -228,17 +203,17 @@ class NTRIPClient:
 
                 # Parse the data into individual RTCM3 messages
                 while True:
-                    rtcm_msg, buf = self.parse_rtcm(buf)
+                    raw_data, buf = RTCMReader.parse_buffer(buf)
 
-                    if rtcm_msg:
-                        msg = RTCMReader.parse(rtcm_msg)
-                        print(f"{msg}\n")
-                        # if you wanted to forward this RTCM3 message to a GNSS device
-                        # via its serial port at this point, you could use something
-                        # like this:
+                    if raw_data is not None:
+                        parsed_data = RTCMReader.parse(raw_data)
+                        print(f"{parsed_data}\n")
+                        # if you wanted to forward this RTCM3 message to
+                        # a GNSS device via its serial port at this point,
+                        # you could use something like this:
                         #
                         # with Serial(port, baudrate, timeout=timeout) as serial:
-                        #    serial.write(msg.serialize())
+                        #    serial.write(parsed_data.serialize())
                         #
                     else:
                         break
