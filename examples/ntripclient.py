@@ -200,6 +200,12 @@ class NTRIPClient:
                 self.doOutput(f"Data bytes received: {len(data)}")
                 msg = RTCMReader.parse(data)
                 print(f"{msg}\n")
+                # if you wanted to forward this RTCM3 message to a GNSS device
+                # via its serial port, you could use something like this:
+                #
+                # with Serial(port, baudrate, timeout=timeout) as serial:
+                #    serial.write(msg.serialize())
+                #
                 self.doGGA(sock)
 
             except (RTCMParseError, RTCMMessageError) as err:
