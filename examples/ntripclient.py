@@ -3,6 +3,9 @@
 A very simple example of an NTRIP client which uses pyrtcm to parse the RTCM3 output
 from a designated NTRIP server & mountpoint to the terminal.
 
+Based on https://github.com/liukai-tech/NtripClient-Tools but extensively refactored.
+Original MIT license here https://github.com/liukai-tech/NtripClient-Tools/blob/master/LICENSE.
+
 *** WORK IN PROGRESS ***
 
 Usage:
