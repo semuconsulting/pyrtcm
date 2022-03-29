@@ -64,9 +64,10 @@ NTRIPCLIENT_HELP = (
     + "  V2 - use NTRIP version 2 (True)\n"
     + "  user - user name (anon)\n"
     + "  password - user password (password)\n"
-    + "  lat - base latitude (53.0)\n"
-    + "  lon - base longitute (-2.0)\n"
-    + "  alt - base altitude (0.0)\n"
+    + "  sendGGA - send GGA sentence to server (False)\n"
+    + "  lat - base latitude for GGA (53.0)\n"
+    + "  lon - base longitute for GGA (-2.0)\n"
+    + "  alt - base altitude for GGA (0.0)\n"
     + "  verbose - verbose log messages (True)\n\n"
     + f"{GREEN}Type Ctrl-C to terminate.{NORMAL}\n\n"
     + f"{YELLOW}© 2022 SEMU Consulting BSD 3-Clause license\n"
@@ -93,6 +94,7 @@ class NTRIPClient:
         self._lat = float(kwargs.get("lat", 53.0))
         self._lon = float(kwargs.get("lon", -2.0))
         self._alt = float(kwargs.get("alt", 0))
+        self._sendGGA = int(kwargs.get("sendGGA", False))
         self._verbose = bool(kwargs.get("verbose", True))
         self._lastGGAtime = datetime(1990, 1, 1, 1, 0, 0)
 
@@ -228,7 +230,7 @@ class NTRIPClient:
         Send GGA sentence periodically.
         """
 
-        if datetime.now() > self._lastGGAtime + GGAINTERVAL:
+        if self._sendGGA and (datetime.now() > self._lastGGAtime + GGAINTERVAL):
             gga = self._formatGGA()
             sock.sendall(gga.serialize())
             self._lastGGAtime = datetime.now()
