@@ -101,7 +101,7 @@ class NTRIPClient:
 
         self._socket = None
 
-    def formatGET(self):
+    def _formatGET(self):
         """
         Format HTTP GET Request.
         """
@@ -119,7 +119,7 @@ class NTRIPClient:
         self.doOutput(req)
         return req.encode(encoding="utf-8")
 
-    def formatGGA(self):
+    def _formatGGA(self):
         """
         Format NMEA GGA sentence using pynmeagps.
         """
@@ -149,7 +149,7 @@ class NTRIPClient:
         if self._verbose:
             print(msg)
 
-    def doHeader(self, sock):
+    def _doHeader(self, sock):
         """
         Parse response header lines.
         """
@@ -181,12 +181,12 @@ class NTRIPClient:
                         self.doOutput("Mountpoint does not exist\n")
                         sys.exit(2)
                     elif line.find("200 OK") >= 0:  # Request was valid
-                        self.doGGA(sock)
+                        self._doGGA(sock)
 
             except UnicodeDecodeError as err:
                 self.doOutput(f"Header decode error {err}")
 
-    def doData(self, sock):
+    def _doData(self, sock):
         """
         Parse RTCM3 data.
         """
@@ -217,19 +217,19 @@ class NTRIPClient:
                     else:
                         break
 
-                self.doGGA(sock)
+                self._doGGA(sock)
 
             except (RTCMParseError, RTCMMessageError) as err:
                 self.doOutput(f"RTCM Parse Error {err}\n")
                 data = False
 
-    def doGGA(self, sock):
+    def _doGGA(self, sock):
         """
         Send GGA sentence periodically.
         """
 
         if datetime.now() > self._lastGGAtime + GGAINTERVAL:
-            gga = self.formatGGA()
+            gga = self._formatGGA()
             sock.sendall(gga.serialize())
             self._lastGGAtime = datetime.now()
             self.doOutput(gga)
@@ -245,10 +245,10 @@ class NTRIPClient:
                 sock.connect((self._caster, self._port))
                 self.doOutput(f"Connected to: {self._caster}:{self._port}")
                 sock.settimeout(TIMEOUT)
-                sock.sendall(self.formatGET())
+                sock.sendall(self._formatGET())
                 while True:
-                    self.doHeader(sock)
-                    self.doData(sock)
+                    self._doHeader(sock)
+                    self._doData(sock)
 
         except socket.timeout as err:
             self.doOutput(f"Connection Timed Out {err}")
