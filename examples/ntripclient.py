@@ -27,6 +27,7 @@ import socket
 import sys
 from datetime import datetime, timedelta
 from base64 import b64encode
+from typing import ByteString, Tuple
 from pynmeagps import NMEAMessage, GET, ddd2dmm
 from pyrtcm import RTCMReader, RTCMParseError, RTCMMessageError, ParameterError
 
@@ -141,6 +142,31 @@ class NTRIPClient:
             sepUnit="M",
         )
 
+    def parse_rtcm(self, buf: ByteString) -> Tuple[ByteString, ByteString]:
+        """
+        Parses a bytearray and decodes RTCM messages one at a time.
+        Based on, and thanks to:
+        https://github.com/jakepoz/deweeder/blob/main/src/ntrip.py
+        """
+        start = 0
+
+        while start < len(buf):
+            if buf[start] != 0xD3:
+                start += 1
+                continue
+
+            msglen = (buf[start + 1] & 0b00000011 > 8) | buf[start + 2]
+
+            if len(buf) < start + 3 + msglen + 3:
+                return None, buf
+
+            return (
+                buf[start : start + 3 + msglen + 3],
+                buf[start + 3 + msglen + 3 :],
+            )
+
+        return None, bytearray()
+
     def doOutput(self, msg):
         """
         Output debug message according to verbosity setting.
@@ -191,21 +217,32 @@ class NTRIPClient:
         Parse RTCM3 data.
         """
 
+        buf = bytearray()
         data = "Initial data"
         while data:
             try:
 
                 data = sock.recv(DATBUFFER)
-                # print(data)
                 self.doOutput(f"Data bytes received: {len(data)}")
-                msg = RTCMReader.parse(data)
-                print(f"{msg}\n")
-                # if you wanted to forward this RTCM3 message to a GNSS device
-                # via its serial port, you could use something like this:
-                #
-                # with Serial(port, baudrate, timeout=timeout) as serial:
-                #    serial.write(msg.serialize())
-                #
+                buf += data
+
+                # Parse the data into individual RTCM3 messages
+                while True:
+                    rtcm_msg, buf = self.parse_rtcm(buf)
+
+                    if rtcm_msg:
+                        msg = RTCMReader.parse(rtcm_msg)
+                        print(f"{msg}\n")
+                        # if you wanted to forward this RTCM3 message to a GNSS device
+                        # via its serial port at this point, you could use something
+                        # like this:
+                        #
+                        # with Serial(port, baudrate, timeout=timeout) as serial:
+                        #    serial.write(msg.serialize())
+                        #
+                    else:
+                        break
+
                 self.doGGA(sock)
 
             except (RTCMParseError, RTCMMessageError) as err:
