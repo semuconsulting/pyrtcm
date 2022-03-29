@@ -10,7 +10,7 @@ Original MIT license here https://github.com/liukai-tech/NtripClient-Tools/blob/
 
 Usage:
 
-python3 ntripclient.py server=127.0.0.1 port=2101 mountpoint=RTMC32 user=myuser@domain.com password=mypassword
+python3 ntripclient.py server=127.0.0.1 port=2101 mountpoint=RTMC32 user=myuser password=mypassword
 
 NB: Please respect the terms and conditions of any public NTRIP service you use with this utility.
 
@@ -27,7 +27,6 @@ import socket
 import sys
 from datetime import datetime, timedelta
 from base64 import b64encode
-from typing import ByteString, Tuple
 from pynmeagps import NMEAMessage, GET, ddd2dmm
 from pyrtcm import RTCMReader, RTCMParseError, RTCMMessageError, ParameterError
 
@@ -87,34 +86,34 @@ class NTRIPClient:
 
         user = kwargs.get("user", "anon")
         password = kwargs.get("password", "password")
-        self.caster = kwargs.get("server", "3.23.52.207")  # 3.23.52.207 = RTK2Go
-        self.port = int(kwargs.get("port", 2101))
-        self.mountpoint = kwargs.get("mountpoint", None)
-        self.V2 = bool(kwargs.get("V2", True))
-        self.lat = float(kwargs.get("lat", 53.0))
-        self.lon = float(kwargs.get("lon", -2.0))
-        self.alt = kwargs.get("alt", 0)
-        self.verbose = bool(kwargs.get("verbose", True))
-        self.lastGGATime = datetime(1990, 1, 1, 1, 0, 0)
+        self._caster = kwargs.get("server", "3.23.52.207")  # 3.23.52.207 = RTK2Go
+        self._port = int(kwargs.get("port", 2101))
+        self._mountpoint = kwargs.get("mountpoint", None)
+        self._V2 = bool(kwargs.get("V2", True))
+        self._lat = float(kwargs.get("lat", 53.0))
+        self._lon = float(kwargs.get("lon", -2.0))
+        self._alt = float(kwargs.get("alt", 0))
+        self._verbose = bool(kwargs.get("verbose", True))
+        self._lastGGAtime = datetime(1990, 1, 1, 1, 0, 0)
 
         user = user + ":" + password
-        self.user = b64encode(user.encode(encoding="utf-8"))
+        self._user = b64encode(user.encode(encoding="utf-8"))
 
-        self.socket = None
+        self._socket = None
 
     def formatGET(self):
         """
         Format HTTP GET Request.
         """
 
-        if self.mountpoint[0:1] != "/":
-            self.mountpoint = "/" + self.mountpoint
+        if self._mountpoint[0:1] != "/":
+            self._mountpoint = "/" + self._mountpoint
         req = (
-            f"GET {self.mountpoint} HTTP/1.1\r\n"
+            f"GET {self._mountpoint} HTTP/1.1\r\n"
             + f"User-Agent: {USERAGENT}\r\n"
-            + f"Authorization: Basic {self.user.decode(encoding='utf-8')}\r\n"
+            + f"Authorization: Basic {self._user.decode(encoding='utf-8')}\r\n"
         )
-        if self.V2:
+        if self._V2:
             req += "Ntrip-Version: Ntrip/2.0\r\n"
         req += "\r\n"
         self.doOutput(req)
@@ -129,14 +128,14 @@ class NTRIPClient:
             "GP",
             "GGA",
             GET,
-            lat=float(ddd2dmm(self.lat, "LA")),
-            NS="N" if self.lat > 0 else "S",
-            lon=float(ddd2dmm(self.lon, "LN")),
-            EW="E" if self.lon > 0 else "W",
+            lat=float(ddd2dmm(self._lat, "LA")),
+            NS="N" if self._lat > 0 else "S",
+            lon=float(ddd2dmm(self._lon, "LN")),
+            EW="E" if self._lon > 0 else "W",
             quality=1,
             numSV=15,
             HDOP=0.19,
-            alt=float(self.alt),
+            alt=self._alt,
             altUnit="M",
             sep=-8.992,
             sepUnit="M",
@@ -147,7 +146,7 @@ class NTRIPClient:
         Output debug message according to verbosity setting.
         """
 
-        if self.verbose:
+        if self._verbose:
             print(msg)
 
     def doHeader(self, sock):
@@ -156,7 +155,7 @@ class NTRIPClient:
         """
 
         header = "Initial header"
-        print("*** Start Of Header ***")
+        self.doOutput("*** Start Of Header ***")
         while header:
             try:
 
@@ -229,10 +228,10 @@ class NTRIPClient:
         Send GGA sentence periodically.
         """
 
-        if datetime.now() > self.lastGGATime + GGAINTERVAL:
+        if datetime.now() > self._lastGGAtime + GGAINTERVAL:
             gga = self.formatGGA()
             sock.sendall(gga.serialize())
-            self.lastGGATime = datetime.now()
+            self._lastGGAtime = datetime.now()
             self.doOutput(gga)
 
     def run(self):
@@ -243,8 +242,8 @@ class NTRIPClient:
         try:
 
             with socket.socket() as sock:
-                sock.connect((self.caster, self.port))
-                self.doOutput(f"Connected to: {self.caster}:{self.port}")
+                sock.connect((self._caster, self._port))
+                self.doOutput(f"Connected to: {self._caster}:{self._port}")
                 sock.settimeout(TIMEOUT)
                 sock.sendall(self.formatGET())
                 while True:
