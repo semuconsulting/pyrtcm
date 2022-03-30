@@ -27,7 +27,7 @@ import socket
 import sys
 from datetime import datetime, timedelta
 from base64 import b64encode
-from pynmeagps import NMEAMessage, GET, ddd2dmm
+from pynmeagps import NMEAMessage, GET
 from pyrtcm import RTCMReader, RTCMParseError, RTCMMessageError, ParameterError
 
 USERAGENT = "pyrtcm NTRIP client/0.1"
@@ -92,8 +92,8 @@ class NTRIPClient:
         self._port = int(kwargs.get("port", 2101))
         self._mountpoint = kwargs.get("mountpoint", None)
         self._V2 = bool(kwargs.get("V2", True))
-        self._lat = float(kwargs.get("lat", 53.0))
-        self._lon = float(kwargs.get("lon", -2.0))
+        self._lat = float(kwargs.get("lat", 53.5))
+        self._lon = float(kwargs.get("lon", -2.5))
         self._alt = float(kwargs.get("alt", 0))
         self._sendGGA = int(kwargs.get("sendGGA", False))
         self._idonly = int(kwargs.get("idonly", False))
@@ -132,9 +132,9 @@ class NTRIPClient:
             "GP",
             "GGA",
             GET,
-            lat=float(ddd2dmm(self._lat, "LA")),
+            lat=self._lat,
             NS="N" if self._lat > 0 else "S",
-            lon=float(ddd2dmm(self._lon, "LN")),
+            lon=self._lon,
             EW="E" if self._lon > 0 else "W",
             quality=1,
             numSV=15,
