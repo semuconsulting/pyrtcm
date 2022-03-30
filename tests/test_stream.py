@@ -165,6 +165,13 @@ class StreamTest(unittest.TestCase):
         raw_data, _ = RTCMReader.parse_buffer(buffer)
         self.assertIsNone(raw_data)
 
+    def testparsebuffer5(self):  # test parse_buffer method with short buffer
+        DATAS = [b"", b"\xd3" b"\xd3\x00", b"\x23\xd3", b"\x11\x22\xd3"]
+        for data in DATAS:
+            buffer = bytearray(data)
+            raw_data, _ = RTCMReader.parse_buffer(buffer)
+            self.assertIsNone(raw_data)
+
 
 if __name__ == "__main__":
     # import sys;sys.argv = ['', 'Test.testName']

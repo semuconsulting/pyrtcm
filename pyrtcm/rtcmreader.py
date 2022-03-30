@@ -270,6 +270,8 @@ class RTCMReader:
         :rtype: tuple
         """
 
+        raw_data = None
+        buf_remain = buf
         start = 0
 
         while start < len(buf):
@@ -277,15 +279,18 @@ class RTCMReader:
                 start += 1
                 continue
 
+            if len(buf) < start + 2:
+                break
+
             msglen = (buf[start + 1] & 0b00000011 > 8) | buf[start + 2]
 
             if len(buf) < start + 3 + msglen + 3:
-                return (None, buf)
+                break
 
             raw_data = buf[start : start + 3 + msglen + 3]
             buf_remain = buf[start + 3 + msglen + 3 :]
-            if calc_crc24q(raw_data) == 0:  # valid checksum
-                return (raw_data, buf_remain)
-            return (None, buf_remain)
+            if calc_crc24q(raw_data):  # invalid checksum
+                raw_data = None
+            break
 
-        return (None, bytearray())
+        return (raw_data, buf_remain)
