@@ -1,6 +1,12 @@
 # pyrtcm Release Notes
 
-### RELEASE 0.2-beta
+### RELEASE 0.2.1-beta
+
+FIXES:
+
+1. Fixed error in RTCMReader.parse_buffer() which caused IndexError in certain circumstances.
+
+### RELEASE 0.2.0-beta
 
 CHANGES:
 

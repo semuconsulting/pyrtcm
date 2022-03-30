@@ -262,11 +262,12 @@ class RTCMReader:
         """
         Parses a bytearray buffer containing whole or partial RTCM3 messages
         (e.g. an NTRIP server HTTP GET response) and returns the first raw
-        RTCM3 message and any remaining buffer. Based on, and thanks to:
+        RTCM3 message (or None if no message found) and any remaining buffer.
+        Based on, and thanks to:
         https://github.com/jakepoz/deweeder/blob/main/src/ntrip.py
 
         :param bytearray buf: buffer containing whole or partial RTCM3 messages
-        :return: tuple of (raw_data as bytes, buf_remain as bytes)
+        :return: tuple of (raw_data as bytes (or None), buf_remain as bytes)
         :rtype: tuple
         """
 
