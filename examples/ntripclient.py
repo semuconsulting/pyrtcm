@@ -64,6 +64,7 @@ NTRIPCLIENT_HELP = (
     + "  V2 - use NTRIP version 2 (True)\n"
     + "  user - user name (anon)\n"
     + "  password - user password (password)\n"
+    + "  idonly - show RTCM3 message identity only (False)\n"
     + "  sendGGA - send GGA sentence to server (False)\n"
     + "  lat - base latitude for GGA (53.0)\n"
     + "  lon - base longitute for GGA (-2.0)\n"
@@ -95,6 +96,7 @@ class NTRIPClient:
         self._lon = float(kwargs.get("lon", -2.0))
         self._alt = float(kwargs.get("alt", 0))
         self._sendGGA = int(kwargs.get("sendGGA", False))
+        self._idonly = int(kwargs.get("idonly", False))
         self._verbose = bool(kwargs.get("verbose", True))
         self._lastGGAtime = datetime(1990, 1, 1, 1, 0, 0)
 
@@ -208,7 +210,10 @@ class NTRIPClient:
 
                     if raw_data is not None:
                         parsed_data = RTCMReader.parse(raw_data)
-                        print(f"{parsed_data}\n")
+                        if self._idonly:
+                            print(f"{parsed_data.identity}")
+                        else:
+                            print(f"{parsed_data}\n")
                         # if you wanted to forward this RTCM3 message to
                         # a GNSS device via its serial port at this point,
                         # you could use something like this:
