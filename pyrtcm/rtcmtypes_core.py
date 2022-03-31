@@ -509,6 +509,10 @@ RTCM_MSGIDS = {
     "1037": "GLONASS Ionospheric Correction Differences",
     "1038": "GLONASS Geometric Correction Differences",
     "1039": "GLONASS Combined Geometric and Ionospheric Correction Differences",
+    "1042": "Beidou Satellite Emphemeris Data",  # v3.3 TODO
+    "1044": "QZSS Ephemerides",  # v3.3 TODO
+    "1045": "Galileo F/NAV Satellite Emphemeris Data",  # v3.3 TODO
+    "1046": "Galileo I/NAV Satellite Emphemeris Data",  # v3.3 TODO
     "1057": "SSR GPS Orbit Correction",
     "1058": "SSR GPS Clock Correction",
     "1059": "SSR GPS Code Bias",
@@ -584,7 +588,14 @@ RTCM_MSGIDS = {
     #
     # Proprietary messages have not yet been implemented
     #
-    # "4001-4079":"Proprietary Messages",
+    # "4001-4095":"Proprietary Messages",
+    "4072": "Mitsubishi Electric Corp",
+    "4073": "Unicore Communications Inc",
+    "4075": "Alberding GmbH",
+    "4076": "International GNSS Service (IGS)",
+    "4077": "Hemisphere GNSS Inc.",
+    "4078": "ComNav Technology Ltd.",
+    "4079": "SubCarrier Systems Corp. (SCSC) The makers of SNIP",
     "4080": "NavCom Technology, Inc.",
     "4081": "Seoul National University GNSS Lab",
     "4082": "Cooperative Research Centre for Spatial Information",
