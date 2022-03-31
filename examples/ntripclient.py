@@ -6,13 +6,16 @@ from a designated NTRIP server & mountpoint to the terminal.
 Based on https://github.com/liukai-tech/NtripClient-Tools but extensively refactored.
 Original MIT license here https://github.com/liukai-tech/NtripClient-Tools/blob/master/LICENSE.
 
-*** WORK IN PROGRESS ***
-
 Usage:
 
 python3 ntripclient.py server=127.0.0.1 port=2101 mountpoint=RTMC32 user=myuser password=mypassword
 
-NB: Please respect the terms and conditions of any public NTRIP service you use with this utility.
+For help, type:
+
+python3 ntripclient.py -h
+
+NB: NOT FOR PRODUCTION USE! Please respect the terms and conditions
+of any public or private NTRIP service you use with this example.
 
 Created on 27 Mar 2022
 
@@ -29,6 +32,11 @@ from datetime import datetime, timedelta
 from base64 import b64encode
 from pynmeagps import NMEAMessage, GET
 from pyrtcm import RTCMReader, RTCMParseError, RTCMMessageError, ParameterError
+
+
+class ConnError(Exception):
+    """Connection Error Class."""
+
 
 USERAGENT = "pyrtcm NTRIP client/0.1"
 GGAINTERVAL = timedelta(seconds=3)
@@ -65,6 +73,7 @@ NTRIPCLIENT_HELP = (
     + "  user - user name (anon)\n"
     + "  password - user password (password)\n"
     + "  idonly - show RTCM3 message identity only (False)\n"
+    + "  listmp - list all available mountpoints (False)\n"
     + "  sendGGA - send GGA sentence to server (False)\n"
     + "  lat - base latitude for GGA (53.0)\n"
     + "  lon - base longitute for GGA (-2.0)\n"
@@ -88,7 +97,7 @@ class NTRIPClient:
 
         user = kwargs.get("user", "anon")
         password = kwargs.get("password", "password")
-        self._caster = kwargs.get("server", "3.23.52.207")  # 3.23.52.207 = RTK2Go
+        self._caster = kwargs.get("server", None)  # 3.23.52.207 = RTK2Go
         self._port = int(kwargs.get("port", 2101))
         self._mountpoint = kwargs.get("mountpoint", None)
         self._V2 = bool(kwargs.get("V2", True))
@@ -97,12 +106,19 @@ class NTRIPClient:
         self._alt = float(kwargs.get("alt", 0))
         self._sendGGA = int(kwargs.get("sendGGA", False))
         self._idonly = int(kwargs.get("idonly", False))
+        self._listmp = int(kwargs.get("listmp", False))
         self._verbose = bool(kwargs.get("verbose", True))
         self._lastGGAtime = datetime(1990, 1, 1, 1, 0, 0)
 
+        if self._caster is None or (self._mountpoint is None and not self._listmp):
+            raise ParameterError(
+                f"Invalid parameter(s). Server and Mountpoint must be provided.\n{NTRIPCLIENT_HELP}"
+            )
+
         user = user + ":" + password
         self._user = b64encode(user.encode(encoding="utf-8"))
-
+        if self._listmp:
+            self._mountpoint = "XXXXXXXXXXXX"
         self._socket = None
 
     def _formatGET(self):
@@ -158,37 +174,33 @@ class NTRIPClient:
         Parse response header lines.
         """
 
-        header = "Initial header"
+        conn = f"{self._caster}:{self._port}{self._mountpoint}"
+        data = "Initial Header"
         self.doOutput("*** Start Of Header ***")
-        while header:
+        while data:
             try:
 
                 data = sock.recv(HDRBUFFER)
                 header_lines = data.decode(encoding="utf-8").split("\r\n")
 
                 for line in header_lines:
-                    if line == "":
-                        if header:
-                            header = False
-                            self.doOutput("*** End Of Header ***\n")
-                    else:
+                    if line.find("SOURCETABLE") >= 0:  # end of mountpoint list
                         self.doOutput(line)
+                        sys.exit()
+                    elif (
+                        line.find("401 Unauthorized") >= 0
+                        or line.find("403 Forbidden") >= 0
+                        or line.find("404 Not Found") >= 0
+                    ):
+                        raise ConnError(f"{line}: {conn}")
+                    elif line == "":
+                        break
+                    self.doOutput(line)
 
-                for line in header_lines:
-                    if line.find("SOURCETABLE") >= 0:
-                        self.doOutput("Mountpoint does not exist")
-                        sys.exit(1)
-                    elif line.find("401 Unauthorized") >= 0:
-                        self.doOutput("Unauthorized request\n")
-                        sys.exit(1)
-                    elif line.find("404 Not Found") >= 0:
-                        self.doOutput("Mountpoint does not exist\n")
-                        sys.exit(2)
-                    elif line.find("200 OK") >= 0:  # Request was valid
-                        self._doGGA(sock)
+            except UnicodeDecodeError:
+                data = False
 
-            except UnicodeDecodeError as err:
-                self.doOutput(f"Header decode error {err}")
+        self.doOutput("*** End Of Header ***\n")
 
     def _doData(self, sock):
         """
