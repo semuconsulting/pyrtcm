@@ -166,7 +166,15 @@ class StreamTest(unittest.TestCase):
         self.assertIsNone(raw_data)
 
     def testparsebuffer5(self):  # test parse_buffer method with short buffer
-        DATAS = [b"", b"\xd3" b"\xd3\x00", b"\x23\xd3", b"\x11\x22\xd3"]
+        DATAS = [
+            b"",
+            b"\xd3",
+            b"\xd3\x11",
+            b"\xd3\x11\x22",
+            b"\x23\xd3",
+            b"\x11\x22\xd3",
+            b"\x11\x22\x33\x44\x55",
+        ]
         for data in DATAS:
             buffer = bytearray(data)
             raw_data, _ = RTCMReader.parse_buffer(buffer)
