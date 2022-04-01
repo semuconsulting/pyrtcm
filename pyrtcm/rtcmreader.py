@@ -284,7 +284,7 @@ class RTCMReader:
                 break
 
             msglen = (buf[start + 1] & 0b00000011 > 8) | buf[start + 2]
-            totlen = start + 3 + msglen + 3
+            totlen = start + msglen + 6
 
             if len(buf) < totlen:
                 break
