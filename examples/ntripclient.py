@@ -28,10 +28,15 @@ Created on 27 Mar 2022
 from platform import system
 import socket
 import sys
-from datetime import datetime, timedelta
+from datetime import timedelta
 from base64 import b64encode
-from pynmeagps import NMEAMessage, GET
-from pyrtcm import RTCMReader, RTCMParseError, RTCMMessageError, ParameterError
+from pyrtcm import (
+    RTCMReader,
+    RTCMParseError,
+    RTCMMessageError,
+    ParameterError,
+    RTCM_MSGIDS,
+)
 
 
 class ConnError(Exception):
@@ -74,10 +79,6 @@ NTRIPCLIENT_HELP = (
     + "  password - user password (password)\n"
     + "  idonly - show RTCM3 message identity only (False)\n"
     + "  listmp - list all available mountpoints (False)\n"
-    + "  sendGGA - send GGA sentence to server (False)\n"
-    + "  lat - base latitude for GGA (53.0)\n"
-    + "  lon - base longitute for GGA (-2.0)\n"
-    + "  alt - base altitude for GGA (0.0)\n"
     + "  verbose - verbose log messages (True)\n\n"
     + f"{GREEN}Type Ctrl-C to terminate.{NORMAL}\n\n"
     + f"{YELLOW}© 2022 SEMU Consulting BSD 3-Clause license\n"
@@ -100,15 +101,13 @@ class NTRIPClient:
         self._caster = kwargs.get("server", None)  # 3.23.52.207 = RTK2Go
         self._port = int(kwargs.get("port", 2101))
         self._mountpoint = kwargs.get("mountpoint", None)
-        self._V2 = bool(kwargs.get("V2", True))
+        self._V2 = int(kwargs.get("V2", True))
         self._lat = float(kwargs.get("lat", 53.5))
         self._lon = float(kwargs.get("lon", -2.5))
         self._alt = float(kwargs.get("alt", 0))
-        self._sendGGA = int(kwargs.get("sendGGA", False))
         self._idonly = int(kwargs.get("idonly", False))
         self._listmp = int(kwargs.get("listmp", False))
-        self._verbose = bool(kwargs.get("verbose", True))
-        self._lastGGAtime = datetime(1990, 1, 1, 1, 0, 0)
+        self._verbose = int(kwargs.get("verbose", True))
 
         if self._caster is None or (self._mountpoint is None and not self._listmp):
             raise ParameterError(
@@ -138,28 +137,6 @@ class NTRIPClient:
         req += "\r\n"
         self.doOutput(req)
         return req.encode(encoding="utf-8")
-
-    def _formatGGA(self):
-        """
-        Format NMEA GGA sentence using pynmeagps.
-        """
-
-        return NMEAMessage(
-            "GP",
-            "GGA",
-            GET,
-            lat=self._lat,
-            NS="N" if self._lat > 0 else "S",
-            lon=self._lon,
-            EW="E" if self._lon > 0 else "W",
-            quality=1,
-            numSV=15,
-            HDOP=0.19,
-            alt=self._alt,
-            altUnit="M",
-            sep=-8.992,
-            sepUnit="M",
-        )
 
     def doOutput(self, msg):
         """
@@ -223,7 +200,8 @@ class NTRIPClient:
                     if raw_data is not None:
                         parsed_data = RTCMReader.parse(raw_data)
                         if self._idonly:
-                            print(f"{parsed_data.identity}")
+                            mid = parsed_data.identity
+                            print(f"{mid} ({RTCM_MSGIDS[mid]})")
                         else:
                             print(f"{parsed_data}\n")
                         # if you wanted to forward this RTCM3 message to
@@ -236,22 +214,9 @@ class NTRIPClient:
                     else:
                         break
 
-                self._doGGA(sock)
-
             except (RTCMParseError, RTCMMessageError) as err:
                 self.doOutput(f"RTCM Parse Error {err}\n")
                 data = False
-
-    def _doGGA(self, sock):
-        """
-        Send GGA sentence periodically.
-        """
-
-        if self._sendGGA and (datetime.now() > self._lastGGAtime + GGAINTERVAL):
-            gga = self._formatGGA()
-            sock.sendall(gga.serialize())
-            self._lastGGAtime = datetime.now()
-            self.doOutput(gga)
 
     def run(self):
         """
