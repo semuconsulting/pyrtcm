@@ -284,12 +284,13 @@ class RTCMReader:
                 break
 
             msglen = (buf[start + 1] & 0b00000011 > 8) | buf[start + 2]
+            totlen = start + msglen + 6
 
-            if len(buf) < start + 3 + msglen + 3:
+            if len(buf) < totlen:
                 break
 
-            raw_data = buf[start : start + 3 + msglen + 3]
-            buf_remain = buf[start + 3 + msglen + 3 :]
+            raw_data = buf[start:totlen]
+            buf_remain = buf[totlen:]
             if calc_crc24q(raw_data):  # invalid checksum
                 raw_data = None
             break
