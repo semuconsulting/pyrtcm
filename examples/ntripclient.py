@@ -3,9 +3,6 @@
 A very simple example of an NTRIP client which uses pyrtcm to parse the RTCM3 output
 from a designated NTRIP server & mountpoint to the terminal.
 
-Based on https://github.com/liukai-tech/NtripClient-Tools but extensively refactored.
-Original MIT license here https://github.com/liukai-tech/NtripClient-Tools/blob/master/LICENSE.
-
 Usage:
 
 python3 ntripclient.py server=127.0.0.1 port=2101 mountpoint=RTMC32 user=myuser password=mypassword
@@ -28,7 +25,6 @@ Created on 27 Mar 2022
 from platform import system
 import socket
 import sys
-from datetime import timedelta
 from base64 import b64encode
 from pyrtcm import (
     RTCMReader,
@@ -44,7 +40,6 @@ class ConnError(Exception):
 
 
 USERAGENT = "pyrtcm NTRIP client/0.1"
-GGAINTERVAL = timedelta(seconds=3)
 HDRBUFFER = 4096
 DATBUFFER = 1024
 TIMEOUT = 10
@@ -77,7 +72,7 @@ NTRIPCLIENT_HELP = (
     + "  V2 - use NTRIP version 2 (True)\n"
     + "  user - user name (anon)\n"
     + "  password - user password (password)\n"
-    + "  idonly - show RTCM3 message identity only (False)\n"
+    + "  idonly - show RTCM3 message identity & description only (False)\n"
     + "  listmp - list all available mountpoints (False)\n"
     + "  verbose - verbose log messages (True)\n\n"
     + f"{GREEN}Type Ctrl-C to terminate.{NORMAL}\n\n"
@@ -98,13 +93,10 @@ class NTRIPClient:
 
         user = kwargs.get("user", "anon")
         password = kwargs.get("password", "password")
-        self._caster = kwargs.get("server", None)  # 3.23.52.207 = RTK2Go
+        self._caster = kwargs.get("server", None)  # 3.23.52.207 = rtk2go.com
         self._port = int(kwargs.get("port", 2101))
         self._mountpoint = kwargs.get("mountpoint", None)
         self._V2 = int(kwargs.get("V2", True))
-        self._lat = float(kwargs.get("lat", 53.5))
-        self._lon = float(kwargs.get("lon", -2.5))
-        self._alt = float(kwargs.get("alt", 0))
         self._idonly = int(kwargs.get("idonly", False))
         self._listmp = int(kwargs.get("listmp", False))
         self._verbose = int(kwargs.get("verbose", True))
