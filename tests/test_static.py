@@ -139,6 +139,10 @@ class StaticTest(unittest.TestCase):
         res = bits2val(rtt.INT8, 1, [1, 1, 0, 1, 0, 0, 1, 1])  # -ve 2's comp INT
         self.assertEqual(res, -45)
 
+    def testbits2val_null(self):  # test bits2val for with null bitfield
+        res = bits2val(rtt.INT15, 0.0001, [])
+        self.assertEqual(res, 0)
+
     def testnum_setbits(self):  # test num_setbits
         res = num_setbits([1, 0, 1, 0, 1, 1, 0, 1])
         self.assertEqual(res, 5)

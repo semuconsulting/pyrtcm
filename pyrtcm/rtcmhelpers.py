@@ -32,7 +32,11 @@ def bits2val(att: str, scale: float, bitfield: list) -> object:
     siz = attsiz(att)
     logging.debug("Att type %s, size: %s", typ, siz)
 
+    if len(bitfield) == 0:
+        return 0
+
     val = 0
+
     if typ == "SNT":  # int, MSB indicates sign
         for bit in bitfield[1:]:
             val = (val << 1) | bit
