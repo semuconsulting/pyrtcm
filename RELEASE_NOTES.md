@@ -1,5 +1,13 @@
 # pyrtcm Release Notes
 
+### RELEASE 0.2.3-beta
+
+ENHANCEMENTS:
+
+1. Additional Ephemerides message types added - 1041, 1042, 1044, 1045, 1046. `pyrtcm` should now support the full range of non-proprietary message types documented in RTCM 10403.3 (aka v3.3) with Amendment 2 - 2021-SC104-1217.
+3. Minor enhancements to data field and message type descriptions.
+2. `ntripclient.py` example enhanced and simplified.
+
 ### RELEASE 0.2.2-beta
 
 FIXES:
