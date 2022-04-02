@@ -1,5 +1,11 @@
 # pyrtcm Release Notes
 
+### RELEASE 0.2.4-beta
+
+FIXES:
+
+1. Fixed occasional parse error in some 1127 (MSM7) messages (some NTRIP casters appear to send truncated 1127 messages in certain circumstances).
+
 ### RELEASE 0.2.3-beta
 
 ENHANCEMENTS:
