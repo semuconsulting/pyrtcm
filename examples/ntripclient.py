@@ -30,6 +30,7 @@ from pyrtcm import (
     RTCMReader,
     RTCMParseError,
     RTCMMessageError,
+    RTCMTypeError,
     ParameterError,
     RTCM_MSGIDS,
 )
@@ -206,7 +207,7 @@ class NTRIPClient:
                     else:
                         break
 
-            except (RTCMParseError, RTCMMessageError) as err:
+            except (RTCMParseError, RTCMMessageError, RTCMTypeError) as err:
                 self.doOutput(f"RTCM Parse Error {err}\n")
                 data = False
 
