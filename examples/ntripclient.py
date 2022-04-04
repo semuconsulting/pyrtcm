@@ -69,12 +69,14 @@ NTRIPCLIENT_HELP = (
     + f"{GREEN}Optional keyword arguments (default):{NORMAL}\n\n"
     + "  server - NTRIP caster URL or IP address (None)\n"
     + "  port - NTRIP caster port (2101)\n"
-    + "  mountpoint - NTRIP mountpoint (None)\n"
+    + "  mountpoint - NTRIP mountpoint ("
+    ")\n"
     + "  V2 - use NTRIP version 2 (True)\n"
     + "  user - user name (anon)\n"
     + "  password - user password (password)\n"
     + "  idonly - show RTCM3 message identity & description only (False)\n"
-    + "  listmp - list all available mountpoints (False)\n"
+    + "  getsrt - get sourcetable (False) (same as mountpoint="
+    ")\n"
     + "  verbose - verbose log messages (True)\n\n"
     + f"{GREEN}Type Ctrl-C to terminate.{NORMAL}\n\n"
     + f"{YELLOW}© 2022 SEMU Consulting BSD 3-Clause license\n"
@@ -96,21 +98,21 @@ class NTRIPClient:
         password = kwargs.get("password", "password")
         self._caster = kwargs.get("server", None)  # 3.23.52.207 = rtk2go.com
         self._port = int(kwargs.get("port", 2101))
-        self._mountpoint = kwargs.get("mountpoint", None)
+        self._mountpoint = kwargs.get("mountpoint", "")
         self._V2 = int(kwargs.get("V2", True))
         self._idonly = int(kwargs.get("idonly", False))
-        self._listmp = int(kwargs.get("listmp", False))
+        self._getsrt = int(kwargs.get("getsrt", False))
         self._verbose = int(kwargs.get("verbose", True))
 
-        if self._caster is None or (self._mountpoint is None and not self._listmp):
+        if self._caster is None:
             raise ParameterError(
-                f"Invalid parameter(s). Server and Mountpoint must be provided.\n{NTRIPCLIENT_HELP}"
+                f"Invalid parameter(s). Server must be provided.\n{NTRIPCLIENT_HELP}"
             )
 
         user = user + ":" + password
         self._user = b64encode(user.encode(encoding="utf-8"))
-        if self._listmp:
-            self._mountpoint = "XXXXXXXXXXXX"
+        if self._getsrt:
+            self._mountpoint = ""
         self._socket = None
 
     def _formatGET(self):
@@ -118,7 +120,7 @@ class NTRIPClient:
         Format HTTP GET Request.
         """
 
-        if self._mountpoint[0:1] != "/":
+        if self._mountpoint[0:1] != "":
             self._mountpoint = "/" + self._mountpoint
         req = (
             f"GET {self._mountpoint} HTTP/1.1\r\n"
@@ -154,7 +156,7 @@ class NTRIPClient:
                 header_lines = data.decode(encoding="utf-8").split("\r\n")
 
                 for line in header_lines:
-                    if line.find("SOURCETABLE") >= 0:  # end of mountpoint list
+                    if line.find("ENDSOURCETABLE") >= 0:  # end of sourcetable
                         self.doOutput(line)
                         sys.exit()
                     elif (
