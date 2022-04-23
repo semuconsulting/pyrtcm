@@ -1,5 +1,15 @@
 # pyrtcm Release Notes
 
+### RELEASE 0.2.5-beta
+
+CHANGES:
+
+1. Remove support for Python 3.6, now end of life (should still work find on 3.6 but no longer actively tested on this version).
+
+FIXES:
+
+1. Add CRC validation to RTCMReader.parse() method.
+
 ### RELEASE 0.2.4-beta
 
 FIXES:
