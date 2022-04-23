@@ -245,6 +245,7 @@ class RTCMReader:
         Parse RTCM message to RTCMMessage object.
 
         :param bytes message: RTCM raw message bytes
+        :param int validate: (kwargs) 0 = don't validate CRC, 1 = validate CRC (1)
         :param bool scaling: (kwargs) apply attribute scaling True/False (False)
         :return: RTCMMessage object
         :rtype: RTCMMessage
