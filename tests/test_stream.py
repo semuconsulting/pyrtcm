@@ -180,6 +180,22 @@ class StreamTest(unittest.TestCase):
             raw_data, _ = RTCMReader.parse_buffer(buffer)
             self.assertIsNone(raw_data)
 
+    def testbadCRC(
+        self,
+    ):  # test mixed stream of NMEA, UBX & RTCM messages with invalid RTCM CRC
+        EXPECTED_ERROR = "RTCM3 message invalid - failed CRC: (.*)"
+        dirname = os.path.dirname(__file__)
+        stream = open(os.path.join(dirname, "pygpsdata-MIXED-RTCM3BADCRC.log"), "rb")
+        i = 0
+        raw = 0
+        rtr = RTCMReader(stream, protfilter=7)
+        with self.assertRaisesRegex(rte.RTCMParseError, EXPECTED_ERROR):
+            for (raw, parsed) in rtr.iterate(quitonerror=rtt.ERR_RAISE):
+                if raw is not None:
+                    print(parsed)
+                    i += 1
+        stream.close()
+
 
 if __name__ == "__main__":
     # import sys;sys.argv = ['', 'Test.testName']

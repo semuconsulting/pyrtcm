@@ -170,10 +170,9 @@ class RTCMReader:
         payload = self._read_bytes(size)
         crc = self._read_bytes(3)
         raw_data = hdr + hdr3 + payload + crc
-        if self._validate & rtt.VALCKSUM:
-            if calc_crc24q(raw_data):
-                raise rte.RTCMParseError(f"RTCM3 message invalid - failed CRC: {crc}")
-        parsed_data = self.parse(raw_data, scaling=self._scaling)
+        parsed_data = self.parse(
+            raw_data, validate=self._validate, scaling=self._scaling
+        )
         return (raw_data, parsed_data)
 
     def _read_bytes(self, size: int) -> bytes:
@@ -253,7 +252,13 @@ class RTCMReader:
         """
         # pylint: disable=unused-argument
 
+        validate = kwargs.get("validate", rtt.VALCKSUM)
         scaling = int(kwargs.get("scaling", True))
+        if validate & rtt.VALCKSUM:
+            if calc_crc24q(message):
+                raise rte.RTCMParseError(
+                    f"RTCM3 message invalid - failed CRC: {message[-3:]}"
+                )
         payload = message[3:-3]
         return RTCMMessage(payload=payload, scaling=scaling)
 
