@@ -21,7 +21,9 @@ Created on 14 Feb 2022
 :license: BSD 3-Clause
 """
 
+from socket import socket
 from pyrtcm.rtcmmessage import RTCMMessage
+from pyrtcm.socket_stream import SocketStream
 from pyrtcm.rtcmhelpers import calc_crc24q
 import pyrtcm.rtcmtypes_core as rtt
 import pyrtcm.exceptions as rte
@@ -39,10 +41,15 @@ class RTCMReader:
         :param int quitonerror: (kwarg) 0 = ignore,  1 = log and continue, 2 = (re)raise (1)
         :param int validate: (kwarg) 0 = ignore invalid checksum, 1 = validate checksum (1)
         :param bool scaling: (kwarg) apply attribute scaling True/False (False)
+        :param int bufsize: (kwarg) socket recv buffer size (4096)
         :raises: RTCMStreamError (if mode is invalid)
         """
 
-        self._stream = datastream
+        bufsize = int(kwargs.get("bufsize", 4096))
+        if isinstance(datastream, socket):
+            self._stream = SocketStream(datastream, bufsize=bufsize)
+        else:
+            self._stream = datastream
         self._quitonerror = int(kwargs.get("quitonerror", rtt.ERR_LOG))
         self._validate = int(kwargs.get("validate", rtt.VALCKSUM))
         self._scaling = int(kwargs.get("scaling", True))
@@ -245,6 +252,7 @@ class RTCMReader:
         Parse RTCM message to RTCMMessage object.
 
         :param bytes message: RTCM raw message bytes
+        :param int validate: (kwargs) 0 = don't validate CRC, 1 = validate CRC (1)
         :param bool scaling: (kwargs) apply attribute scaling True/False (False)
         :return: RTCMMessage object
         :rtype: RTCMMessage
@@ -261,43 +269,3 @@ class RTCMReader:
                 )
         payload = message[3:-3]
         return RTCMMessage(payload=payload, scaling=scaling)
-
-    @staticmethod
-    def parse_buffer(buf: bytearray) -> tuple:
-        """
-        Parses a bytearray buffer containing whole or partial RTCM3 messages
-        (e.g. an NTRIP server HTTP GET response) and returns the first raw
-        RTCM3 message (or None if no message found) and any remaining buffer.
-        Based on, and thanks to:
-        https://github.com/jakepoz/deweeder/blob/main/src/ntrip.py
-
-        :param bytearray buf: buffer containing whole or partial RTCM3 messages
-        :return: tuple of (raw_data as bytes (or None), buf_remain as bytes)
-        :rtype: tuple
-        """
-
-        raw_data = None
-        buf_remain = buf
-        start = 0
-
-        while start < len(buf):
-            if buf[start] != 0xD3:  # RTCM3 header
-                start += 1
-                continue
-
-            if len(buf) < start + 6:
-                break
-
-            msglen = (buf[start + 1] & 0b00000011 > 8) | buf[start + 2]
-            totlen = start + msglen + 6
-
-            if len(buf) < totlen:
-                break
-
-            raw_data = buf[start:totlen]
-            buf_remain = buf[totlen:]
-            if calc_crc24q(raw_data):  # invalid checksum
-                raw_data = None
-            break
-
-        return (raw_data, buf_remain)
