@@ -1,5 +1,11 @@
 # pyrtcm Release Notes
 
+### RELEASE 0.2.6-beta
+
+ENHANCEMENTS:
+
+1. Add capability to read from TCP/UDP socket as well as serial stream. Utilises a SocketStream utility class to allow sockets to be read using standard stream-like read(bytes) and readline() methods.
+
 ### RELEASE 0.2.5-beta
 
 CHANGES:
