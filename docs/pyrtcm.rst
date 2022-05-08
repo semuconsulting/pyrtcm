@@ -52,6 +52,14 @@ pyrtcm.rtcmtypes\_get module
    :undoc-members:
    :show-inheritance:
 
+pyrtcm.socket\_stream module
+----------------------------
+
+.. automodule:: pyrtcm.socket_stream
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

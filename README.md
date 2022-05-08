@@ -20,8 +20,8 @@ The `pyrtcm` homepage is located at [https://github.com/semuconsulting/pyrtcm](h
 This is an independent project and we have no affiliation whatsoever with the Radio Technical Commission for Maritime Services.
 
 **FYI** There are companion libraries which handle standard NMEA 0183 &copy; and UBX &copy; (u-blox) GNSS/GPS messages:
+- [pyubx2](http://github.com/semuconsulting/pyubx2) (**FYI** installing `pyubx2` via pip also installs `pynmeagps` and `pyrtcm`)
 - [pynmeagps](http://github.com/semuconsulting/pynmeagps)
-- [pyubx2](http://github.com/semuconsulting/pyubx2)
 
 ## <a name="currentstatus">Current Status</a>
 
@@ -79,7 +79,7 @@ class pyrtcm.rtcmreader.RTCMReader(stream, **kwargs)
 
 You can create a `RTCMReader` object by calling the constructor with an active stream object. 
 The stream object can be any data stream which supports a `read(n) -> bytes` method (e.g. File or Serial, with 
-or without a buffer wrapper).
+or without a buffer wrapper). `pyrtcm` implements an internal `SocketStream` class to allow sockets to be read in the same way as other streams (see example below).
 
 Individual RTCM messages can then be read using the `RTCMReader.read()` function, which returns both the raw binary data (as bytes) and the parsed data (as a `RTCMMessage`, via the `parse()` method). The function is thread-safe in so far as the incoming data stream object is thread-safe. `RTCMReader` also implements an iterator.
 
@@ -101,6 +101,17 @@ Example - File input (using iterator).
 >>> for (raw_data, parsed_data) in rtr: print(parsed_data)
 ...
 ```
+
+Example - Socket input (using enhanced iterator):
+```python
+>>> import socket
+>>> from pyrtcm import RTCMReader
+>>> stream = socket.socket(socket.AF_INET, socket.SOCK_STREAM):
+>>> stream.connect(("localhost", 50007))
+>>> rtr = RTCMReader(stream)
+>>> for (raw_data, parsed_data) in rtr.iterate(): print(parsed_data)
+```
+
 ---
 ## <a name="parsing">Parsing</a>
 
@@ -125,24 +136,6 @@ The `RTCMMessage` object exposes different public attributes depending on its me
 '1005'
 >>> msg.DF024
 1
-```
-
-It is also possible to parse raw RTCM3 messages from a buffer using the `RTCMReader.parse_buffer(bytearray)` function, which takes a bytearray containing one or more whole or partial RTCM3 messages and returns the first complete raw RTCM3 message and any remaining buffer.
-
-Example - Reading successive RTCM3 messages from an NTRIP server socket.
-```python
-  buf = bytearray()
-  data = True
-  while data:
-    data = sock.recv(1024) # NTRIP server socket
-    buf += data
-    while True:
-      raw_data, buf = RTCMReader.parse_buffer(buf)
-      if raw_data is not None:
-        parsed_data = RTCMReader.parse(raw_data)
-        print(parsed_data)
-      else:
-        break
 ```
 
 Helper methods are available to interpret the individual datafields:
@@ -206,10 +199,11 @@ b'\xd3\x00\x13>\xd0\x00\x03\x8aX\xd9I<\x87/4\x10\x9d\x07\xd6\xafH Z\xd7\xf7'
 
 The following examples are available in the /examples folder:
 
+1. `rtcmserial.py` - illustrates how to stream RTCM data from serial/UART port.
 1. `rtcmfile.py` - illustrates how to stream RTCM data from binary log file.
-2. `rtcmserial.py` - illustrates how to stream RTCM data from serial/UART port.
-3. `rtcmbuild.py` - illustrates how to construct RTCM payload from constituent datafields.
-4. `ntripclient.py` - illustrates a simple [NTRIP](https://en.wikipedia.org/wiki/Networked_Transport_of_RTCM_via_Internet_Protocol) client using pyrtcm to parse the RTCM3 output.
+1. `rtcmsocket.py` illustrates how to implement a TCP Socket reader for RTCM messages using RTCMReader iterator functionality.
+1. `rtcmbuild.py` - illustrates how to construct RTCM payload from constituent datafields.
+1. `ntripclient.py` - illustrates a simple [NTRIP](https://en.wikipedia.org/wiki/Networked_Transport_of_RTCM_via_Internet_Protocol) client using pyrtcm to parse the RTCM3 output.
 
 ---
 ## <a name="extensibility">Extensibility</a>
