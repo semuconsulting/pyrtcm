@@ -49,8 +49,9 @@ class DummySocket(socket):
             raise TimeoutError
         if len(self._buffer) < num:
             self._buffer = self._buffer + self._stream
-        return self._buffer[:num]
+        buff = self._buffer[:num]
         self._buffer = self._buffer[num:]
+        return buff
 
 
 class SocketTest(unittest.TestCase):
@@ -92,6 +93,20 @@ class SocketTest(unittest.TestCase):
                 if i >= 12:
                     break
         self.assertEqual(i, 12)
+
+    def testSocketIter(self):  # test for extended stream
+
+        raw = None
+        stream = DummySocket()
+        rtr = RTCMReader(stream)
+        i = 0
+        for (raw, parsed) in rtr.iterate():
+            if raw is None:
+                raise EOFError
+            i += 1
+            if i >= 123:
+                break
+        self.assertEqual(i, 123)
 
     def testSocketError(self):  # test for simulated socket timeout
 
