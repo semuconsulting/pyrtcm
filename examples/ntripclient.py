@@ -178,39 +178,31 @@ class NTRIPClient:
         Parse RTCM3 data.
         """
 
-        buf = bytearray()
-        data = "Initial data"
-        while data:
+        # UBXreader will wrap socket as SocketStream
+        rtr = RTCMReader(
+            sock,
+            quitonerror=0,
+            bufsize=DATBUFFER,
+        )
+
+        raw_data = None
+        parsed_data = None
+
+        while True:
             try:
 
-                data = sock.recv(DATBUFFER)
-                self.doOutput(f"Data bytes received: {len(data)}")
-                buf += data
-
-                # Parse the data into individual RTCM3 messages
-                while True:
-                    raw_data, buf = RTCMReader.parse_buffer(buf)
-
-                    if raw_data is not None:
-                        parsed_data = RTCMReader.parse(raw_data)
-                        if self._idonly:
-                            mid = parsed_data.identity
-                            print(f"{mid} ({RTCM_MSGIDS[mid]})")
-                        else:
-                            print(f"{parsed_data}\n")
-                        # if you wanted to forward this RTCM3 message to
-                        # a GNSS device via its serial port at this point,
-                        # you could use something like this:
-                        #
-                        # with Serial(port, baudrate, timeout=timeout) as serial:
-                        #    serial.write(parsed_data.serialize())
-                        #
-                    else:
-                        break
-
-            except (RTCMParseError, RTCMMessageError, RTCMTypeError) as err:
-                self.doOutput(f"RTCM Parse Error {err}\n")
-                data = False
+                raw_data, parsed_data = rtr.read()
+                if raw_data is not None:
+                    print(parsed_data)
+            except (
+                RTCMMessageError,
+                RTCMParseError,
+                RTCMTypeError,
+            ) as err:
+                parsed_data = f"Error parsing data stream {err}"
+                ntripqueue.put((raw_data, parsed_data))
+                self.__master.event_generate("<<ntrip_read>>")
+                continue
 
     def run(self):
         """
