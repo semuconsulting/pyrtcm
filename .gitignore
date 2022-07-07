@@ -21,6 +21,7 @@ Pipfile*.*
 *.pyc
 /examples/rtcmsandpit.py
 /examples/temp*.py
+/examples/*.log
 /.pytest_cache/
 pylint_report.txt
 venv

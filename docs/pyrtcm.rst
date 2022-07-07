@@ -36,6 +36,14 @@ pyrtcm.rtcmreader module
    :undoc-members:
    :show-inheritance:
 
+pyrtcm.rtcmtables module
+------------------------
+
+.. automodule:: pyrtcm.rtcmtables
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pyrtcm.rtcmtypes\_core module
 -----------------------------
 

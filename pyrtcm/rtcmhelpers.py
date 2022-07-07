@@ -12,7 +12,22 @@ Created on 14 Feb 2022
 
 import logging
 from datetime import datetime, timedelta
-from pyrtcm.rtcmtypes_core import RTCM_DATA_FIELDS
+from pyrtcm.rtcmtypes_core import RTCM_DATA_FIELDS, RTCM_MSGIDS
+from pyrtcm.exceptions import RTCMTypeError
+from pyrtcm.rtcmtables import (
+    GPS_PRN_MAP,
+    GPS_SIG_MAP,
+    GLONASS_PRN_MAP,
+    GLONASS_SIG_MAP,
+    GALILEO_PRN_MAP,
+    GALILEO_SIG_MAP,
+    SBAS_PRN_MAP,
+    SBAS_SIG_MAP,
+    QZSS_PRN_MAP,
+    QZSS_SIG_MAP,
+    BEIDOU_PRN_MAP,
+    BEIDOU_SIG_MAP,
+)
 
 SCALEDP = 8
 
@@ -256,3 +271,88 @@ def hextable(raw: bytes, cols: int = 8) -> str:
         hextbl += f" | {bytes.fromhex(rawl)} |\n"
 
     return hextbl
+
+
+def cell2prn(msg: object) -> dict:
+    """
+    Map MSM cell to satellite PRN and signal ID for a given RTCM3 MSM message.
+
+    Returns a dict mapping the satellite PRN and signal ID corresponding to each
+    item in the MSM repeating group e.g. DF405_01, DF406_02, etc.
+
+    :param RTCMMessage msg: RTCM3 MSM message e.g. 1077
+    :return: dict of {cell: (prn, sig)} values
+    :rtype: dict
+    :raises: RTCMTypeError if not MSM message type
+    """
+
+    try:
+
+        prnmap, sigmap = id2prnsigmap(msg.identity)
+
+        sats = []
+        nsat = 0
+        for idx in range(64, 0, -1):
+            if msg.DF394 & pow(2, idx):
+                sats.append(prnmap[64 - idx])
+                nsat += 1
+
+        sigs = []
+        nsig = 0
+        for idx in range(32, 0, -1):
+            if msg.DF395 & pow(2, idx):
+                sigs.append(sigmap[32 - idx])
+                nsig += 1
+
+        idx = nsat * nsig
+        cells = {}
+        ncell = 0
+        for prn in range(nsat):
+            for sig in range(nsig):
+                idx -= 1
+                ncell += 1
+                csig = sigs[sig] if msg.DF396 & pow(2, idx) else None
+                cells[ncell] = (sats[prn], csig)
+
+        return cells
+
+    except (TypeError, KeyError, AttributeError) as err:
+        raise RTCMTypeError(
+            "Invalid RTCM3 message type - must be MSM message."
+        ) from err
+
+
+def id2prnsigmap(ident: str) -> tuple:
+    """
+    Map RTCM3 message identity to MSM satellite PRN and signal ID maps.
+
+    :param str ident: RTCM3 MSM message identity e.g. "1077"
+    :return: tuple of (PRNMAP, SIGMAP)
+    :rtype: tuple
+    :raises: KeyError if ident unknown
+    """
+
+    gnss = RTCM_MSGIDS[ident][0:3]
+    if gnss == "GPS":
+        PRNMAP = GPS_PRN_MAP
+        SIGMAP = GPS_SIG_MAP
+    elif gnss == "GLO":
+        PRNMAP = GLONASS_PRN_MAP
+        SIGMAP = GLONASS_SIG_MAP
+    elif gnss == "GAL":
+        PRNMAP = GALILEO_PRN_MAP
+        SIGMAP = GALILEO_SIG_MAP
+    elif gnss == "SBA":
+        PRNMAP = SBAS_PRN_MAP
+        SIGMAP = SBAS_SIG_MAP
+    elif gnss == "QZS":
+        PRNMAP = QZSS_PRN_MAP
+        SIGMAP = QZSS_SIG_MAP
+    elif gnss == "Bei":
+        PRNMAP = BEIDOU_PRN_MAP
+        SIGMAP = BEIDOU_SIG_MAP
+    else:
+        PRNMAP = None
+        SIGMAP = None
+
+    return (PRNMAP, SIGMAP)
