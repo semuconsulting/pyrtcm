@@ -40,8 +40,8 @@ class RTCMReader:
         :param datastream stream: input data stream
         :param int quitonerror: (kwarg) 0 = ignore,  1 = log and continue, 2 = (re)raise (1)
         :param int validate: (kwarg) 0 = ignore invalid checksum, 1 = validate checksum (1)
-        :param bool scaling: (kwarg) apply attribute scaling True/False (False)
-        :param bool labelmsm: (kwarg) whether to label MSM NSAT and NCELL attributes (False)
+        :param bool scaling: (kwarg) apply attribute scaling True/False (True)
+        :param bool labelmsm: (kwarg) whether to label MSM NSAT and NCELL attributes (True)
         :param int bufsize: (kwarg) socket recv buffer size (4096)
         :raises: RTCMStreamError (if mode is invalid)
         """
@@ -258,8 +258,8 @@ class RTCMReader:
 
         :param bytes message: RTCM raw message bytes
         :param int validate: (kwargs) 0 = don't validate CRC, 1 = validate CRC (1)
-        :param bool scaling: (kwargs) apply attribute scaling True/False (False)
-        :param bool labelmsm: (kwarg) whether to label MSM NSAT and NCELL attributes (False)
+        :param bool scaling: (kwargs) apply attribute scaling True/False (True)
+        :param bool labelmsm: (kwarg) whether to label MSM NSAT and NCELL attributes (True)
         :return: RTCMMessage object
         :rtype: RTCMMessage
         :raises: RTCMParseError (if data stream contains invalid data or unknown message type)

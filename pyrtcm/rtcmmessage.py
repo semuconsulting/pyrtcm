@@ -40,8 +40,8 @@ class RTCMMessage:
         """Constructor.
 
         :param bytes payload: (kwarg) message payload (mandatory)
-        :param bool scaling: (kwarg) whether to apply attribute scaling True/False (False)
-        :param bool labelmsm: (kwarg) whether to label MSM NSAT and NCELL attributes (False)
+        :param bool scaling: (kwarg) whether to apply attribute scaling True/False (True)
+        :param bool labelmsm: (kwarg) whether to label MSM NSAT and NCELL attributes (True)
         :raises: RTCMMessageError
         """
         # pylint: disable=unused-argument
