@@ -1,5 +1,15 @@
 # pyrtcm Release Notes
 
+### RELEASE 0.2.7-beta
+
+FIXES:
+
+1. MSM group name definitions updated (was preventing some MSM attributes from rendering). All MSM message types (1077, 1127, etc.) should now render properly.
+
+ENHANCEMENTS:
+
+1. Add helper method `cell2prn` and associated lookup tables to map MSM cells (DF405_01, DF405_02, etc.) to their corresponding satellite PRNs and signal IDs.
+
 ### RELEASE 0.2.6-beta
 
 ENHANCEMENTS:
