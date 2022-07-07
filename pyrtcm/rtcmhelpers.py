@@ -273,12 +273,44 @@ def hextable(raw: bytes, cols: int = 8) -> str:
     return hextbl
 
 
+def sat2prn(msg: object) -> dict:
+    """
+    Map MSM sat to satellite PRN for a given RTCM3 MSM message.
+
+    Returns a dict mapping the satellite PRN corresponding to each
+    item in the MSM NSAT repeating group e.g. DF397_01, DF397_02, etc.
+
+    :param RTCMMessage msg: RTCM3 MSM message e.g. 1077
+    :return: dict of {cell: prn} values
+    :rtype: dict
+    :raises: RTCMTypeError if not MSM message type
+    """
+
+    try:
+
+        prnmap, sigmap = id2prnsigmap(msg.identity)
+
+        sats = {}
+        nsat = 0
+        for idx in range(64, 0, -1):
+            if msg.DF394 & pow(2, idx):
+                nsat += 1
+                sats[nsat] = prnmap[64 - idx]
+
+        return sats
+
+    except (TypeError, KeyError, AttributeError) as err:
+        raise RTCMTypeError(
+            "Invalid RTCM3 message type - must be MSM message."
+        ) from err
+
+
 def cell2prn(msg: object) -> dict:
     """
     Map MSM cell to satellite PRN and signal ID for a given RTCM3 MSM message.
 
     Returns a dict mapping the satellite PRN and signal ID corresponding to each
-    item in the MSM repeating group e.g. DF405_01, DF406_02, etc.
+    item in the MSM NCELL repeating group e.g. DF405_01, DF406_02, etc.
 
     :param RTCMMessage msg: RTCM3 MSM message e.g. 1077
     :return: dict of {cell: (prn, sig)} values

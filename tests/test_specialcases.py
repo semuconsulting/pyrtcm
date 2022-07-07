@@ -13,7 +13,7 @@ import unittest
 from pyrtcm import RTCMReader, RTCMMessage
 import pyrtcm.exceptions as rte
 import pyrtcm.rtcmtypes_core as rtt
-from pyrtcm.rtcmhelpers import cell2prn, id2prnsigmap
+from pyrtcm.rtcmhelpers import cell2prn, sat2prn, id2prnsigmap
 
 
 class StreamTest(unittest.TestCase):
@@ -27,7 +27,6 @@ class StreamTest(unittest.TestCase):
         pass
 
     def testid2prnsigmap(self):  # test id2prnsigmap helper method
-        EXPECTED_RESULT = []
         idx = 0
         for ident in ["1077", "1087", "1097", "1107", "1117", "1127", "1110"]:
             res = str(id2prnsigmap(ident))
@@ -38,6 +37,33 @@ class StreamTest(unittest.TestCase):
         EXPECTED_ERROR = "6666"
         with self.assertRaisesRegex(KeyError, EXPECTED_ERROR):
             res = id2prnsigmap("6666")
+
+    def testsat2prn(self):  # test sat2prn helper method
+        EXPECTED_RESULT = [
+            "{1: '005', 2: '007', 3: '009', 4: '013', 5: '014', 6: '015', 7: '017', 8: '019', 9: '020', 10: '030'}",
+            "{1: '003', 2: '004', 3: '005', 4: '013', 5: '014', 6: '015', 7: '023'}",
+            "{1: '007', 2: '008', 3: '021', 4: '027', 5: '030'}",
+            "{1: '007', 2: '009', 3: '010', 4: '020', 5: '023', 6: '028', 7: '032', 8: '037', 9: '040', 10: '043'}",
+        ]
+
+        rtr = RTCMReader(self.streamRTCM3)
+        idx = 0
+        for (raw, parsed) in rtr:
+            if raw is not None:
+                if parsed.identity in ["1077", "1087", "1097", "1107", "1127"]:
+                    res = str(sat2prn(parsed))
+                    # print(res)
+                    self.assertEqual(res, EXPECTED_RESULT[idx])
+                    idx += 1
+
+    def testsat2prnerr(self):  # test sat2prn helper method with invalid message
+        EXPECTED_ERROR = "Invalid RTCM3 message type - must be MSM message."
+        rtr = RTCMReader(self.streamRTCM3)
+        with self.assertRaisesRegex(rte.RTCMTypeError, EXPECTED_ERROR):
+            for (raw, parsed) in rtr:
+                if raw is not None:
+                    if parsed.identity in ["1230"]:
+                        res = str(sat2prn(parsed))
 
     def testcell2prn(self):  # test cell2prn helper method
         EXPECTED_RESULT = [
