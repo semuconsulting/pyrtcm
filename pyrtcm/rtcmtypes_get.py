@@ -36,7 +36,7 @@ MSM_HDR = {
 }
 
 MSM_SAT_123 = {
-    "group": (
+    "groupsat1": (
         NSAT,
         {
             "DF398": "GNSS Satellite rough ranges modulo 1 millisecond",
@@ -45,13 +45,13 @@ MSM_SAT_123 = {
 }
 
 MSM_SAT_46 = {
-    "group1": (
+    "groupsat1": (
         NSAT,
         {
             "DF397": "Number of int millisecs in GNSS Satellite roughranges",
         },
     ),
-    "group2": (
+    "groupsat2": (
         NSAT,
         {
             "DF398": "GNSS Satellite rough ranges modulo 1 millisecond",
@@ -61,25 +61,25 @@ MSM_SAT_46 = {
 
 
 MSM_SAT_57 = {
-    "group1": (
+    "groupsat1": (
         NSAT,
         {
             "DF397": "The number of integer milliseconds in GNSS Satellite rough ranges",
         },
     ),
-    "group2": (
+    "groupsat2": (
         NSAT,
         {
             "GNSSSpecific": "Extended Satellite Information",
         },
     ),
-    "group3": (
+    "groupsat3": (
         NSAT,
         {
             "DF398": "GNSS Satellite rough ranges modulo 1 millisecond",
         },
     ),
-    "group4": (
+    "groupsat4": (
         NSAT,
         {
             "DF399": "GNSS Satellite rough PhaseRangeRates",
@@ -89,7 +89,7 @@ MSM_SAT_57 = {
 
 
 MSM_SIG_1 = {
-    "group1": (
+    "groupsig1": (
         NCELL,
         {
             "DF400": "GNSS signal fine Pseudoranges",
@@ -98,19 +98,19 @@ MSM_SIG_1 = {
 }
 
 MSM_SIG_2 = {
-    "group1": (
+    "groupsig1": (
         NCELL,
         {
             "DF401": "GNSS signal fine PhaseRange data",
         },
     ),
-    "group2": (
+    "groupsig2": (
         NCELL,
         {
             "DF402": "GNSS PhaseRange Lock",
         },
     ),
-    "group3": (
+    "groupsig3": (
         NCELL,
         {
             "DF420",
@@ -120,25 +120,25 @@ MSM_SIG_2 = {
 }
 
 MSM_SIG_3 = {
-    "group1": (
+    "groupsig1": (
         NCELL,
         {
             "DF400": "GNSS signal fine Pseudoranges",
         },
     ),
-    "group2": (
+    "groupsig2": (
         NCELL,
         {
             "DF401": "GNSS signal fine PhaseRange data",
         },
     ),
-    "group3": (
+    "groupsig3": (
         NCELL,
         {
             "DF402": "GNSS PhaseRange Lock",
         },
     ),
-    "group4": (
+    "groupsig4": (
         NCELL,
         {
             "DF420": "Half-cycle ambiguity indicator",
@@ -147,31 +147,31 @@ MSM_SIG_3 = {
 }
 
 MSM_SIG_4 = {
-    "group1": (
+    "groupsig1": (
         NCELL,
         {
             "DF400": "GNSS signal fine Pseudoranges",
         },
     ),
-    "group2": (
+    "groupsig2": (
         NCELL,
         {
             "DF401": "GNSS signal fine PhaseRange data",
         },
     ),
-    "group3": (
+    "groupsig3": (
         NCELL,
         {
             "DF402": "GNSS PhaseRange Lock",
         },
     ),
-    "group4": (
+    "groupsig4": (
         NCELL,
         {
             "DF420": "Half-cycle ambiguity indicator",
         },
     ),
-    "group5": (
+    "groupsig5": (
         NCELL,
         {
             "DF403": "GNSS signal CNRs",
@@ -180,37 +180,37 @@ MSM_SIG_4 = {
 }
 
 MSM_SIG_5 = {
-    "group1": (
+    "groupsig1": (
         NCELL,
         {
             "DF400": "GNSS signal fine Pseudoranges",
         },
     ),
-    "group2": (
+    "groupsig2": (
         NCELL,
         {
             "DF401": "GNSS signal fine PhaseRange data",
         },
     ),
-    "group3": (
+    "groupsig3": (
         NCELL,
         {
             "DF402": "GNSS PhaseRange Lock",
         },
     ),
-    "group4": (
+    "groupsig4": (
         NCELL,
         {
             "DF420": "Half-cycle ambiguity indicator",
         },
     ),
-    "group5": (
+    "groupsig5": (
         NCELL,
         {
             "DF403": "GNSS signal CNRs",
         },
     ),
-    "group6": (
+    "groupsig6": (
         NCELL,
         {
             "DF404": "GNSS signal fine PhaseRangeRates",
@@ -219,31 +219,31 @@ MSM_SIG_5 = {
 }
 
 MSM_SIG_6 = {
-    "group1": (
+    "groupsig1": (
         NCELL,
         {
             "DF405": "GNSS signal fine",
         },
     ),
-    "group2": (
+    "groupsig2": (
         NCELL,
         {
             "DF406": "GNSS signal fine PhaseRange data with extended resolution",
         },
     ),
-    "group3": (
+    "groupsig3": (
         NCELL,
         {
             "DF407": "GNSS PhaseRange Lock",
         },
     ),
-    "group4": (
+    "groupsig4": (
         NCELL,
         {
             "DF420": "Half-cycle ambiguity indicator",
         },
     ),
-    "group5": (
+    "groupsig5": (
         NCELL,
         {
             "DF408": "GNSS signal CNRs with extended resolution",
@@ -252,37 +252,37 @@ MSM_SIG_6 = {
 }
 
 MSM_SIG_7 = {
-    "group1": (
+    "groupsig1": (
         NCELL,
         {
             "DF405": "GNSS signal fine",
         },
     ),
-    "group2": (
+    "groupsig2": (
         NCELL,
         {
             "DF406": "GNSS signal fine PhaseRange data with extended resolution",
         },
     ),
-    "group3": (
+    "groupsig3": (
         NCELL,
         {
             "DF407": "GNSS PhaseRange Lock",
         },
     ),
-    "group4": (
+    "groupsig4": (
         NCELL,
         {
             "DF420": "Half-cycle ambiguity indicator",
         },
     ),
-    "group5": (
+    "groupsig5": (
         NCELL,
         {
             "DF408": "GNSS signal CNRs with extended resolution",
         },
     ),
-    "group6": (
+    "groupsig6": (
         NCELL,
         {
             "DF404": "GNSS signal fine PhaseRangeRates",
