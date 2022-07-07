@@ -20,6 +20,10 @@ from pyrtcm.rtcmhelpers import (
     bits2val,
     attsiz,
     num_setbits,
+    sat2prn,
+    cell2prn,
+    att2idx,
+    att2name,
 )
 
 LOGGING = logging.WARNING
@@ -37,6 +41,7 @@ class RTCMMessage:
 
         :param bytes payload: (kwarg) message payload (mandatory)
         :param bool scaling: (kwarg) whether to apply attribute scaling True/False (False)
+        :param bool labelmsm: (kwarg) whether to label MSM NSAT and NCELL attributes (False)
         :raises: RTCMMessageError
         """
         # pylint: disable=unused-argument
@@ -53,6 +58,7 @@ class RTCMMessage:
         if self._payload is None:
             raise rte.RTCMMessageError("Payload must be specified")
         self._scaling = int(kwargs.get("scaling", True))
+        self._labelmsm = int(kwargs.get("labelmsm", True))
         self._unknown = False
         self._do_attributes()
 
@@ -235,11 +241,34 @@ class RTCMMessage:
         :rtype: str
         """
 
+        # if MSM message and labelmsm flag is set,
+        # label NSAT and NCELL group attributes with
+        # corresponding satellite PRN and signal ID
+        if self._labelmsm and "MSM" in rtt.RTCM_MSGIDS[self.identity]:
+            sats = sat2prn(self)
+            cells = cell2prn(self)
+            is_msm = True
+        else:
+            is_msm = False
+
         stg = f"<RTCM({self.identity}, "
         for i, att in enumerate(self.__dict__):
             if att[0] != "_":  # only show public attributes
                 val = self.__dict__[att]
-                stg += att + "=" + str(val)
+
+                # label MSM NSAT and NCELL group attributes
+                lbl = ""
+                if self._labelmsm and is_msm:
+                    aname = att2name(att)
+                    if aname in rtt.ATT_NSAT:
+                        prn = sats[att2idx(att)]
+                        lbl = f"({prn})"
+                    if aname in rtt.ATT_NCELL:
+                        prn, sig = cells[att2idx(att)]
+                        sig = "n/a" if sig is None else sig
+                        lbl = f"({prn},{sig})"
+
+                stg += att + lbl + "=" + str(val)
                 if i < len(self.__dict__) - 1:
                     stg += ", "
         if self._unknown:

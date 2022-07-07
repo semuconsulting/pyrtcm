@@ -41,6 +41,7 @@ class RTCMReader:
         :param int quitonerror: (kwarg) 0 = ignore,  1 = log and continue, 2 = (re)raise (1)
         :param int validate: (kwarg) 0 = ignore invalid checksum, 1 = validate checksum (1)
         :param bool scaling: (kwarg) apply attribute scaling True/False (False)
+        :param bool labelmsm: (kwarg) whether to label MSM NSAT and NCELL attributes (False)
         :param int bufsize: (kwarg) socket recv buffer size (4096)
         :raises: RTCMStreamError (if mode is invalid)
         """
@@ -53,6 +54,7 @@ class RTCMReader:
         self._quitonerror = int(kwargs.get("quitonerror", rtt.ERR_LOG))
         self._validate = int(kwargs.get("validate", rtt.VALCKSUM))
         self._scaling = int(kwargs.get("scaling", True))
+        self._labelmsm = int(kwargs.get("labelmsm", True))
 
     def __iter__(self):
         """Iterator."""
@@ -178,7 +180,10 @@ class RTCMReader:
         crc = self._read_bytes(3)
         raw_data = hdr + hdr3 + payload + crc
         parsed_data = self.parse(
-            raw_data, validate=self._validate, scaling=self._scaling
+            raw_data,
+            validate=self._validate,
+            scaling=self._scaling,
+            labelmsm=self._labelmsm,
         )
         return (raw_data, parsed_data)
 
@@ -254,6 +259,7 @@ class RTCMReader:
         :param bytes message: RTCM raw message bytes
         :param int validate: (kwargs) 0 = don't validate CRC, 1 = validate CRC (1)
         :param bool scaling: (kwargs) apply attribute scaling True/False (False)
+        :param bool labelmsm: (kwarg) whether to label MSM NSAT and NCELL attributes (False)
         :return: RTCMMessage object
         :rtype: RTCMMessage
         :raises: RTCMParseError (if data stream contains invalid data or unknown message type)
@@ -262,10 +268,11 @@ class RTCMReader:
 
         validate = kwargs.get("validate", rtt.VALCKSUM)
         scaling = int(kwargs.get("scaling", True))
+        labelmsm = int(kwargs.get("labelmsm", True))
         if validate & rtt.VALCKSUM:
             if calc_crc24q(message):
                 raise rte.RTCMParseError(
                     f"RTCM3 message invalid - failed CRC: {message[-3:]}"
                 )
         payload = message[3:-3]
-        return RTCMMessage(payload=payload, scaling=scaling)
+        return RTCMMessage(payload=payload, scaling=scaling, labelmsm=labelmsm)
