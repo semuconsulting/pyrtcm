@@ -1,5 +1,12 @@
 # pyrtcm Release Notes
 
+### RELEASE 0.2.8-beta
+
+ENHANCEMENTS:
+
+1. New optional keyword argument `labelmsm` added to `read()` and `parse()` methods. Defaults to `True`. When True, attributes within MSM NSAT and NCELL repeating groups are labelled with their corresponding satellite PRN and signal ID when the `__str__()` (`print()`) method is invoked - e.g. `DF405_10(014,2C)` signifies that the the 10th `DF405` attribute in the group refers to satellite PRN 014 and signal ID 2C (*in RINEX notation*). 
+2. **NB** this only affects the string (print) representation of the RTCMMessage - the underlying payload and attribute names are unchanged.
+
 ### RELEASE 0.2.7-beta
 
 FIXES:

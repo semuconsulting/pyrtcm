@@ -156,7 +156,7 @@ Helper methods are available to interpret the individual datafields:
 
 Attributes within repeating groups are parsed with a two-digit suffix ("DF030_01", "DF030_02", etc.). The `payload` attribute always contains the raw payload as bytes.
 
-Attributes within MSM NSAT and NCELL repeating groups can optionally be labelled with their corresponding satellite PRN and signal ID when the `str()` method is invoked (e.g. `DF405_10(014,2C)`).
+Attributes within MSM NSAT and NCELL repeating groups can optionally be labelled with their corresponding satellite PRN and signal ID when the `__str__()` method is invoked (e.g. `DF405_10(014,2C)`).
 
 ---
 ## <a name="generating">Generating</a>
