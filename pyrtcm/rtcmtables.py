@@ -250,7 +250,7 @@ BEIDOU_SIG_MAP = {
     7: "Reserved",
     8: "6I",
     9: "6Q",
-    10: "6S",
+    10: "6X",
     11: "Reserved",
     12: "Reserved",
     13: "Reserved",
