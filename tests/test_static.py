@@ -30,6 +30,8 @@ from pyrtcm.rtcmhelpers import (
     atttyp,
     tow2utc,
     num_setbits,
+    att2idx,
+    att2name,
 )
 
 
@@ -220,6 +222,22 @@ class StaticTest(unittest.TestCase):
     def testtow2utc(self):  # test tow2utc
         res = str(tow2utc(387092000))
         self.assertEqual(res, "11:31:14")
+
+    def testatt2idx(self):  # test att2idx
+        EXPECTED_RESULT = [4, 16, 101, 0]
+        atts = ["DF389_04", "DF406_16", "DF406_101", "DF396"]
+        for i, att in enumerate(atts):
+            res = att2idx(att)
+            # print(res)
+            self.assertEqual(res, EXPECTED_RESULT[i])
+
+    def testatt2name(self):  # test att2name
+        EXPECTED_RESULT = ["DF389", "DF406", "DF406", "DF396"]
+        atts = ["DF389_04", "DF406_16", "DF406_101", "DF396"]
+        for i, att in enumerate(atts):
+            res = att2name(att)
+            # print(res)
+            self.assertEqual(res, EXPECTED_RESULT[i])
 
 
 if __name__ == "__main__":

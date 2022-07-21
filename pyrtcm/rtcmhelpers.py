@@ -32,6 +32,40 @@ from pyrtcm.rtcmtables import (
 SCALEDP = 8
 
 
+def att2idx(att: str) -> int:
+    """
+    Get integer index corresponding to grouped attribute.
+
+    e.g. DF389_06 -> 6; DF406_103 -> 103
+
+    :param str att: grouped attribute name e.g. DF406_01
+    :return: index as integer, or 0 if not grouped
+    :rtype: int
+    """
+
+    try:
+        return int(att[att.rindex("_") - len(att) + 1 :])
+    except ValueError:
+        return 0
+
+
+def att2name(att: str) -> str:
+    """
+    Get name of grouped attribute.
+
+    e.g. DF389_06 -> DF389; DF406_103 -> DF406
+
+    :param str att: grouped attribute name e.g. DF406_01
+    :return: name without index e.g. DF406
+    :rtype: str
+    """
+
+    try:
+        return att[: att.rindex("_")]
+    except ValueError:
+        return att
+
+
 def bits2val(att: str, scale: float, bitfield: list) -> object:
     """
     Convert bit array to value for this attribute type.

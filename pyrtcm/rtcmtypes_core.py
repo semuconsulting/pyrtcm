@@ -749,3 +749,18 @@ RTCM_MSGIDS = {
     "4094": "Trimble Navigation Ltd.",
     "4095": "Ashtech",
 }
+
+# list of MSM attributes to label if `labelmsm` kwarg is True
+ATT_NSAT = ["DF397", "DF398", "DF399", "GNSSSpecific"]
+ATT_NCELL = [
+    "DF400",
+    "DF401",
+    "DF402",
+    "DF403",
+    "DF404",
+    "DF405",
+    "DF406",
+    "DF407",
+    "DF408",
+    "DF420",
+]

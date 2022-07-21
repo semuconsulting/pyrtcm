@@ -91,7 +91,7 @@ Example -  Serial input:
 >>> rtr = RTCMReader(stream)
 >>> (raw_data, parsed_data) = rtr.read()
 >>> print(parsed_data)
-<RTCM(1077, DF002=1077, DF003=0, GNSSEpoch=204137001, DF393=1, DF409=0, DF001_7=0, DF411=0, DF412=0, DF417=0, DF418=0, DF394=760738918298550272, NSat=10, DF395=1073807360, NSig=2, DF396=1044459, DF397_01=75, DF397_02=75, ..., DF404_17=0, DF404_18=0, DF404_19=0, DF404_20=0)>        
+ <RTCM(1077, DF002=1077, DF003=0, GNSSEpoch=204137001, DF393=1, DF409=0, DF001_7=0, DF411=0, DF412=0, DF417=0, DF418=0, DF394=760738918298550272, NSat=10, DF395=1073807360, NSig=2, DF396=1044459, DF397_01(005)=75, DF397_02(007)=75, DF397_03(009)=81, ..., DF404_19(030,1C)=0.0, DF404_20(030,2L)=0.0)>,
 ```
 
 Example - File input (using iterator).
@@ -155,6 +155,8 @@ Helper methods are available to interpret the individual datafields:
 ```
 
 Attributes within repeating groups are parsed with a two-digit suffix ("DF030_01", "DF030_02", etc.). The `payload` attribute always contains the raw payload as bytes.
+
+Attributes within MSM NSAT and NCELL repeating groups can optionally be labelled with their corresponding satellite PRN and signal ID when the `__str__()` method is invoked (e.g. `DF405_10(014,2C)`).
 
 ---
 ## <a name="generating">Generating</a>
