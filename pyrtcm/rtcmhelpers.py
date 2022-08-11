@@ -358,18 +358,21 @@ def cell2prn(msg: object) -> dict:
 
         sats = []
         nsat = 0
-        for idx in range(64, 0, -1):
+        for idx in range(64, -1, -1):
             if msg.DF394 & pow(2, idx):
                 sats.append(prnmap[64 - idx])
                 nsat += 1
 
         sigs = []
         nsig = 0
-        for idx in range(32, 0, -1):
+        for idx in range(32, -1, -1):
             if msg.DF395 & pow(2, idx):
                 sigs.append(sigmap[32 - idx])
                 nsig += 1
 
+        # print(
+        #     f"DEBUG cell2prn {msg.identity} {msg.DF395:>032b} nsat {nsat} nsig {nsig} NSig {msg.NSig}"
+        # )
         idx = nsat * nsig
         cells = {}
         ncell = 0
