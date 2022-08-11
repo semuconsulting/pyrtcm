@@ -79,7 +79,7 @@ class StreamTest(unittest.TestCase):
             if raw is not None:
                 if parsed.identity in ["1077", "1087", "1097", "1107", "1127"]:
                     res = str(cell2prn(parsed))
-                    # print(f"{idx} {parsed.identity} {res}")
+                    # print(f"{idx} {parsed.identity} {res} {parsed.DF395:>032b}")
                     self.assertEqual(res, EXPECTED_RESULT[idx])
                     idx += 1
 

@@ -259,6 +259,7 @@ class RTCMMessage:
                 # label MSM NSAT and NCELL group attributes
                 lbl = ""
                 if is_msm:
+
                     aname = att2name(att)
                     if aname in rtt.ATT_NSAT:
                         prn = sats[att2idx(att)]
