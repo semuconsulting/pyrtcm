@@ -1,7 +1,7 @@
 <?xml version = "1.0"?>
 <project name="pyrtcm" default="build">
 	<property name="module.name" value="pyrtcm" />
-	<property name="version" value="0.2.8" />
+	<property name="version" value="0.2.9" />
 	<condition property="python" value="python">
 		<os family="windows" />
 	</condition>

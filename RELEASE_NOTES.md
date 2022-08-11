@@ -1,5 +1,11 @@
 # pyrtcm Release Notes
 
+### RELEASE 0.2.9-beta
+
+FIXES:
+
+1. `cell2prn` routine in `rtcmhelpers.py` corrected for 1117 and 1127 MSM message types.
+
 ### RELEASE 0.2.8-beta
 
 ENHANCEMENTS:
