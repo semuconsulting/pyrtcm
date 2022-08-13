@@ -1,5 +1,14 @@
 # pyrtcm Release Notes
 
+
+### RELEASE 0.3.0
+
+CHANGES:
+
+1. Setup status changed to Production/Stable.
+2. `pyserial` dependency removed.
+
+
 ### RELEASE 0.2.9-beta
 
 FIXES:

@@ -22,9 +22,6 @@ setuptools.setup(
     packages=setuptools.find_packages(
         exclude=["tests", "examples", "references", "docs"]
     ),
-    install_requires=[
-        "pyserial>=3.4",
-    ],
     license="BSD 3-Clause 'Modified' License",
     keywords="PYRTCM GNSS GPS RTCM RTCM3 GIS NTRIP",
     platforms="Windows, MacOS, Linux",
@@ -36,7 +33,7 @@ setuptools.setup(
     },
     classifiers=[
         "Operating System :: OS Independent",
-        "Development Status :: 4 - Beta",
+        "Development Status :: 5 - Production/Stable",
         "Environment :: MacOS X",
         "Environment :: Win32 (MS Windows)",
         "Environment :: X11 Applications",

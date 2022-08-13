@@ -8,6 +8,7 @@
 [Serializing](#serializing) |
 [Examples](#examples) |
 [Extensibility](#extensibility) |
+[Command Line Utility](#cli) |
 [Graphical Client](#gui) |
 [Author & License](#author)
 
@@ -34,7 +35,7 @@ This is an independent project and we have no affiliation whatsoever with the Ra
 ![Contributors](https://img.shields.io/github/contributors/semuconsulting/pyrtcm.svg)
 ![Open Issues](https://img.shields.io/github/issues-raw/semuconsulting/pyrtcm)
 
-Currently in Beta; parses RTCM3 messages into their constituent data fields. Refer to the `RTCM_MSGIDS` dictionary in [`rtcmtypes_core.py`](https://github.com/semuconsulting/pyrtcm/blob/main/pyrtcm/rtcmtypes_core.py) for a list of message types currently implemented (*but not necessarily tested*). Additional message types can be readily added - see [Extensibility](#extensibility)).
+Parses RTCM3 messages into their constituent data fields. Refer to the `RTCM_MSGIDS` dictionary in [`rtcmtypes_core.py`](https://github.com/semuconsulting/pyrtcm/blob/main/pyrtcm/rtcmtypes_core.py) for a list of message types currently implemented. Additional message types can be readily added - see [Extensibility](#extensibility)).
 
 Sphinx API Documentation in HTML format is available at [https://www.semuconsulting.com/pyrtcm](https://www.semuconsulting.com/pyrtcm).
 
@@ -67,7 +68,7 @@ Local installation is also available, provided you have the Python packages `set
 git clone https://github.com/semuconsulting/pyrtcm.git
 cd pyrtcm
 python setup.py sdist bdist_wheel
-python -m pip install dist/pyrtcm-0.2.1.tar.gz --user --force_reinstall
+python -m pip install dist/pyrtcm-0.3.0.tar.gz --user --force_reinstall
 ```
 
 ---
@@ -156,7 +157,7 @@ Helper methods are available to interpret the individual datafields:
 
 Attributes within repeating groups are parsed with a two-digit suffix ("DF030_01", "DF030_02", etc.). The `payload` attribute always contains the raw payload as bytes.
 
-Attributes within MSM NSAT and NCELL repeating groups can optionally be labelled with their corresponding satellite PRN and signal ID when the `__str__()` method is invoked (e.g. `DF405_10(014,2C)`).
+Attributes within MSM NSAT and NCELL repeating groups can optionally be labelled with their corresponding satellite PRN and signal ID when the `__str__()` method is invoked, by setting the keyword argument `labelmsm` to True (e.g. `DF405_10(014,2C)` signifies that the 10th item in the DF405 group refers to satellite PRN 014, signal ID 2C).
 
 ---
 ## <a name="generating">Generating</a>
@@ -226,9 +227,24 @@ The RTCM protocol is principally defined in the modules `rtcmtypes_core.py` and 
 Repeating attribute names are parsed with a two-digit suffix ("DF030_01", "DF030_02", etc.). Nested repeating groups are supported.
 
 ---
+## <a name="cli">Command Line Utility</a>
+
+A command line utility `gnssdump` is available via the `pygnssutils` package. This is capable of reading and parsing NMEA, UBX and RTCM3 data from a variety of input sources (e.g. serial, socket and file) and outputting to a variety of media in a variety of formats. See https://github.com/semuconsulting/pygnssutils for further details.
+
+To install `pygnssutils`:
+```
+python3 -m pip install --upgrade pygnssutils
+```
+
+For help with the `gnssdump` utility, type:
+```
+gnssdump -h
+```
+
+---
 ## <a name="gui">Graphical Client</a>
 
-A python/tkinter graphical GPS client which supports NMEA, UBX and RTCM protocols is available at: 
+A python/tkinter graphical GPS client which supports NMEA, UBX and RTCM3 protocols is available at: 
 
 [https://github.com/semuconsulting/PyGPSClient](https://github.com/semuconsulting/PyGPSClient)
 
