@@ -9,7 +9,6 @@ Created on 14 Feb 2022
 """
 # pylint: disable=invalid-name
 
-import logging
 import pyrtcm.exceptions as rte
 import pyrtcm.rtcmtypes_core as rtt
 import pyrtcm.rtcmtypes_get as rtg
@@ -26,7 +25,6 @@ from pyrtcm.rtcmhelpers import (
     att2name,
 )
 
-LOGGING = logging.WARNING
 NSAT = "NSat"
 NSIG = "NSig"
 NCELL = "_NCell"
@@ -45,11 +43,6 @@ class RTCMMessage:
         :raises: RTCMMessageError
         """
         # pylint: disable=unused-argument
-
-        logging.basicConfig(
-            format="%(asctime)-15s [%(levelname)s] %(funcName)s: %(message)s",
-            level=LOGGING,
-        )
 
         # object is mutable during initialisation only
         super().__setattr__("_immutable", False)
@@ -74,12 +67,6 @@ class RTCMMessage:
         offset = 0  # payload offset in bits
         index = []  # array of (nested) group indices
         self._payload_bits = get_bitarray(self._payload)  # payload as bit array
-        logging.debug(
-            "Payload identity %s, bits: %s, length: %s",
-            self.identity,
-            self._payload_bits,
-            len(self._payload),
-        )
 
         try:
 
@@ -90,7 +77,6 @@ class RTCMMessage:
                 self._do_unknown()
                 return
             for key in pdict:  # process each attribute in dict
-                logging.debug("Key: %s", key)
                 (offset, index) = self._set_attribute(offset, pdict, key, index)
 
         except Exception as err:
@@ -192,7 +178,6 @@ class RTCMMessage:
         else:
             atts = attsiz(att)
         bitfield = self._payload_bits[offset : offset + atts]
-        logging.debug("Bitfield: %s, size: %s", bitfield, atts)
         val = bits2val(att, scale, bitfield)
 
         setattr(self, keyr, val)
@@ -231,7 +216,6 @@ class RTCMMessage:
 
         setattr(self, "DF002", self.identity)
         self._unknown = True
-        logging.debug("Unknown message identity: %s", self.identity)
 
     def __str__(self) -> str:
         """

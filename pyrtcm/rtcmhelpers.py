@@ -10,7 +10,6 @@ Created on 14 Feb 2022
 """
 # pylint: disable=invalid-name
 
-import logging
 from datetime import datetime, timedelta
 from pyrtcm.rtcmtypes_core import RTCM_DATA_FIELDS, RTCM_MSGIDS
 from pyrtcm.exceptions import RTCMTypeError
@@ -79,7 +78,6 @@ def bits2val(att: str, scale: float, bitfield: list) -> object:
 
     typ = atttyp(att)
     siz = attsiz(att)
-    logging.debug("Att type %s, size: %s", typ, siz)
 
     if len(bitfield) == 0:
         return 0
