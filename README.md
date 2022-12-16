@@ -28,7 +28,7 @@ This is an independent project and we have no affiliation whatsoever with the Ra
 
 <!--![Status](https://img.shields.io/pypi/status/pyrtcm)-->
 ![Release](https://img.shields.io/github/v/release/semuconsulting/pyrtcm?include_prereleases)
-![Build](https://img.shields.io/github/workflow/status/semuconsulting/pyrtcm/pyrtcm)
+![Build](https://img.shields.io/github/actions/workflow/status/semuconsulting/pyrtcm/main.yml?branch=main)
 ![Codecov](https://img.shields.io/codecov/c/github/semuconsulting/pyrtcm)
 ![Release Date](https://img.shields.io/github/release-date-pre/semuconsulting/pyrtcm)
 ![Last Commit](https://img.shields.io/github/last-commit/semuconsulting/pyrtcm)
