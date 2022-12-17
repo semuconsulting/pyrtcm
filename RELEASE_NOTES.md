@@ -1,5 +1,14 @@
 # pyrtcm Release Notes
 
+### RELEASE 1.0.0
+
+CHANGES:
+
+1. Marked to v1.0.0.
+2. shields.io build status badge URL updated.
+
+No functional changes
+
 ### RELEASE 0.3.1
 
 CHANGES:

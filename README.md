@@ -62,13 +62,15 @@ The recommended way to install the latest version of `pyrtcm` is with
 python -m pip install --upgrade pyrtcm
 ```
 
-Local installation is also available, provided you have the Python packages `setuptools` and `wheel` installed:
+If required, `pyrtcm` can also be installed into a virtual environment, e.g.:
 
 ```shell
-git clone https://github.com/semuconsulting/pyrtcm.git
-cd pyrtcm
-python setup.py sdist bdist_wheel
-python -m pip install dist/pyrtcm-0.3.0.tar.gz --user --force_reinstall
+python3 -m pip install --user --upgrade virtualenv
+python3 -m virtualenv env
+source env/bin/activate (or env\Scripts\activate on Windows)
+(env) python3 -m pip install --upgrade pyrtcm
+...
+deactivate
 ```
 
 ---
