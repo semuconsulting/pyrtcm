@@ -157,7 +157,20 @@ Helper methods are available to interpret the individual datafields:
 'GPS L1 PhaseRange - L1 Pseudorange'
 ```
 
-Attributes within repeating groups are parsed with a two-digit suffix ("DF030_01", "DF030_02", etc.). The `payload` attribute always contains the raw payload as bytes.
+The `payload` attribute always contains the raw payload as bytes.
+
+Attributes within repeating groups are parsed with a two-digit suffix ("DF030_01", "DF030_02", etc.). 
+
+**Tip:** To iterate through a repeating group of attributes (*e.g., DF406 (GNSS signal fine PhaseRange)*), the following construct can be used:
+
+```
+df406group = [] # list of DF406 ((GNSS signal fine PhaseRange) values from repeating group in MSM 1077 message
+size = msg.NSat * msg.NSig # size of repeating group (NCELL)
+for i in range(1, size + 1):
+    idx = f"_{i:02}"
+    df406 = getattr(msg, "DF406" + idx)
+    df406group.append(df406)
+```
 
 Attributes within MSM NSAT and NCELL repeating groups can optionally be labelled with their corresponding satellite PRN and signal ID when the `__str__()` method is invoked, by setting the keyword argument `labelmsm` to True (e.g. `DF405_10(014,2C)` signifies that the 10th item in the DF405 group refers to satellite PRN 014, signal ID 2C).
 
