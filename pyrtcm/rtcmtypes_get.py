@@ -15,6 +15,8 @@ NSAT = "NSat"
 NSIG = "NSig"
 NCELL = "_NCell"
 NBIAS = "_NBias"
+# Number of Residuals groups in MT1023
+NRES = 16
 
 # *************************************************************
 # MSM MESSAGE SUB-SECTION DEFINITIONS
@@ -766,9 +768,24 @@ RTCM_PAYLOADS_GET = {
         "DF196": "Mean ∆φ - Mean Latitude Offset",
         "DF197": "Mean ∆λ - Mean Longitude Offset",
         "DF198": "Mean ∆H - Mean Height Offset",
-        "DF199": "δφi - Latitude Residual",
-        "DF200": "δλi - Longitude Residual",
-        "DF201": "δhi - Height Residual",
+        "group1": (
+            NRES,
+            {
+                "DF199": "δφi - Latitude Residual"
+            }
+        ),
+        "group2": (
+            NRES,
+            {
+                "DF200": "δλi - Longitude Residual"
+            }
+        ),
+        "group3": (
+            NRES,
+            {
+                "DF201": "δhi - Height Residual"
+            }
+        ),
         "DF212": "Horizontal Interpolation Method Indicator",
         "DF213": "Vertical Interpolation Method Indicator",
         "DF216": "Horizontal Grid Quality Indicator",
@@ -787,9 +804,24 @@ RTCM_PAYLOADS_GET = {
         "DF206": "Mean ∆N - Mean Local Northing Offset",
         "DF207": "Mean ∆E - Mean Local Easting Offset",
         "DF208": "Mean ∆h - Mean Local Height Offset",
-        "DF209": "δNi  - Residual in Local Northing",
-        "DF210": "δEi - Residual in Local Easting",
-        "DF211": "δhi - Residual in Local Height",
+        "group1": (
+            NRES,
+            {
+                "DF209": "δNi  - Residual in Local Northing"
+            }
+        ),
+        "group2": (
+            NRES,
+            {
+                "DF210": "δEi - Residual in Local Easting"
+            }
+        ),
+        "group3": (
+            NRES,
+            {
+                "DF211": "δhi - Residual in Local Height"
+            }
+        ),
         "DF212": "Horizontal Interpolation Method Indicator",
         "DF213": "Vertical Interpolation Method Indicator",
         "DF216": "Horizontal Grid Quality Indicator",
