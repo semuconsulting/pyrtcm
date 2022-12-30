@@ -774,7 +774,7 @@ RTCM_PAYLOADS_GET = {
                 "DF199": "δφi - Latitude Residual",
                 "DF200": "δλi - Longitude Residual",
                 "DF201": "δhi - Height Residual",
-            }
+            },
         ),
         "DF212": "Horizontal Interpolation Method Indicator",
         "DF213": "Vertical Interpolation Method Indicator",
@@ -800,7 +800,7 @@ RTCM_PAYLOADS_GET = {
                 "DF209": "δNi - Residual in Local Northing",
                 "DF210": "δEi - Residual in Local Easting",
                 "DF211": "δhi - Residual in Local Height"
-            }
+            },
         ),
         "DF212": "Horizontal Interpolation Method Indicator",
         "DF213": "Vertical Interpolation Method Indicator",
