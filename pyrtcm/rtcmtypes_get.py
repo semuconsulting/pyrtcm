@@ -15,7 +15,7 @@ NSAT = "NSat"
 NSIG = "NSig"
 NCELL = "_NCell"
 NBIAS = "_NBias"
-# Number of Residuals groups in MT1023
+# Number of Residuals groups in MT1023 and MT1024
 NRES = 16
 
 # *************************************************************
@@ -771,19 +771,9 @@ RTCM_PAYLOADS_GET = {
         "group1": (
             NRES,
             {
-                "DF199": "δφi - Latitude Residual"
-            }
-        ),
-        "group2": (
-            NRES,
-            {
-                "DF200": "δλi - Longitude Residual"
-            }
-        ),
-        "group3": (
-            NRES,
-            {
-                "DF201": "δhi - Height Residual"
+                "DF199": "δφi - Latitude Residual",
+                "DF200": "δλi - Longitude Residual",
+                "DF201": "δhi - Height Residual",
             }
         ),
         "DF212": "Horizontal Interpolation Method Indicator",
@@ -807,18 +797,8 @@ RTCM_PAYLOADS_GET = {
         "group1": (
             NRES,
             {
-                "DF209": "δNi  - Residual in Local Northing"
-            }
-        ),
-        "group2": (
-            NRES,
-            {
-                "DF210": "δEi - Residual in Local Easting"
-            }
-        ),
-        "group3": (
-            NRES,
-            {
+                "DF209": "δNi - Residual in Local Northing",
+                "DF210": "δEi - Residual in Local Easting",
                 "DF211": "δhi - Residual in Local Height"
             }
         ),
