@@ -1,11 +1,17 @@
 # pyrtcm Release Notes
 
+### RELEASE 1.0.1
+
+FIXES:
+
+1. Message payload for 1023 and 1024 corrected to include correct x16 grouping for residuals - thanks to @jiargei for contribution.
+
 ### RELEASE 1.0.0
 
 CHANGES:
 
 1. Marked to v1.0.0.
-2. shields.io build status badge URL updated.
+2. shields.io build status badge URL updated. 
 
 No functional changes
 
