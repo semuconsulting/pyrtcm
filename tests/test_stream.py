@@ -31,6 +31,7 @@ class StreamTest(unittest.TestCase):
         self._raw1065 = (
             b"\xd3\x00\x12B\x91\x81\xc9\x84\x00\x04B\xb8\x88\x008\x80\t\xd0F\x00(\xf0kf"
         )
+        self._raw1023 = b'\xd3\x00I?\xf0\x8c\xa9\x02\xe0\xe0(\x80P\x07\x04\x04\x80P\x00{?\xc0/o\xf0\x0b\xee\xfc\x81\xfd\xbfp\x17\xc4\x04\x04\xf9\x80\x00\xdf?\xe8#\xe7\xfb\x02~\x00`o\xc8\x04\x11\xfa\xff\x82\xbf?\xc07\xfc\n\x08\x00\x00\x81@\x10\x00/\xff\xfe\x0bz"\x00\xc1\x16\x92'
         self._payload1007 = self._raw1007[3:-3]
 
     def tearDown(self):
@@ -45,6 +46,13 @@ class StreamTest(unittest.TestCase):
         self.assertEqual(msg.DF025, 1114104.5999)
         self.assertEqual(msg.DF026, -4850729.7108)
         self.assertEqual(msg.DF027, 3975521.4643)
+
+    def test1023(
+        self,
+    ):  # test sample 1023 given in RTCM standard
+        EXPECTED_RESULT = "<RTCM(1023, DF002=1023, DF147=8, DF190=1, DF191=1, DF192=173067.5, DF193=57384.5, DF194=5.0, DF195=7.0, DF196=0.008, DF197=0.009, DF198=0.8, DF199_01=0.0, DF200_01=-0.0006, DF201_01=-0.002, DF199_02=6e-05, DF200_02=-0.00057, DF201_02=-0.004, DF199_03=0.00015, DF200_03=-0.00054, DF201_03=-0.007, DF199_04=0.00021, DF200_04=-0.00057, DF201_04=-0.009, DF199_05=6e-05, DF200_05=-0.00045, DF201_05=0.002, DF199_06=0.00012, DF200_06=-0.00039, DF201_06=0.0, DF199_07=0.00018, DF200_07=-0.00039, DF201_07=-0.003, DF199_08=0.00024, DF200_08=-0.00039, DF201_08=-0.005, DF199_09=0.00012, DF200_09=-0.00024, DF201_09=0.003, DF199_10=0.00018, DF200_10=-0.00021, DF201_10=0.001, DF199_11=0.00024, DF200_11=-0.00018, DF201_11=-0.001, DF199_12=0.0003, DF200_12=-0.00021, DF201_12=-0.004, DF199_13=0.00018, DF200_13=-3e-05, DF201_13=0.005, DF199_14=0.00024, DF200_14=0.0, DF201_14=0.002, DF199_15=0.0003, DF200_15=3e-05, DF201_15=0.0, DF199_16=0.00033, DF200_16=-3e-05, DF201_16=-0.002, DF212=0, DF213=0, DF216=5, DF217=5, DF051=59528)>"
+        msg = RTCMReader.parse(self._raw1023)
+        self.assertEqual(str(msg), EXPECTED_RESULT)
 
     def testMIXEDRTCM_NOSCALE(
         self,
