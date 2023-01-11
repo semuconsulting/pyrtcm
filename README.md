@@ -166,9 +166,8 @@ Attributes within repeating groups are parsed with a two-digit suffix ("DF030_01
 ```
 df406group = [] # list of DF406 ((GNSS signal fine PhaseRange) values from repeating group in MSM 1077 message
 size = msg.NSat * msg.NSig # size of repeating group (NCELL)
-for i in range(1, size + 1):
-    idx = f"_{i:02}"
-    df406 = getattr(msg, "DF406" + idx)
+for i in range(size):
+    df406 = getattr(msg, f"DF406_{i+1:02}")
     df406group.append(df406)
 ```
 
