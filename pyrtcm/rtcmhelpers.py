@@ -368,9 +368,6 @@ def cell2prn(msg: object) -> dict:
                 sigs.append(sigmap[32 - idx])
                 nsig += 1
 
-        # print(
-        #     f"DEBUG cell2prn {msg.identity} {msg.DF395:>032b} nsat {nsat} nsig {nsig} NSig {msg.NSig}"
-        # )
         idx = nsat * nsig
         cells = {}
         ncell = 0
