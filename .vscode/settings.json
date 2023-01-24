@@ -10,7 +10,8 @@
     "python.testing.nosetestsEnabled": false,
     "python.testing.unittestEnabled": true,
     "python.formatting.provider": "black",
-    "python.pythonPath": "python3",
+    // for Windows, assumes symlink has been set up for python3<==>python
+    "python.defaultInterpreterPath": "python3",
     "editor.formatOnSave": true,
     "modulename": "${workspaceFolderBasename}",
     "distname": "${workspaceFolderBasename}",
