@@ -1,5 +1,11 @@
 # pyrtcm Release Notes
 
+### RELEASE 1.0.2
+
+ENHANCEMENTS:
+
+1. Add support for INRSS MSM message types 1131-1137
+
 ### RELEASE 1.0.1
 
 FIXES:
