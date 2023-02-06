@@ -26,6 +26,8 @@ from pyrtcm.rtcmtables import (
     QZSS_SIG_MAP,
     BEIDOU_PRN_MAP,
     BEIDOU_SIG_MAP,
+    IRNSS_PRN_MAP,
+    IRNSS_SIG_MAP,
 )
 
 SCALEDP = 8
@@ -415,6 +417,9 @@ def id2prnsigmap(ident: str) -> tuple:
     elif gnss == "Bei":
         PRNMAP = BEIDOU_PRN_MAP
         SIGMAP = BEIDOU_SIG_MAP
+    elif gnss == "IRN":
+        PRNMAP = IRNSS_PRN_MAP  # TODO
+        SIGMAP = IRNSS_SIG_MAP  # TODO
     else:
         PRNMAP = None
         SIGMAP = None

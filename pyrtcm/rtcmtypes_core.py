@@ -718,7 +718,17 @@ RTCM_MSGIDS = {
     "1125": "BeiDou MSM5",
     "1126": "BeiDou MSM6",
     "1127": "BeiDou MSM7",
-    # "1128-1229":"Reserved MSM",
+    "1128": "Reserved MSM",
+    "1129": "Reserved MSM",
+    "1120": "Reserved MSM",
+    "1130": "IRNSS MSM1",
+    "1132": "IRNSS MSM2",
+    "1133": "IRNSS MSM3",
+    "1134": "IRNSS MSM4",
+    "1135": "IRNSS MSM5",
+    "1136": "IRNSS MSM6",
+    "1137": "IRNSS MSM7",
+    # "1138-1229":"Reserved MSM",
     "1230": "GLONASS L1 and L2 Code-Phase Biases",
     # "1240-1263": "SSR Messages"
     #
