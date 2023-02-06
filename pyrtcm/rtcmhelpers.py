@@ -418,8 +418,8 @@ def id2prnsigmap(ident: str) -> tuple:
         PRNMAP = BEIDOU_PRN_MAP
         SIGMAP = BEIDOU_SIG_MAP
     elif gnss == "IRN":
-        PRNMAP = IRNSS_PRN_MAP  # TODO
-        SIGMAP = IRNSS_SIG_MAP  # TODO
+        PRNMAP = IRNSS_PRN_MAP
+        SIGMAP = IRNSS_SIG_MAP
     else:
         PRNMAP = None
         SIGMAP = None
