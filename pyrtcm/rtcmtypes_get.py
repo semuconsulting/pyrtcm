@@ -1481,6 +1481,14 @@ RTCM_PAYLOADS_GET = {
     "1125": MSM5,
     "1126": MSM6,
     "1127": MSM7,
+    # IRNSS
+    "1131": MSM1,
+    "1132": MSM2,
+    "1133": MSM3,
+    "1134": MSM4,
+    "1135": MSM5,
+    "1136": MSM6,
+    "1137": MSM7,
     "1230": {
         "DF002": "Message Number",
         "DF003": "Reference Station ID",
