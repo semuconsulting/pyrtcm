@@ -509,7 +509,7 @@ RTCM_DATA_FIELDS = {
     "DF427": (UINT30, 1, "BeiDou Epoch Time (TOW)"),
     "DF428": (UINT30, 1, "QZSS Epoch Time (TOW)"),
     "DF429": (UINT4, 1, "QZSS Satellite ID"),
-    "DF430": (UINT4, P2_P4, "QZSS toc"),
+    "DF430": (UINT16, P2_P4, "QZSS toc"),
     "DF431": (INT8, P2_55, "QZSS af2"),
     "DF432": (INT16, P2_43, "QZSS af1"),
     "DF433": (INT22, P2_31, "QZSS af0"),
