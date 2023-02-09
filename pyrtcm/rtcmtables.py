@@ -283,7 +283,7 @@ IRNSS_PRN_MAP = {}
 for i in range(1, 15):
     IRNSS_PRN_MAP[i] = f"{i:03d}"
 for i in range(15, 65):
-    QZSS_PRN_MAP[i] = "Reserved"
+    IRNSS_PRN_MAP[i] = "Reserved"
 
 IRNSS_SIG_MAP = {
     1: "Reserved",
