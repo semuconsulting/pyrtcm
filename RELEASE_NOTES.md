@@ -1,5 +1,16 @@
 # pyrtcm Release Notes
 
+### RELEASE 1.0.3
+
+FIXES:
+
+1. Fix payload definition for DF430 in message type 1044. Thanks to @Ralphccs for contribution.
+2. Fix typo in IRNSS_PRN_MAP table definition.
+
+CHANGES:
+
+1. internal changes to GitHub actions workflow for Node.js 16 compatibility.
+
 ### RELEASE 1.0.2
 
 ENHANCEMENTS:
