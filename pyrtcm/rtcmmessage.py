@@ -69,7 +69,6 @@ class RTCMMessage:
         self._payload_bits = get_bitarray(self._payload)  # payload as bit array
 
         try:
-
             pdict = (
                 self._get_dict()
             )  # get payload definition dict for this message identity
@@ -243,7 +242,6 @@ class RTCMMessage:
                 # label MSM NSAT and NCELL group attributes
                 lbl = ""
                 if is_msm:
-
                     aname = att2name(att)
                     if aname in rtt.ATT_NSAT:
                         prn = sats[att2idx(att)]

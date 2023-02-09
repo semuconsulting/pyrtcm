@@ -321,7 +321,6 @@ def sat2prn(msg: object) -> dict:
     """
 
     try:
-
         prnmap, sigmap = id2prnsigmap(msg.identity)
 
         sats = {}
@@ -353,7 +352,6 @@ def cell2prn(msg: object) -> dict:
     """
 
     try:
-
         prnmap, sigmap = id2prnsigmap(msg.identity)
 
         sats = []
