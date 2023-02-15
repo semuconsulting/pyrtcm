@@ -33,6 +33,22 @@ from pyrtcm.rtcmtables import (
 SCALEDP = 8
 
 
+def num_setbits(val: int, width: int) -> int:
+    """
+    Get number of set bits in integer.
+
+    :param int val: integer value
+    :param int width: size of integer in bits
+    :return: number of bits set
+    :rtype: int
+    """
+
+    i = 0
+    for x in "{:0{size}b}".format(val, size=width):
+        i += int(x)
+    return i
+
+
 def att2idx(att: str) -> int:
     """
     Get integer index corresponding to grouped attribute.
@@ -67,13 +83,13 @@ def att2name(att: str) -> str:
         return att
 
 
-def bits2val(att: str, scale: float, bitfield: list) -> object:
+def bits2val(att: str, scale: float, bitfield: int) -> object:
     """
-    Convert bit array to value for this attribute type.
+    Convert bitfield to value for given attribute type.
 
     :param str att: attribute type e.g. "UNT008"
     :param float scale: scaling factor (where defined)
-    :param list bitfield: array of bits representing attribute
+    :param int bitfield: attribute as integer
     :return: value
     :rtype: object (int, float, char, bool)
     """
@@ -81,20 +97,15 @@ def bits2val(att: str, scale: float, bitfield: list) -> object:
     typ = atttyp(att)
     siz = attsiz(att)
 
-    if len(bitfield) == 0:
-        return 0
-
     val = 0
 
     if typ == "SNT":  # int, MSB indicates sign
-        for bit in bitfield[1:]:
-            val = (val << 1) | bit
-        if bitfield[0]:
+        val = bitfield & 2 ** (siz - 1) - 1
+        if bitfield & 2 ** (siz - 1):
             val *= -1
     else:  # all other types
-        for bit in bitfield:
-            val = (val << 1) | bit
-    if typ == "INT" and bitfield[0]:  # 2's compliment -ve int
+        val = bitfield
+    if typ == "INT" and (bitfield & 2 ** (siz - 1)):  # 2's compliment -ve int
         val = val - (1 << siz)
     if typ in ("CHA", "UTF"):  # ASCII or UTF-8 character
         val = chr(val)
@@ -104,22 +115,6 @@ def bits2val(att: str, scale: float, bitfield: list) -> object:
             val = round(val * scale, SCALEDP)
 
     return val
-
-
-def num_setbits(bitfield: list) -> int:
-    """
-    Get number of set bits in bitfield.
-
-    :param list bitfield: array of bits
-    :return: number of bits set
-    :rtype: int
-    """
-
-    n = 0
-    for bf in bitfield:
-        if bf:
-            n += 1
-    return n
 
 
 def calc_crc24q(message: bytes) -> int:
@@ -255,18 +250,6 @@ def get_bit(data: bytes, num: int) -> int:
     return (data[base] >> shift) & 0x1
 
 
-def get_bitarray(data: bytes) -> list:
-    """
-    Convert data bytes to bit array.
-
-    :param bytes data: data
-    :return: bit array
-    :rtype: list
-    """
-
-    return [get_bit(data, i) for i in range(len(data) * 8)]
-
-
 def tow2utc(tow: int) -> datetime.time:
     """
     Convert GPS Time Of Week to UTC time
@@ -326,7 +309,7 @@ def sat2prn(msg: object) -> dict:
         sats = {}
         nsat = 0
         for idx in range(64, 0, -1):
-            if msg.DF394 & pow(2, idx):
+            if msg.DF394 & 2**idx:
                 nsat += 1
                 sats[nsat] = prnmap[64 - idx]
 
@@ -357,14 +340,14 @@ def cell2prn(msg: object) -> dict:
         sats = []
         nsat = 0
         for idx in range(64, -1, -1):
-            if msg.DF394 & pow(2, idx):
+            if msg.DF394 & 2**idx:
                 sats.append(prnmap[64 - idx])
                 nsat += 1
 
         sigs = []
         nsig = 0
         for idx in range(32, -1, -1):
-            if msg.DF395 & pow(2, idx):
+            if msg.DF395 & 2**idx:
                 sigs.append(sigmap[32 - idx])
                 nsig += 1
 
@@ -375,7 +358,7 @@ def cell2prn(msg: object) -> dict:
             for sig in range(nsig):
                 idx -= 1
                 ncell += 1
-                csig = sigs[sig] if msg.DF396 & pow(2, idx) else None
+                csig = sigs[sig] if msg.DF396 & 2**idx else None
                 cells[ncell] = (sats[prn], csig)
 
         return cells

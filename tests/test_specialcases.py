@@ -16,7 +16,7 @@ import pyrtcm.rtcmtypes_core as rtt
 from pyrtcm.rtcmhelpers import cell2prn, sat2prn, id2prnsigmap
 
 
-class StreamTest(unittest.TestCase):
+class SpecialTest(unittest.TestCase):
     def setUp(self):
         self.maxDiff = None
         dirname = os.path.dirname(__file__)
@@ -48,7 +48,7 @@ class StreamTest(unittest.TestCase):
 
         rtr = RTCMReader(self.streamRTCM3)
         idx = 0
-        for (raw, parsed) in rtr:
+        for raw, parsed in rtr:
             if raw is not None:
                 if parsed.identity in ["1077", "1087", "1097", "1107", "1127"]:
                     res = str(sat2prn(parsed))
@@ -60,7 +60,7 @@ class StreamTest(unittest.TestCase):
         EXPECTED_ERROR = "Invalid RTCM3 message type - must be MSM message."
         rtr = RTCMReader(self.streamRTCM3)
         with self.assertRaisesRegex(rte.RTCMTypeError, EXPECTED_ERROR):
-            for (raw, parsed) in rtr:
+            for raw, parsed in rtr:
                 if raw is not None:
                     if parsed.identity in ["1230"]:
                         res = str(sat2prn(parsed))
@@ -75,7 +75,7 @@ class StreamTest(unittest.TestCase):
 
         rtr = RTCMReader(self.streamRTCM3)
         idx = 0
-        for (raw, parsed) in rtr:
+        for raw, parsed in rtr:
             if raw is not None:
                 if parsed.identity in ["1077", "1087", "1097", "1107", "1127"]:
                     res = str(cell2prn(parsed))
@@ -87,7 +87,7 @@ class StreamTest(unittest.TestCase):
         EXPECTED_ERROR = "Invalid RTCM3 message type - must be MSM message."
         rtr = RTCMReader(self.streamRTCM3)
         with self.assertRaisesRegex(rte.RTCMTypeError, EXPECTED_ERROR):
-            for (raw, parsed) in rtr:
+            for raw, parsed in rtr:
                 if raw is not None:
                     if parsed.identity in ["1230"]:
                         res = str(cell2prn(parsed))

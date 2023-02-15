@@ -21,7 +21,6 @@ class DummySocket(socket):
     """
 
     def __init__(self, *args, **kwargs):
-
         self._timeout = False
         if "timeout" in kwargs:
             self._timeout = kwargs["timeout"]
@@ -44,7 +43,6 @@ class DummySocket(socket):
         self._buffer = self._stream
 
     def recv(self, num: int) -> bytes:
-
         if self._timeout:
             raise TimeoutError
         if len(self._buffer) < num:
@@ -85,7 +83,7 @@ class SocketTest(unittest.TestCase):
         rtr = RTCMReader(stream, bufsize=512)
         buff = rtr._stream.buffer  # test buffer getter method
         i = 0
-        for (raw, parsed) in rtr.iterate():
+        for raw, parsed in rtr.iterate():
             if raw is not None:
                 # print(parsed)
                 self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
@@ -95,12 +93,11 @@ class SocketTest(unittest.TestCase):
         self.assertEqual(i, 12)
 
     def testSocketIter(self):  # test for extended stream
-
         raw = None
         stream = DummySocket()
         rtr = RTCMReader(stream)
         i = 0
-        for (raw, parsed) in rtr.iterate():
+        for raw, parsed in rtr.iterate():
             if raw is None:
                 raise EOFError
             i += 1
@@ -109,12 +106,11 @@ class SocketTest(unittest.TestCase):
         self.assertEqual(i, 123)
 
     def testSocketError(self):  # test for simulated socket timeout
-
         raw = None
         stream = DummySocket(timeout=True)
         rtr = RTCMReader(stream)
         i = 0
-        for (raw, parsed) in rtr.iterate():
+        for raw, parsed in rtr.iterate():
             i += 1
             if i >= 12:
                 break
