@@ -73,9 +73,9 @@ class StreamTest(unittest.TestCase):
         i = 0
         raw = 0
         rtr = RTCMReader(stream, scaling=False, labelmsm=False)
-        for (raw, parsed) in rtr.iterate():
+        for raw, parsed in rtr.iterate():
             if raw is not None:
-                # print(parsed)
+                print(parsed)
                 self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
                 i += 1
         stream.close()
@@ -100,7 +100,7 @@ class StreamTest(unittest.TestCase):
         i = 0
         raw = 0
         rtr = RTCMReader(stream, scaling=True, labelmsm=False)
-        for (raw, parsed) in rtr.iterate():
+        for raw, parsed in rtr.iterate():
             if raw is not None:
                 print(parsed)
                 # self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
@@ -129,7 +129,7 @@ class StreamTest(unittest.TestCase):
         rtr = RTCMReader(stream, scaling=True, labelmsm=True)
         # stdout_saved = sys.stdout
         # sys.stdout = open("output.txt", "w")
-        for (raw, parsed) in rtr.iterate():
+        for raw, parsed in rtr.iterate():
             if raw is not None:
                 # print(parsed)
                 self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
@@ -193,7 +193,7 @@ class StreamTest(unittest.TestCase):
         raw = 0
         rtr = RTCMReader(stream, protfilter=7)
         with self.assertRaisesRegex(rte.RTCMParseError, EXPECTED_ERROR):
-            for (raw, parsed) in rtr.iterate(quitonerror=rtt.ERR_RAISE):
+            for raw, parsed in rtr.iterate(quitonerror=rtt.ERR_RAISE):
                 if raw is not None:
                     print(parsed)
                     i += 1
