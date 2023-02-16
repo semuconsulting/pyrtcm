@@ -75,7 +75,7 @@ class StreamTest(unittest.TestCase):
         rtr = RTCMReader(stream, scaling=False, labelmsm=False)
         for raw, parsed in rtr.iterate():
             if raw is not None:
-                print(parsed)
+                # print(parsed)
                 self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
                 i += 1
         stream.close()
@@ -134,6 +134,25 @@ class StreamTest(unittest.TestCase):
                 # print(parsed)
                 self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
                 i += 1
+        stream.close()
+        # sys.stdout = stdout_saved
+
+    def testNTRIP(
+        self,
+    ):  # test NTRIP output stream
+        EXPECTED_RESULTS = "<RTCM(1075, DF002=1075, DF003=2690, GNSSEpoch=386583000, DF393=1, DF409=0, DF001_7=0, DF411=1, DF412=0, DF417=0, DF418=0, DF394=292770813713580032, NSat=6, DF395=1073872896, NSig=2, DF396=4031, DF397_01(006)=80, DF397_02(012)=67, DF397_03(019)=74, DF397_04(024)=70, DF397_05(025)=69, DF397_06(032)=73, GNSSSpecific_01(006)=15, GNSSSpecific_02(012)=15, GNSSSpecific_03(019)=15, GNSSSpecific_04(024)=15, GNSSSpecific_05(025)=15, GNSSSpecific_06(032)=15, DF398_01(006)=0.99414062, DF398_02(012)=0.13085938, DF398_03(019)=0.84179688, DF398_04(024)=0.25292969, DF398_05(025)=0.97949219, DF398_06(032)=0.67773438, DF399_01(006)=-421, DF399_02(012)=-112, DF399_03(019)=351, DF399_04(024)=444, DF399_05(025)=-469, DF399_06(032)=-303, DF400_01(006,1C)=0.00034624, DF400_02(006,2S)=0.00039607, DF400_03(012,1C)=-0.0004673, DF400_04(012,2S)=-0.00045753, DF400_05(019,1C)=-0.00012845, DF400_06(019,n/a)=-0.00033915, DF400_07(024,1C)=-0.00031781, DF400_08(024,2S)=-0.0003649, DF400_09(025,1C)=-0.00034219, DF400_10(025,2S)=-0.000184, DF400_11(032,1C)=-0.00016075, DF400_12(032,2S)=8.631e-05, DF401_01(006,1C)=0.00104086, DF401_02(006,2S)=0.00304812, DF401_03(012,1C)=-0.00018586, DF401_04(012,2S)=-0.00140482, DF401_05(019,1C)=-0.00256613, DF401_06(019,n/a)=-0.00256643, DF401_07(024,1C)=0.00079059, DF401_08(024,2S)=0.00109615, DF401_09(025,1C)=0.00158546, DF401_10(025,2S)=0.00250093, DF401_11(032,1C)=0.00217031, DF401_12(032,2S)=-0.00099188, DF402_01(006,1C)=13, DF402_02(006,2S)=14, DF402_03(012,1C)=0, DF402_04(012,2S)=0, DF402_05(019,1C)=2, DF402_06(019,n/a)=12, DF402_07(024,1C)=11, DF402_08(024,2S)=3, DF402_09(025,1C)=6, DF402_10(025,2S)=12, DF402_11(032,1C)=11, DF402_12(032,2S)=1, DF420_01(006,1C)=1, DF420_02(006,2S)=1, DF420_03(012,1C)=0, DF420_04(012,2S)=1, DF420_05(019,1C)=0, DF420_06(019,n/a)=0, DF420_07(024,1C)=1, DF420_08(024,2S)=1, DF420_09(025,1C)=0, DF420_10(025,2S)=0, DF420_11(032,1C)=1, DF420_12(032,2S)=0, DF403_01(006,1C)=51, DF403_02(006,2S)=48, DF403_03(012,1C)=52, DF403_04(012,2S)=49, DF403_05(019,1C)=12, DF403_06(019,n/a)=3, DF403_07(024,1C)=57, DF403_08(024,2S)=5, DF403_09(025,1C)=17, DF403_10(025,2S)=62, DF403_11(032,1C)=59, DF403_12(032,2S)=47, DF404_01(006,1C)=-1.5415, DF404_02(006,2S)=0.58, DF404_03(012,1C)=-1.1856, DF404_04(012,2S)=1.4879, DF404_05(019,1C)=-0.6026, DF404_06(019,n/a)=-0.2633, DF404_07(024,1C)=-0.4544, DF404_08(024,2S)=0.916, DF404_09(025,1C)=0.0, DF404_10(025,2S)=0, DF404_11(032,1C)=0, DF404_12(032,2S)=0)>"
+        dirname = os.path.dirname(__file__)
+        stream = open(os.path.join(dirname, "pygpsdata-NTRIP.log"), "rb")
+        i = 0
+        raw = 0
+        rtr = RTCMReader(stream, scaling=True, labelmsm=True)
+        # stdout_saved = sys.stdout
+        # sys.stdout = open("output.txt", "w")
+        for raw, parsed in rtr.iterate():
+            if raw is not None:
+                # print(parsed)
+                i += 1
+        self.assertEqual(str(parsed), EXPECTED_RESULTS)
         stream.close()
         # sys.stdout = stdout_saved
 
