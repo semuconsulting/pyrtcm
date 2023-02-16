@@ -81,7 +81,7 @@ class RTCMMessage:
             raise rte.RTCMTypeError(
                 (
                     f"Error processing attribute '{key}' "
-                    f"in message type {self.identity}"
+                    f"in message type {self.identity} {err}"
                 )
             ) from err
 
@@ -208,8 +208,7 @@ class RTCMMessage:
 
         if position + length > self._payblen:
             raise rte.RTCMMessageError(
-                f"Attribute size {length} exceeds",
-                f"remaining payload length {self._payblen - position}",
+                f"Attribute size {length} exceeds remaining payload length {self._payblen - position}"
             )
 
         return int.from_bytes(self._payload, "big") >> (
