@@ -908,11 +908,9 @@ RTCM_PAYLOADS_GET = {
         "DF029": "Antenna Descriptor Counter N",
         "group1": (
             "DF029",
-            {
-                "DF030": "Antenna Descriptor",
-                "DF031": "Antenna Setup ID",
-            },
+            {"DF030": "Antenna Descriptor"},
         ),
+        "DF031": "Antenna Setup ID",
         "DF032": "Antenna Serial Number Counter M",
         "group2": (
             "DF032",
