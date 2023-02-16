@@ -96,16 +96,17 @@ def bits2val(att: str, scale: float, bitfield: int) -> object:
 
     typ = atttyp(att)
     siz = attsiz(att)
+    val = msb = 0
 
-    val = 0
-
+    if typ in ("SNT", "INT"):
+        msb = 2 ** (siz - 1)
     if typ == "SNT":  # int, MSB indicates sign
-        val = bitfield & 2 ** (siz - 1) - 1
-        if bitfield & 2 ** (siz - 1):
+        val = bitfield & msb - 1
+        if bitfield & msb:
             val *= -1
     else:  # all other types
         val = bitfield
-    if typ == "INT" and (bitfield & 2 ** (siz - 1)):  # 2's compliment -ve int
+    if typ == "INT" and (bitfield & msb):  # 2's compliment -ve int
         val = val - (1 << siz)
     if typ in ("CHA", "UTF"):  # ASCII or UTF-8 character
         val = chr(val)
