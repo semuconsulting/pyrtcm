@@ -32,6 +32,7 @@ from pyrtcm.rtcmhelpers import (
     num_setbits,
     att2idx,
     att2name,
+    escapeall,
 )
 
 
@@ -191,7 +192,7 @@ class StaticTest(unittest.TestCase):
             ds = datascale(dt)
             self.assertEqual(ds, EXPECTED_RESULT[i])
         # double check all the defined res are numbers
-        for (_, res, _) in RTCM_DATA_FIELDS.values():
+        for _, res, _ in RTCM_DATA_FIELDS.values():
             self.assertIsInstance(res, (int, float))
 
     def testdatadesc(self):  # test datadesc
@@ -238,6 +239,13 @@ class StaticTest(unittest.TestCase):
             res = att2name(att)
             # print(res)
             self.assertEqual(res, EXPECTED_RESULT[i])
+
+    def testescapeall(self):
+        EXPECTED_RESULT = "b'\\x68\\x65\\x72\\x65\\x61\\x72\\x65\\x73\\x6f\\x6d\\x65\\x63\\x68\\x61\\x72\\x73'"
+        val = b"herearesomechars"
+        res = escapeall(val)
+        print(res)
+        self.assertEqual(res, EXPECTED_RESULT)
 
 
 if __name__ == "__main__":

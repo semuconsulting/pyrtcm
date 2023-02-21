@@ -29,13 +29,10 @@ def read(stream, errorhandler, quitonerror, validate):
     """
 
     msgcount = 0
-
     ubr = RTCMReader(
         stream, errorhandler=errorhandler, quitonerror=quitonerror, validate=validate
     )
-    for (_, parsed_data) in ubr.iterate(
-        errorhandler=errorhandler, quitonerror=quitonerror
-    ):
+    for _, parsed_data in ubr:
         print(parsed_data)
         msgcount += 1
 
@@ -43,7 +40,6 @@ def read(stream, errorhandler, quitonerror, validate):
 
 
 if __name__ == "__main__":
-
     YES = ("Y", "y", "YES,", "yes", "True")
     NO = ("N", "n", "NO,", "no", "False")
 

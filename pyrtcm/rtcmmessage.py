@@ -23,6 +23,7 @@ from pyrtcm.rtcmhelpers import (
     cell2prn,
     att2idx,
     att2name,
+    escapeall,
 )
 
 NSAT = "NSat"
@@ -238,7 +239,9 @@ class RTCMMessage:
         for i, att in enumerate(self.__dict__):
             if att[0] != "_":  # only show public attributes
                 val = self.__dict__[att]
-
+                # escape all byte chars
+                if isinstance(val, bytes):
+                    val = escapeall(val)
                 # label MSM NSAT and NCELL group attributes
                 lbl = ""
                 if is_msm:
