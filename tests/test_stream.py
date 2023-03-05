@@ -72,6 +72,27 @@ class StreamTest(unittest.TestCase):
         msg = RTCMReader.parse(self._raw1023)
         self.assertEqual(str(msg), EXPECTED_RESULT)
 
+    def test1230(
+        self,
+    ):  # test sample 1230
+        dirname = os.path.dirname(__file__)
+        stream = open(os.path.join(dirname, "pygpsdata-1230.bin"), "rb")
+        EXPECTED_RESULT = [
+            "<RTCM(1230, DF002=1230, DF003=0, DF421=0, DF001_3=0, DF422=15, DF423=0.0, DF424=0.0, DF425=0.0, DF426=0.0)>",
+            "<RTCM(1230, DF002=1230, DF003=0, DF421=0, DF001_3=0, DF422=15, DF423=0.0, DF424=0.0, DF425=0.0, DF426=0.0)>",
+            "<RTCM(1230, DF002=1230, DF003=0, DF421=0, DF001_3=0, DF422=15, DF423=0.0, DF424=0.0, DF425=0.0, DF426=0.0)>",
+            "<RTCM(1230, DF002=1230, DF003=0, DF421=0, DF001_3=0, DF422=15, DF423=0.0, DF424=0.0, DF425=0.0, DF426=0.0)>",
+            "<RTCM(1230, DF002=1230, DF003=0, DF421=0, DF001_3=0, DF422=15, DF423=0.0, DF424=0.0, DF425=0.0, DF426=0.0)>",
+            "<RTCM(1230, DF002=1230, DF003=0, DF421=0, DF001_3=0, DF422=15, DF423=0.0, DF424=0.0, DF425=0.0, DF426=0.0)>",
+        ]
+        rtr = RTCMReader(stream)
+        i = 0
+        for raw, parsed in rtr:
+            # print(f"{parsed}\n{raw}")
+            self.assertEqual(str(parsed), EXPECTED_RESULT[i])
+            i += 1
+        stream.close()
+
     def testMIXEDRTCM_NOSCALE(
         self,
     ):  # test mixed stream of NMEA, UBX & RTCM messages with no scaling applied

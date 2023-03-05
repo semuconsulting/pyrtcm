@@ -16,6 +16,7 @@ from pyrtcm.rtcmhelpers import (
     crc2bytes,
     len2bytes,
     get_bitarray,
+    get_bit,
     bits2val,
     attsiz,
     num_setbits,
@@ -29,7 +30,10 @@ from pyrtcm.rtcmhelpers import (
 NSAT = "NSat"
 NSIG = "NSig"
 NCELL = "_NCell"
-NBIAS = "_NBias"
+NL1CA = "_NL1CA"
+NL1P = "_NL1P"
+NL2CA = "_NL2CA"
+NL2P = "_NL2P"
 
 
 class RTCMMessage:
@@ -165,8 +169,12 @@ class RTCMMessage:
 
         # if attribute is part of a (nested) repeating group, suffix name with index
         keyr = key
-        for i in index:  # one index for each nested level
-            if i > 0:
+        for (
+            i
+        ) in (
+            index
+        ):  # one index for each nested level (unless it's a 1230 message group)
+            if i > 0 and keyr not in ("DF423", "DF424", "DF425", "DF426"):
                 keyr += f"_{i:02d}"
 
         # get value of required number of bits at current payload offset
@@ -193,8 +201,12 @@ class RTCMMessage:
         if key == "DF395":  # num of signals in MSM message
             setattr(self, NSIG, num_setbits(bitfield))
             setattr(self, NCELL, getattr(self, NSAT) * getattr(self, NSIG))
-        if key == "DF422":  # num of bias entries in 1230 message
-            setattr(self, NBIAS, num_setbits(bitfield))
+        if key == "DF422":  # bitmask of bias entries in 1230 message
+            val = bits2val(rtt.BIT4, 0, bitfield)
+            setattr(self, NL1CA, (val & 8) >> 3)
+            setattr(self, NL1P, (val & 4) >> 2)
+            setattr(self, NL2CA, (val & 2) >> 1)
+            setattr(self, NL2P, val & 1)
 
         return offset
 

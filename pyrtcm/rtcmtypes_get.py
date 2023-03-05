@@ -14,7 +14,10 @@ Information sourced from RTCM STANDARD 10403.3 © 2016 RTCM
 NSAT = "NSat"
 NSIG = "NSig"
 NCELL = "_NCell"
-NBIAS = "_NBias"
+NL1CA = "_NL1CA"
+NL1P = "_NL1P"
+NL2CA = "_NL2CA"
+NL2P = "_NL2P"
 # Number of Residuals groups in MT1023 and MT1024
 NRES = 16
 
@@ -1492,16 +1495,29 @@ RTCM_PAYLOADS_GET = {
         "DF003": "Reference Station ID",
         "DF421": "GLONASS Code-Phase bias indicator",
         "DF001_3": "Reserved",
-        "DF422": "GLONASS FDMA signals mask",  # NBIAS = num bits set
-        # TODO verify that each iteration of this group only ever contains
-        # one of either DF423, DF424, DF425 or FD426?
-        "group": (
-            NBIAS,
+        "DF422": "GLONASS FDMA signals mask",
+        "groupL1CA": (
+            NL1CA,  # = 1 if bit 1 (MSB) in DF422 is set, otherwise 0
             {
                 "DF423": "GLONASS L1 C/A Code-Phase Bias",
-                # "DF424": "GLONASS L1 P Code-Phase Bias",
-                # "DF425": "GLONASS L2 C/A Code-Phase Bias",
-                # "DF426": "GLONASS L2 P Code-Phase Bias",
+            },
+        ),
+        "groupL1P": (
+            NL1P,  # = 1 if bit 2 in DF422 is set, otherwise 0
+            {
+                "DF424": "GLONASS L1 P Code-Phase Bias",
+            },
+        ),
+        "groupL2CA": (
+            NL2CA,  # = 1 if bit 3 in DF422 is set, otherwise 0
+            {
+                "DF425": "GLONASS L2 C/A Code-Phase Bias",
+            },
+        ),
+        "groupL2P": (
+            NL2P,  # = 1 if bit 4 (LSB) in DF422 is set, otherwise 0
+            {
+                "DF426": "GLONASS L2 P Code-Phase Bias",
             },
         ),
     },
