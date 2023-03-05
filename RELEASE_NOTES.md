@@ -2,6 +2,10 @@
 
 ### RELEASE 1.0.5rc0
 
+FIXES:
+
+1. Fix to 1230 message payload - will now correctly label DF423, DF424, DF425 & DF426 data fields.
+
 CHANGES:
 
 1. `__str__` method enhanced to escape all byte values for clarity e.g. will now return b'\x61\x62\x63' rather than b'abc'
