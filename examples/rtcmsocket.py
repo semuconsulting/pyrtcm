@@ -25,7 +25,7 @@ def read(stream: socket.socket):
         stream,
     )
     try:
-        for (_, parsed_data) in rtr.iterate():
+        for _, parsed_data in rtr:
             print(parsed_data)
             msgcount += 1
     except KeyboardInterrupt:
@@ -39,7 +39,6 @@ def read(stream: socket.socket):
 
 
 if __name__ == "__main__":
-
     SERVER = "192.168.0.72"
     PORT = 50007
 

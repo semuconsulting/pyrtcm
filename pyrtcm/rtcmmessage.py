@@ -10,7 +10,21 @@ Created on 14 Feb 2022
 # pylint: disable=invalid-name
 
 import pyrtcm.exceptions as rte
-import pyrtcm.rtcmtypes_core as rtt
+from pyrtcm.rtcmtypes_core import (
+    RTCM_HDR,
+    RTCM_MSGIDS,
+    RTCM_DATA_FIELDS,
+    BOOL_GROUPS,
+    ATT_NSAT,
+    ATT_NCELL,
+    NSAT,
+    NSIG,
+    NCELL,
+    NL1CA,
+    NL1P,
+    NL2CA,
+    NL2P,
+)
 import pyrtcm.rtcmtypes_get as rtg
 from pyrtcm.rtcmhelpers import (
     crc2bytes,
@@ -23,12 +37,8 @@ from pyrtcm.rtcmhelpers import (
     cell2prn,
     att2idx,
     att2name,
+    escapeall,
 )
-
-NSAT = "NSat"
-NSIG = "NSig"
-NCELL = "_NCell"
-NBIAS = "_NBias"
 
 
 class RTCMMessage:
@@ -164,12 +174,12 @@ class RTCMMessage:
 
         # if attribute is part of a (nested) repeating group, suffix name with index
         keyr = key
-        for i in index:  # one index for each nested level
-            if i > 0:
+        for i in index:  # one index for each nested level (unless it's a boolean group)
+            if i > 0 and keyr not in BOOL_GROUPS:
                 keyr += f"_{i:02d}"
 
         # get value of required number of bits at current payload offset
-        att, scale, _ = rtt.RTCM_DATA_FIELDS[key]
+        att, scale, _ = RTCM_DATA_FIELDS[key]
         if not self._scaling:
             scale = 0
         if key == "DF396":  # this MSM attribute has variable length
@@ -192,8 +202,11 @@ class RTCMMessage:
         if key == "DF395":  # num of signals in MSM message
             setattr(self, NSIG, num_setbits(bitfield))
             setattr(self, NCELL, getattr(self, NSAT) * getattr(self, NSIG))
-        if key == "DF422":  # num of bias entries in 1230 message
-            setattr(self, NBIAS, num_setbits(bitfield))
+        if key == "DF422":  # bitmask of bias entries in 1230 message
+            setattr(self, NL1CA, bitfield[0])
+            setattr(self, NL1P, bitfield[1])
+            setattr(self, NL2CA, bitfield[2])
+            setattr(self, NL2P, bitfield[3])
 
         return offset
 
@@ -227,7 +240,7 @@ class RTCMMessage:
         # if MSM message and labelmsm flag is set,
         # label NSAT and NCELL group attributes with
         # corresponding satellite PRN and signal ID
-        if self._labelmsm and "MSM" in rtt.RTCM_MSGIDS[self.identity]:
+        if self._labelmsm and "MSM" in RTCM_MSGIDS[self.identity]:
             sats = sat2prn(self)
             cells = cell2prn(self)
             is_msm = True
@@ -238,15 +251,17 @@ class RTCMMessage:
         for i, att in enumerate(self.__dict__):
             if att[0] != "_":  # only show public attributes
                 val = self.__dict__[att]
-
+                # escape all byte chars
+                if isinstance(val, bytes):
+                    val = escapeall(val)
                 # label MSM NSAT and NCELL group attributes
                 lbl = ""
                 if is_msm:
                     aname = att2name(att)
-                    if aname in rtt.ATT_NSAT:
+                    if aname in ATT_NSAT:
                         prn = sats[att2idx(att)]
                         lbl = f"({prn})"
-                    if aname in rtt.ATT_NCELL:
+                    if aname in ATT_NCELL:
                         prn, sig = cells[att2idx(att)]
                         sig = "n/a" if sig is None else sig
                         lbl = f"({prn},{sig})"
@@ -297,7 +312,7 @@ class RTCMMessage:
         """
 
         size = len2bytes(self._payload)
-        message = rtt.RTCM_HDR + size + self._payload
+        message = RTCM_HDR + size + self._payload
         crc = crc2bytes(message)
         return message + crc
 

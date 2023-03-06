@@ -39,6 +39,7 @@ class RTCMReader:
 
         :param datastream stream: input data stream
         :param int quitonerror: (kwarg) 0 = ignore,  1 = log and continue, 2 = (re)raise (1)
+        :param int errorhandler: (kwarg) error handling object or function (None)
         :param int validate: (kwarg) 0 = ignore invalid checksum, 1 = validate checksum (1)
         :param bool scaling: (kwarg) apply attribute scaling True/False (True)
         :param bool labelmsm: (kwarg) whether to label MSM NSAT and NCELL attributes (True)
@@ -52,6 +53,7 @@ class RTCMReader:
         else:
             self._stream = datastream
         self._quitonerror = int(kwargs.get("quitonerror", rtt.ERR_LOG))
+        self._errorhandler = kwargs.get("errorhandler", None)
         self._validate = int(kwargs.get("validate", rtt.VALCKSUM))
         self._scaling = int(kwargs.get("scaling", True))
         self._labelmsm = int(kwargs.get("labelmsm", True))
@@ -65,15 +67,15 @@ class RTCMReader:
         """
         Return next item in iteration.
 
-        :return: tuple of (raw_data as bytes, parsed_data as rtcmMessage)
+        :return: tuple of (raw_data as bytes, parsed_data as RTCMMessage)
         :rtype: tuple
         :raises: StopIteration
         """
 
         (raw_data, parsed_data) = self.read()
-        if raw_data is not None:
-            return (raw_data, parsed_data)
-        raise StopIteration
+        if raw_data is None and parsed_data is None:
+            raise StopIteration
+        return (raw_data, parsed_data)
 
     def read(self) -> tuple:
         """
@@ -114,14 +116,19 @@ class RTCMReader:
                     parsing = False
                 # unrecognised protocol header
                 else:
-                    if self._quitonerror == rtt.ERR_RAISE:
-                        raise rte.RTCMStreamError(f"Unknown protocol {bytehdr}.")
-                    if self._quitonerror == rtt.ERR_LOG:
-                        return (bytehdr, f"<UNKNOWN PROTOCOL(header={bytehdr})>")
                     continue
 
         except EOFError:
             return (None, None)
+        except (
+            rte.RTCMMessageError,
+            rte.RTCMParseError,
+            rte.RTCMStreamError,
+            rte.RTCMTypeError,
+        ) as err:
+            if self._quitonerror:
+                self._do_error(str(err))
+            parsed_data = str(err)
 
         return (raw_data, parsed_data)
 
@@ -157,9 +164,7 @@ class RTCMReader:
         """
 
         # read the rest of the NMEA message from the buffer
-        byten = self._stream.readline()  # NMEA protocol is CRLF-terminated
-        if byten[-2:] != b"\x0d\x0a":
-            raise EOFError()
+        byten = self._read_line()  # NMEA protocol is CRLF-terminated
         raw_data = hdr + byten
         parsed_data = None
         return (raw_data, parsed_data)
@@ -202,43 +207,53 @@ class RTCMReader:
             raise EOFError()
         return data
 
+    def _read_line(self) -> bytes:
+        """
+        Read until end of line (CRLF).
+
+        :return: bytes
+        :rtype: bytes
+        :raises: EOFError if stream ends prematurely
+        """
+
+        data = self._stream.readline()
+        if data[-2:] != b"\x0d\x0a":
+            raise EOFError()
+        return data
+
+    def _do_error(self, err: str):
+        """
+        Handle error.
+
+        :param str err: error message
+        :raises: RTCMParseError if quitonerror = 2
+        """
+
+        if self._quitonerror == rtt.ERR_RAISE:
+            raise rte.RTCMParseError(err)
+        if self._quitonerror == rtt.ERR_LOG:
+            # pass to error handler if there is one
+            if self._errorhandler is None:
+                print(err)
+            else:
+                self._errorhandler(err)
+
     def iterate(self, **kwargs) -> tuple:
         """
+        DEPRECATED - WILL BE REMOVED IN VERSION >=1.0.6
+        USE STANDARD ITERATOR INSTEAD
         Invoke the iterator within an exception handling framework.
 
-        :param int quitonerror: (kwarg) 0 = ignore,  1 = log and continue, 2 = (re)raise (1)
-        :param object errorhandler: (kwarg) Optional error handler (None)
         :return: tuple of (raw_data as bytes, parsed_data as RTCMMessage)
         :rtype: tuple
         :raises: RTCM... Error (if quitonerror is set and stream is invalid)
-
         """
-
-        quitonerror = kwargs.get("quitonerror", self._quitonerror)
-        errorhandler = kwargs.get("errorhandler", None)
 
         while True:
             try:
                 yield next(self)  # invoke the iterator
             except StopIteration:
                 break
-            except (
-                rte.RTCMMessageError,
-                rte.RTCMTypeError,
-                rte.RTCMParseError,
-                rte.RTCMStreamError,
-            ) as err:
-                # raise, log or ignore any error depending
-                # on the quitonerror setting
-                if quitonerror == rtt.ERR_RAISE:
-                    raise err
-                if quitonerror == rtt.ERR_LOG:
-                    # pass to error handler if there is one
-                    if errorhandler is None:
-                        print(err)
-                    else:
-                        errorhandler(err)
-                # continue
 
     @property
     def datastream(self) -> object:

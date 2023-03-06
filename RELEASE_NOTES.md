@@ -1,6 +1,17 @@
 # pyrtcm Release Notes
 
-### RELEASE 1.0.3
+### RELEASE 1.0.5
+
+FIXES:
+
+1. Fix to 1230 message payload - will now correctly label DF423, DF424, DF425 & DF426 data fields.
+
+CHANGES:
+
+1. `__str__` method enhanced to escape all byte values for clarity e.g. will now return b'\x61\x62\x63' rather than b'abc'
+2. `RTCMReader.iterate()` method deprecated - use the standard iterator instead e.g. `rtr = RTCMReader(**wkargs): for (raw,parse) in ubr: ...`, passing any `quitonerror` or `errorhandler` kwargs to the RTCMReader constructor.
+
+### RELEASE 1.0.4
 
 FIXES:
 

@@ -106,14 +106,14 @@ Example - File input (using iterator).
 ...
 ```
 
-Example - Socket input (using enhanced iterator):
+Example - Socket input (using iterator):
 ```python
 >>> import socket
 >>> from pyrtcm import RTCMReader
 >>> stream = socket.socket(socket.AF_INET, socket.SOCK_STREAM):
 >>> stream.connect(("localhost", 50007))
 >>> rtr = RTCMReader(stream)
->>> for (raw_data, parsed_data) in rtr.iterate(): print(parsed_data)
+>>> for (raw_data, parsed_data) in rtr: print(parsed_data)
 ```
 
 ---
