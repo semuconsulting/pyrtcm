@@ -82,15 +82,15 @@ class StreamTest(unittest.TestCase):
             "<RTCM(1230, DF002=1230, DF003=0, DF421=0, DF001_3=0, DF422=15, DF423=0.0, DF424=0.0, DF425=0.0, DF426=0.0)>",
             "<RTCM(1230, DF002=1230, DF003=0, DF421=0, DF001_3=0, DF422=15, DF423=0.0, DF424=0.0, DF425=0.0, DF426=0.0)>",
             "<RTCM(1230, DF002=1230, DF003=0, DF421=0, DF001_3=0, DF422=15, DF423=0.0, DF424=0.0, DF425=0.0, DF426=0.0)>",
-            "<RTCM(1230, DF002=1230, DF003=0, DF421=0, DF001_3=0, DF422=15, DF423=0.0, DF424=0.0, DF425=0.0, DF426=0.0)>",
-            "<RTCM(1230, DF002=1230, DF003=0, DF421=0, DF001_3=0, DF422=15, DF423=0.0, DF424=0.0, DF425=0.0, DF426=0.0)>",
+            "<RTCM(1230, DF002=1230, DF003=0, DF421=0, DF001_3=0, DF422=11, DF423=0.0, DF425=0.0, DF426=0.0)>",
         ]
-        rtr = RTCMReader(stream)
+        rtr = RTCMReader(stream, quitonerror=2)
         i = 0
         for raw, parsed in rtr:
-            # print(f"{parsed}\n{raw}")
+            # print(f"{i} - {parsed}\n{raw}")
             self.assertEqual(str(parsed), EXPECTED_RESULT[i])
             i += 1
+        self.assertEqual(i, 5)
         stream.close()
 
     def testMIXEDRTCM_NOSCALE(

@@ -25,6 +25,20 @@ ERR_RAISE = 2
 ERR_LOG = 1
 ERR_IGNORE = 0
 
+NSAT = "NSat"
+NSIG = "NSig"
+NCELL = "_NCell"
+NL1CA = "_NL1CA"
+NL1P = "_NL1P"
+NL2CA = "_NL2CA"
+NL2P = "_NL2P"
+# Number of Residuals groups in MT1023 and MT1024
+NRES = 16
+# list of 'group' attributes which have
+# an occurrence of 0 or 1
+BOOL_GROUPS = ("DF423", "DF424", "DF425", "DF426")
+
+
 # Power of 2 scaling constants
 P2_P4 = 16  # 2**4
 P2_4 = 0.0625  # 2**-4

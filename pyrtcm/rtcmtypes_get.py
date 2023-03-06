@@ -9,17 +9,15 @@ Information sourced from RTCM STANDARD 10403.3 © 2016 RTCM
 """
 # pylint: disable=too-many-lines, line-too-long
 
-
-# attribute names holding size of MSM repeating groups
-NSAT = "NSat"
-NSIG = "NSig"
-NCELL = "_NCell"
-NL1CA = "_NL1CA"
-NL1P = "_NL1P"
-NL2CA = "_NL2CA"
-NL2P = "_NL2P"
-# Number of Residuals groups in MT1023 and MT1024
-NRES = 16
+from pyrtcm.rtcmtypes_core import (
+    NSAT,
+    NCELL,
+    NL1CA,
+    NL1P,
+    NL2CA,
+    NL2P,
+    NRES,
+)
 
 # *************************************************************
 # MSM MESSAGE SUB-SECTION DEFINITIONS
