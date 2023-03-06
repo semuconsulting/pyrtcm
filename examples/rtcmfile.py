@@ -51,7 +51,7 @@ if __name__ == "__main__":
     filename = input().strip('"')
     print(
         "How do you want to handle protocol errors?",
-        "(0 = ignore, 1 = log and continue, 3 = raise and stop) (1) ",
+        "(0 = ignore, 1 = log and continue, 2 = raise and stop) (1) ",
         end="",
     )
     val = input() or "1"

@@ -177,6 +177,20 @@ class RTCMMessage:
         else:
             atts = attsiz(att)
         bitfield = self._payload_bits[offset : offset + atts]
+
+        if len(bitfield) != atts:
+            """
+            This should never happen as it is showing that we tried to use more data than
+            was in the payload. This could be a malformed packet or a parsing error in pyrtcm.
+            This is not a security issue as python does not allow for access outside of the
+            buffer.
+            A partial message will not be returned, previously all the remaining attributes
+            would have been returned as 0
+            """
+
+            raise rte.RTCMParseError("Payload is too small, it doesn't contain enough for all expected data.")
+
+
         val = bits2val(att, scale, bitfield)
 
         setattr(self, keyr, val)
