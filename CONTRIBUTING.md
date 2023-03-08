@@ -15,12 +15,12 @@ If you're adding or amending rtcm payload definitions or configuration database 
 ## Coding conventions
 
 * This is open source software. Code should be as simple and transparent as possible. Favour clarity over brevity.
-* The code should be compatible with Python 3.6+.
+* The code should be compatible with Python >=3.7.
 * The core code should be as generic and reusable as possible. We endeavour to limit the amount of processing dedicated to specific rtcm message types, though this is sometimes unavoidable.
 * Avoid external library dependencies unless there's a compelling reason not to.
+* We use and recommend [Visual Studio Code](https://code.visualstudio.com/) with the [Python Extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python) for development and testing.
 * Code should be documented in accordance with [Sphinx](https://www.sphinx-doc.org/en/master/) docstring conventions.
 * Code should formatted using [black](https://pypi.org/project/black/) (>= 20.8).
-* We use and recommend Visual Studio Code with the Python extension for development and testing.
 * We use and recommend [pylint](https://pypi.org/project/pylint/) (>=2.6.0) for code analysis.
 
 ## Testing
@@ -34,6 +34,8 @@ Please write unittest examples for new code you create and add them to the `/tes
 ## Submitting changes
 
 Please send a [GitHub Pull Request to pyrtcm](https://github.com/semuconsulting/pyrtcm/pulls) with a clear list of what you've done (read more about [pull requests](https://docs.github.com/en/free-pro-team@latest/github/collaborating-with-issues-and-pull-requests/about-pull-requests)). Please follow our coding conventions (above) and make sure all of your commits are atomic (one feature per commit).
+
+Please sign all commits - see [Signing GitHub Commits](https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits) for instructions.
 
 Always write a clear log message for your commits. One-line messages are fine for small changes, but bigger changes should look like this:
 
