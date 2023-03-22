@@ -76,22 +76,21 @@ class StreamTest(unittest.TestCase):
         self,
     ):  # test sample 1230
         dirname = os.path.dirname(__file__)
-        stream = open(os.path.join(dirname, "pygpsdata-1230.bin"), "rb")
-        EXPECTED_RESULT = [
-            "<RTCM(1230, DF002=1230, DF003=0, DF421=0, DF001_3=0, DF422=15, DF423=0.0, DF424=0.0, DF425=0.0, DF426=0.0)>",
-            "<RTCM(1230, DF002=1230, DF003=0, DF421=0, DF001_3=0, DF422=15, DF423=0.0, DF424=0.0, DF425=0.0, DF426=0.0)>",
-            "<RTCM(1230, DF002=1230, DF003=0, DF421=0, DF001_3=0, DF422=15, DF423=0.0, DF424=0.0, DF425=0.0, DF426=0.0)>",
-            "<RTCM(1230, DF002=1230, DF003=0, DF421=0, DF001_3=0, DF422=15, DF423=0.0, DF424=0.0, DF425=0.0, DF426=0.0)>",
-            "<RTCM(1230, DF002=1230, DF003=0, DF421=0, DF001_3=0, DF422=11, DF423=0.0, DF425=0.0, DF426=0.0)>",
-        ]
-        rtr = RTCMReader(stream, quitonerror=2)
-        i = 0
-        for raw, parsed in rtr:
-            # print(f"{i} - {parsed}\n{raw}")
-            self.assertEqual(str(parsed), EXPECTED_RESULT[i])
-            i += 1
-        self.assertEqual(i, 5)
-        stream.close()
+        with open(os.path.join(dirname, "pygpsdata-1230.bin"), "rb") as stream:
+            EXPECTED_RESULT = [
+                "<RTCM(1230, DF002=1230, DF003=0, DF421=0, DF001_3=0, DF422=15, DF423=0.0, DF424=0.0, DF425=0.0, DF426=0.0)>",
+                "<RTCM(1230, DF002=1230, DF003=0, DF421=0, DF001_3=0, DF422=15, DF423=0.0, DF424=0.0, DF425=0.0, DF426=0.0)>",
+                "<RTCM(1230, DF002=1230, DF003=0, DF421=0, DF001_3=0, DF422=15, DF423=0.0, DF424=0.0, DF425=0.0, DF426=0.0)>",
+                "<RTCM(1230, DF002=1230, DF003=0, DF421=0, DF001_3=0, DF422=15, DF423=0.0, DF424=0.0, DF425=0.0, DF426=0.0)>",
+                "<RTCM(1230, DF002=1230, DF003=0, DF421=0, DF001_3=0, DF422=11, DF423=0.0, DF425=0.0, DF426=0.0)>",
+            ]
+            rtr = RTCMReader(stream, quitonerror=2)
+            i = 0
+            for raw, parsed in rtr:
+                # print(f"{i} - {parsed}\n{raw}")
+                self.assertEqual(str(parsed), EXPECTED_RESULT[i])
+                i += 1
+            self.assertEqual(i, 5)
 
     def testMSM3(
         self,
@@ -127,16 +126,15 @@ class StreamTest(unittest.TestCase):
         )
 
         dirname = os.path.dirname(__file__)
-        stream = open(os.path.join(dirname, "pygpsdata-RTCM3.log"), "rb")
-        i = 0
-        raw = 0
-        rtr = RTCMReader(stream, scaling=False, labelmsm=False)
-        for raw, parsed in rtr:
-            if raw is not None:
-                # print(f'"{parsed}",')
-                self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
-                i += 1
-        stream.close()
+        with open(os.path.join(dirname, "pygpsdata-RTCM3.log"), "rb") as stream:
+            i = 0
+            raw = 0
+            rtr = RTCMReader(stream, scaling=False, labelmsm=False)
+            for raw, parsed in rtr:
+                if raw is not None:
+                    # print(f'"{parsed}",')
+                    self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
+                    i += 1
 
     def testMIXEDRTCM_SCALE(
         self,
@@ -153,16 +151,15 @@ class StreamTest(unittest.TestCase):
             "<RTCM(1117, DF002=1117, DF003=0, GNSSEpoch=385820000, DF393=1, DF409=0, DF001_7=0, DF411=1, DF412=0, DF417=0, DF418=0, DF394=7061644215716937728, NSat=3, DF395=1073774849, NSig=4, DF396=4095, NCell=12, DF397_01=140, DF397_02=112, DF397_03=133, GNSSSpecific_01=0, GNSSSpecific_02=0, GNSSSpecific_03=0, DF398_01=0.171875, DF398_02=0.125, DF398_03=0.87207031, DF399_01=481, DF399_02=-28, DF399_03=1, DF405_01=0.00022634, DF405_02=0.00026302, DF405_03=0.00024538, DF405_04=0.00023027, DF405_05=-3.85e-05, DF405_06=-8.33e-06, DF405_07=-2.259e-05, DF405_08=-3.289e-05, DF405_09=-9.806e-05, DF405_10=-7.163e-05, DF405_11=-8.577e-05, DF405_12=-9.572e-05, DF406_01=-0.00021978, DF406_02=0.00050089, DF406_03=-3.95e-06, DF406_04=0.00022199, DF406_05=0.00039012, DF406_06=-0.00017093, DF406_07=-0.00016689, DF406_08=-0.00018814, DF406_09=0.00028417, DF406_10=-0.0001959, DF406_11=0.0002057, DF406_12=0.00017754, DF407_01=516, DF407_02=462, DF407_03=684, DF407_04=365, DF407_05=648, DF407_06=649, DF407_07=649, DF407_08=649, DF407_09=568, DF407_10=704, DF407_11=704, DF407_12=704, DF420_01=0, DF420_02=0, DF420_03=0, DF420_04=0, DF420_05=0, DF420_06=0, DF420_07=0, DF420_08=0, DF420_09=0, DF420_10=0, DF420_11=0, DF420_12=0, DF408_01=7760, DF408_02=9184, DF408_03=8832, DF408_04=8832, DF408_05=12448, DF408_06=12928, DF408_07=13472, DF408_08=13104, DF408_09=9808, DF408_10=11184, DF408_11=11728, DF408_12=10320, DF404_01=-0.1064, DF404_02=-1.6384, DF404_03=-1.6384, DF404_04=-1.6384, DF404_05=-0.5875, DF404_06=-1.6384, DF404_07=-1.6384, DF404_08=-1.6384, DF404_09=-0.413, DF404_10=-1.6384, DF404_11=-1.6384, DF404_12=-1.6384)>",
         )
         dirname = os.path.dirname(__file__)
-        stream = open(os.path.join(dirname, "pygpsdata-RTCM3.log"), "rb")
-        i = 0
-        raw = 0
-        rtr = RTCMReader(stream, scaling=True, labelmsm=False)
-        for raw, parsed in rtr:
-            if raw is not None:
-                # print(f'"{parsed}",')
-                self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
-                i += 1
-        stream.close()
+        with open(os.path.join(dirname, "pygpsdata-RTCM3.log"), "rb") as stream:
+            i = 0
+            raw = 0
+            rtr = RTCMReader(stream, scaling=True, labelmsm=False)
+            for raw, parsed in rtr:
+                if raw is not None:
+                    # print(f'"{parsed}",')
+                    self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
+                    i += 1
 
     def testMIXEDRTCM_SCALE_LABELMSM(
         self,
@@ -180,17 +177,16 @@ class StreamTest(unittest.TestCase):
         )
 
         dirname = os.path.dirname(__file__)
-        stream = open(os.path.join(dirname, "pygpsdata-RTCM3.log"), "rb")
-        i = 0
-        raw = 0
-        rtr = RTCMReader(stream, scaling=True, labelmsm=True)
-        d = rtr.datastream
-        for raw, parsed in rtr:
-            if raw is not None:
-                # print(f'"{parsed}",')
-                self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
-                i += 1
-        stream.close()
+        with open(os.path.join(dirname, "pygpsdata-RTCM3.log"), "rb") as stream:
+            i = 0
+            raw = 0
+            rtr = RTCMReader(stream, scaling=True, labelmsm=True)
+            d = rtr.datastream
+            for raw, parsed in rtr:
+                if raw is not None:
+                    # print(f'"{parsed}",')
+                    self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
+                    i += 1
 
     def testMIXEDRTCM_ITERATOR(
         self,
@@ -208,31 +204,29 @@ class StreamTest(unittest.TestCase):
         )
 
         dirname = os.path.dirname(__file__)
-        stream = open(os.path.join(dirname, "pygpsdata-RTCM3.log"), "rb")
-        i = 0
-        raw = 0
-        rtr = RTCMReader(stream, scaling=True, labelmsm=True)
-        for raw, parsed in rtr.iterate():
-            if raw is not None:
-                # print(f'"{parsed}",')
-                self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
-                i += 1
-        stream.close()
+        with open(os.path.join(dirname, "pygpsdata-RTCM3.log"), "rb") as stream:
+            i = 0
+            raw = 0
+            rtr = RTCMReader(stream, scaling=True, labelmsm=True)
+            for raw, parsed in rtr.iterate():
+                if raw is not None:
+                    # print(f'"{parsed}",')
+                    self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
+                    i += 1
 
     def testNTRIP(
         self,
     ):  # test NTRIP output stream
         EXPECTED_RESULTS = "<RTCM(1075, DF002=1075, DF003=2690, GNSSEpoch=386583000, DF393=1, DF409=0, DF001_7=0, DF411=1, DF412=0, DF417=0, DF418=0, DF394=292770813713580032, NSat=6, DF395=1073872896, NSig=2, DF396=4031, DF397_01(006)=80, DF397_02(012)=67, DF397_03(019)=74, DF397_04(024)=70, DF397_05(025)=69, DF397_06(032)=73, GNSSSpecific_01(006)=15, GNSSSpecific_02(012)=15, GNSSSpecific_03(019)=15, GNSSSpecific_04(024)=15, GNSSSpecific_05(025)=15, GNSSSpecific_06(032)=15, DF398_01(006)=0.99414062, DF398_02(012)=0.13085938, DF398_03(019)=0.84179688, DF398_04(024)=0.25292969, DF398_05(025)=0.97949219, DF398_06(032)=0.67773438, DF399_01(006)=-421, DF399_02(012)=-112, DF399_03(019)=351, DF399_04(024)=444, DF399_05(025)=-469, DF399_06(032)=-303, DF400_01(006,1C)=0.00034624, DF400_02(006,2S)=0.00039607, DF400_03(012,1C)=-0.0004673, DF400_04(012,2S)=-0.00045753, DF400_05(019,1C)=-0.00012845, DF400_06(019,n/a)=-0.00033915, DF400_07(024,1C)=-0.00031781, DF400_08(024,2S)=-0.0003649, DF400_09(025,1C)=-0.00034219, DF400_10(025,2S)=-0.000184, DF400_11(032,1C)=-0.00016075, DF400_12(032,2S)=8.631e-05, DF401_01(006,1C)=0.00104086, DF401_02(006,2S)=0.00304812, DF401_03(012,1C)=-0.00018586, DF401_04(012,2S)=-0.00140482, DF401_05(019,1C)=-0.00256613, DF401_06(019,n/a)=-0.00256643, DF401_07(024,1C)=0.00079059, DF401_08(024,2S)=0.00109615, DF401_09(025,1C)=0.00158546, DF401_10(025,2S)=0.00250093, DF401_11(032,1C)=0.00217031, DF401_12(032,2S)=-0.00099188, DF402_01(006,1C)=13, DF402_02(006,2S)=14, DF402_03(012,1C)=0, DF402_04(012,2S)=0, DF402_05(019,1C)=2, DF402_06(019,n/a)=12, DF402_07(024,1C)=11, DF402_08(024,2S)=3, DF402_09(025,1C)=6, DF402_10(025,2S)=12, DF402_11(032,1C)=11, DF402_12(032,2S)=1, DF420_01(006,1C)=1, DF420_02(006,2S)=1, DF420_03(012,1C)=0, DF420_04(012,2S)=1, DF420_05(019,1C)=0, DF420_06(019,n/a)=0, DF420_07(024,1C)=1, DF420_08(024,2S)=1, DF420_09(025,1C)=0, DF420_10(025,2S)=0, DF420_11(032,1C)=1, DF420_12(032,2S)=0, DF403_01(006,1C)=51, DF403_02(006,2S)=48, DF403_03(012,1C)=52, DF403_04(012,2S)=49, DF403_05(019,1C)=12, DF403_06(019,n/a)=3, DF403_07(024,1C)=57, DF403_08(024,2S)=5, DF403_09(025,1C)=17, DF403_10(025,2S)=62, DF403_11(032,1C)=59, DF403_12(032,2S)=47, DF404_01(006,1C)=-1.5415, DF404_02(006,2S)=0.58, DF404_03(012,1C)=-1.1856, DF404_04(012,2S)=1.4879, DF404_05(019,1C)=-0.6026, DF404_06(019,n/a)=-0.2633, DF404_07(024,1C)=-0.4544, DF404_08(024,2S)=0.916, DF404_09(025,1C)=0.0, DF404_10(025,2S)=0, DF404_11(032,1C)=0, DF404_12(032,2S)=0)>"
         dirname = os.path.dirname(__file__)
-        stream = open(os.path.join(dirname, "pygpsdata-NTRIP.log"), "rb")
-        i = 0
-        raw = 0
-        rtr = RTCMReader(stream, quitonerror=rtt.ERR_RAISE)
-        for raw, parsed in rtr:
-            if raw is not None:
-                i += 1
-        self.assertEqual(str(parsed), EXPECTED_RESULTS)
-        stream.close()
+        with open(os.path.join(dirname, "pygpsdata-NTRIP.log"), "rb") as stream:
+            i = 0
+            raw = 0
+            rtr = RTCMReader(stream, quitonerror=rtt.ERR_RAISE)
+            for raw, parsed in rtr:
+                if raw is not None:
+                    i += 1
+            self.assertEqual(str(parsed), EXPECTED_RESULTS)
 
     def testNTRIP(
         self,
@@ -313,16 +307,15 @@ class StreamTest(unittest.TestCase):
             "1075",
         )
         dirname = os.path.dirname(__file__)
-        stream = open(os.path.join(dirname, "pygpsdata-NTRIP.log"), "rb")
-        i = 0
-        raw = 0
-        rtr = RTCMReader(stream, scaling=True, labelmsm=True)
-        for raw, parsed in rtr:
-            if raw is not None:
-                # print(parsed)
-                self.assertEqual(f"{parsed.identity}", EXPECTED_RESULTS[i])
-                i += 1
-        stream.close()
+        with open(os.path.join(dirname, "pygpsdata-NTRIP.log"), "rb") as stream:
+            i = 0
+            raw = 0
+            rtr = RTCMReader(stream, scaling=True, labelmsm=True)
+            for raw, parsed in rtr:
+                if raw is not None:
+                    # print(parsed)
+                    self.assertEqual(f"{parsed.identity}", EXPECTED_RESULTS[i])
+                    i += 1
 
     def testSerialize(self):  # test serialize()
         payload = self._raw1005[3:-3]
@@ -375,56 +368,61 @@ class StreamTest(unittest.TestCase):
     ):  # test mixed stream of NMEA, UBX & RTCM messages with invalid RTCM CRC
         EXPECTED_ERROR = "RTCM3 message invalid - failed CRC: (.*)"
         dirname = os.path.dirname(__file__)
-        stream = open(os.path.join(dirname, "pygpsdata-MIXED-RTCM3BADCRC.log"), "rb")
-        i = 0
-        raw = 0
-        rtr = RTCMReader(stream, protfilter=7, quitonerror=rtt.ERR_RAISE)
-        with self.assertRaisesRegex(rte.RTCMParseError, EXPECTED_ERROR):
-            for raw, parsed in rtr:
-                if raw is not None:
-                    print(parsed)
-                    i += 1
-        stream.close()
+        with open(
+            os.path.join(dirname, "pygpsdata-MIXED-RTCM3BADCRC.log"), "rb"
+        ) as stream:
+            i = 0
+            raw = 0
+            rtr = RTCMReader(stream, protfilter=7, quitonerror=rtt.ERR_RAISE)
+            with self.assertRaisesRegex(rte.RTCMParseError, EXPECTED_ERROR):
+                for raw, parsed in rtr:
+                    if raw is not None:
+                        print(parsed)
+                        i += 1
 
     def testbadCRC2(
         self,
     ):  # test mixed stream of NMEA, UBX & RTCM messages with invalid RTCM CRC
         EXPECTED_ERROR = "I ignored the following error: RTCM3 message invalid - failed CRC: b'Z\\xd7\\xf7'"
         dirname = os.path.dirname(__file__)
-        stream = open(os.path.join(dirname, "pygpsdata-MIXED-RTCM3BADCRC.log"), "rb")
-        self.catchio()
-        rtr = RTCMReader(
-            stream,
-            protfilter=7,
-            quitonerror=rtt.ERR_LOG,
-            errorhandler=lambda e: print(f"I ignored the following error: {e}"),
-        )
-        for raw, parsed in rtr:
-            if raw is not None:
-                pass
-        stream.close()
-        output = self.restoreio()
-        self.assertEqual(output, EXPECTED_ERROR)
+        with open(
+            os.path.join(dirname, "pygpsdata-MIXED-RTCM3BADCRC.log"), "rb"
+        ) as stream:
+            self.catchio()
+            rtr = RTCMReader(
+                stream,
+                protfilter=7,
+                quitonerror=rtt.ERR_LOG,
+                errorhandler=lambda e: print(f"I ignored the following error: {e}"),
+            )
+            for raw, parsed in rtr:
+                if raw is not None:
+                    pass
+            stream.close()
+            output = self.restoreio()
+            self.assertEqual(output, EXPECTED_ERROR)
 
     def testbadCRC3(
         self,
     ):  # test mixed stream of NMEA, UBX & RTCM messages with invalid RTCM CRC
         EXPECTED_ERROR = "RTCM3 message invalid - failed CRC: b'Z\\xd7\\xf7'"
         dirname = os.path.dirname(__file__)
-        stream = open(os.path.join(dirname, "pygpsdata-MIXED-RTCM3BADCRC.log"), "rb")
-        self.catchio()
-        rtr = RTCMReader(
-            stream,
-            protfilter=7,
-            quitonerror=rtt.ERR_LOG,
-            errorhandler=None,
-        )
-        for raw, parsed in rtr:
-            if raw is not None:
-                pass
-        stream.close()
-        output = self.restoreio()
-        self.assertEqual(output, EXPECTED_ERROR)
+        with open(
+            os.path.join(dirname, "pygpsdata-MIXED-RTCM3BADCRC.log"), "rb"
+        ) as stream:
+            self.catchio()
+            rtr = RTCMReader(
+                stream,
+                protfilter=7,
+                quitonerror=rtt.ERR_LOG,
+                errorhandler=None,
+            )
+            for raw, parsed in rtr:
+                if raw is not None:
+                    pass
+            stream.close()
+            output = self.restoreio()
+            self.assertEqual(output, EXPECTED_ERROR)
 
 
 if __name__ == "__main__":
