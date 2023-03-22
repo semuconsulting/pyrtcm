@@ -183,7 +183,9 @@ class RTCMMessage:
         if not self._scaling:
             scale = 0
         if key == "DF396":  # this MSM attribute has variable length
-            atts = getattr(self, NCELL)
+            DF396_SIZE = getattr(self, NSAT) * getattr(self, NSIG)
+            atts = DF396_SIZE
+            # atts = getattr(self, NCELL)
         else:
             atts = attsiz(att)
         bitfield = self._payload_bits[offset : offset + atts]
@@ -201,7 +203,9 @@ class RTCMMessage:
             setattr(self, NSAT, num_setbits(bitfield))
         if key == "DF395":  # num of signals in MSM message
             setattr(self, NSIG, num_setbits(bitfield))
-            setattr(self, NCELL, getattr(self, NSAT) * getattr(self, NSIG))
+        if key == "DF396":  # num of cells in MSM message
+            setattr(self, NCELL, num_setbits(bitfield))
+            # setattr(self, NCELL, getattr(self, NSAT) * getattr(self, NSIG))
         if key == "DF422":  # bitmask of bias entries in 1230 message
             setattr(self, NL1CA, bitfield[0])
             setattr(self, NL1P, bitfield[1])

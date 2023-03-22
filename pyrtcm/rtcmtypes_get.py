@@ -35,7 +35,7 @@ MSM_HDR = {
     "DF418": "GNSS Smoothing Interval",
     "DF394": "GNSS Satellite Mask",  # NSAT = num of set bits
     "DF395": "GNSS Signal Mask",  # NSIG = num of set bits
-    "DF396": "GNSS Cell Mask",  # size = NCELL = NSAT * NSIG
+    "DF396": "GNSS Cell Mask",  # size = NSAT * NSIG
 }
 
 MSM_SAT_123 = {
