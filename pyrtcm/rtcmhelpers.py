@@ -67,34 +67,30 @@ def att2name(att: str) -> str:
         return att
 
 
-def bits2val(att: str, scale: float, bitfield: list) -> object:
+def bits2val(att: str, scale: float, bitfield: int) -> object:
     """
-    Convert bit array to value for this attribute type.
+    Convert bitfield to value for given attribute type.
 
     :param str att: attribute type e.g. "UNT008"
     :param float scale: scaling factor (where defined)
-    :param list bitfield: array of bits representing attribute
+    :param int bitfield: attribute as integer
     :return: value
     :rtype: object (int, float, char, bool)
     """
 
     typ = atttyp(att)
     siz = attsiz(att)
+    val = msb = 0
 
-    if len(bitfield) == 0:
-        return 0
-
-    val = 0
-
+    if typ in ("SNT", "INT"):
+        msb = 2 ** (siz - 1)
     if typ == "SNT":  # int, MSB indicates sign
-        for bit in bitfield[1:]:
-            val = (val << 1) | bit
-        if bitfield[0]:
+        val = bitfield & msb - 1
+        if bitfield & msb:
             val *= -1
     else:  # all other types
-        for bit in bitfield:
-            val = (val << 1) | bit
-    if typ == "INT" and bitfield[0]:  # 2's compliment -ve int
+        val = bitfield
+    if typ == "INT" and (bitfield & msb):  # 2's compliment -ve int
         val = val - (1 << siz)
     if typ in ("CHA", "UTF"):  # ASCII or UTF-8 character
         val = chr(val)
@@ -106,20 +102,19 @@ def bits2val(att: str, scale: float, bitfield: list) -> object:
     return val
 
 
-def num_setbits(bitfield: list) -> int:
+def num_setbits(val: int) -> int:
     """
-    Get number of set bits in bitfield.
+    Get number of set bits in integer.
 
-    :param list bitfield: array of bits
+    :param int val: integer value
     :return: number of bits set
     :rtype: int
     """
 
-    n = 0
-    for bf in bitfield:
-        if bf:
-            n += 1
-    return n
+    i = 0
+    for x in bin(val)[2:]:
+        i += int(x)
+    return i
 
 
 def calc_crc24q(message: bytes) -> int:
@@ -253,18 +248,6 @@ def get_bit(data: bytes, num: int) -> int:
     base = int(num // 8)
     shift = 7 - int(num % 8)
     return (data[base] >> shift) & 0x1
-
-
-def get_bitarray(data: bytes) -> list:
-    """
-    Convert data bytes to bit array.
-
-    :param bytes data: data
-    :return: bit array
-    :rtype: list
-    """
-
-    return [get_bit(data, i) for i in range(len(data) * 8)]
 
 
 def tow2utc(tow: int) -> datetime.time:

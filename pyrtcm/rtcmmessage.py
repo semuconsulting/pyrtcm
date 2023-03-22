@@ -29,7 +29,6 @@ import pyrtcm.rtcmtypes_get as rtg
 from pyrtcm.rtcmhelpers import (
     crc2bytes,
     len2bytes,
-    get_bitarray,
     bits2val,
     attsiz,
     num_setbits,
@@ -60,6 +59,7 @@ class RTCMMessage:
         self._payload = kwargs.get("payload", None)
         if self._payload is None:
             raise rte.RTCMMessageError("Payload must be specified")
+        self._payblen = len(self._payload) * 8  # length of payload in bits
         self._scaling = int(kwargs.get("scaling", True))
         self._labelmsm = int(kwargs.get("labelmsm", True))
         self._unknown = False
@@ -76,7 +76,6 @@ class RTCMMessage:
 
         offset = 0  # payload offset in bits
         index = []  # array of (nested) group indices
-        self._payload_bits = get_bitarray(self._payload)  # payload as bit array
 
         try:
             pdict = (
@@ -186,7 +185,8 @@ class RTCMMessage:
             atts = getattr(self, NSAT) * getattr(self, NSIG)
         else:
             atts = attsiz(att)
-        bitfield = self._payload_bits[offset : offset + atts]
+        # bitfield = self._payload_bits[offset : offset + atts]
+        bitfield = self._getbits(offset, atts)
         val = bits2val(att, scale, bitfield)
 
         setattr(self, keyr, val)
@@ -204,12 +204,31 @@ class RTCMMessage:
         if key == "DF396":  # num of cells in MSM message
             setattr(self, NCELL, num_setbits(bitfield))
         if key == "DF422":  # bitmask of bias entries in 1230 message
-            setattr(self, NL1CA, bitfield[0])
-            setattr(self, NL1P, bitfield[1])
-            setattr(self, NL2CA, bitfield[2])
-            setattr(self, NL2P, bitfield[3])
+            setattr(self, NL1CA, (bitfield & 8) >> 3)  # MSB
+            setattr(self, NL1P, (bitfield & 4) >> 2)
+            setattr(self, NL2CA, (bitfield & 2) >> 1)
+            setattr(self, NL2P, bitfield & 1)  # LSB
 
         return offset
+
+    def _getbits(self, position: int, length: int) -> int:
+        """
+        Get unisgned integer value of masked bits in bytes.
+
+        :param int position: position in bitfield, from leftmost bit
+        :param int length: length of masked bits
+        :return: value
+        :rtype: int
+        """
+
+        if position + length > self._payblen:
+            raise rte.RTCMMessageError(
+                f"Attribute size {length} exceeds remaining payload length {self._payblen - position}"
+            )
+
+        return int.from_bytes(self._payload, "big") >> (
+            self._payblen - position - length
+        ) & (2**length - 1)
 
     def _get_dict(self) -> dict:
         """
