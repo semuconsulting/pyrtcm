@@ -109,7 +109,6 @@
                 "&&",
                 "coverage",
                 "html",
-                "--omit='*/test*'"
             ],
             "problemMatcher": []
         },
