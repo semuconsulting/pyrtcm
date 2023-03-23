@@ -1,5 +1,16 @@
 # pyrtcm Release Notes
 
+### RELEASE 1.0.6
+
+FIXES:
+
+1. Fix to MSM message payload #21 - thanks to @jcmb for issue report.
+
+ENHANCEMENTS:
+
+1. Internal bitfield parsing streamlined - almost twice as fast as previously.
+2. Exception handling enhanced.
+
 ### RELEASE 1.0.5
 
 FIXES:
