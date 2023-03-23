@@ -13,7 +13,7 @@ Pipfile*.*
 /references
 /pyrtcm_*
 /pyrtcm-*
-/pyrtcm.egg*
+src/pyrtcm.egg*
 /__pycache__
 /.dbeaver
 /pyrtcm/__pycache__
