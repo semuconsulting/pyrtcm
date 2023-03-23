@@ -27,7 +27,7 @@ ERR_IGNORE = 0
 
 NSAT = "NSat"
 NSIG = "NSig"
-NCELL = "_NCell"
+NCELL = "NCell"
 NL1CA = "_NL1CA"
 NL1P = "_NL1P"
 NL2CA = "_NL2CA"
