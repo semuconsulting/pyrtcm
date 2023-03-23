@@ -9,11 +9,14 @@ Created on 3 Oct 2020
 """
 # pylint: disable=line-too-long, invalid-name, missing-docstring, no-member
 
-import sys
 import os
-from io import StringIO
+import sys
 import unittest
 
+ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+sys.path.append(os.path.join(ROOT, "src"))
+
+from io import StringIO
 from pyrtcm import RTCMReader, RTCMMessage
 import pyrtcm.exceptions as rte
 import pyrtcm.rtcmtypes_core as rtt
