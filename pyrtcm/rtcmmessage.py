@@ -185,7 +185,6 @@ class RTCMMessage:
             atts = getattr(self, NSAT) * getattr(self, NSIG)
         else:
             atts = attsiz(att)
-        # bitfield = self._payload_bits[offset : offset + atts]
         bitfield = self._getbits(offset, atts)
         val = bits2val(att, scale, bitfield)
 
