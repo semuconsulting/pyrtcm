@@ -5,4 +5,3 @@ pyrtcm
    :maxdepth: 4
 
    pyrtcm
-   setup

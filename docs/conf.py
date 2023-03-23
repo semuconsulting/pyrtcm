@@ -14,8 +14,9 @@ import os
 import sys
 
 # document local package rather than installed one
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-currdir = os.path.dirname(__file__)
+ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+sys.path.append(os.path.join(ROOT, "src"))
+
 from pyrtcm import version as VERSION
 
 # -- Project information -----------------------------------------------------
@@ -43,7 +44,7 @@ templates_path = ["_templates"]
 # This pattern also affects html_static_path and html_extra_path.
 # NB: THIS HAS NO EFFECT WHEN USING SPHINX-EXT-AUTODOC; NEED TO PASS PATH
 # AS PARAMETER TO SPHINX-APIDOC COMMAND
-exclude_patterns = ["_build", "tests", "setup.py", "Thumbs.db", ".DS_Store"]
+exclude_patterns = ["_build", "tests", "Thumbs.db", ".DS_Store"]
 
 # -- Options for HTML output -------------------------------------------------
 
