@@ -501,7 +501,7 @@ RTCM_DATA_FIELDS = {
         0,
         "GNSS PhaseRange Lock Time Indicator with extended range and resolution.",
     ),
-    "DF408": (UINT10, P2_P4, "GNSS signal CNR with extended resolution"),
+    "DF408": (UINT10, P2_4, "GNSS signal CNR with extended resolution"),
     "DF409": (UINT3, 1, "IODS - Issue Of Data Station"),
     # 'DF410': RESERVED,
     "DF411": (UINT2, 0, "Clock Steering Indicator"),
