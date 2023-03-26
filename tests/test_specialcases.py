@@ -10,6 +10,7 @@ Created on 7 Jul 2022
 import os
 import sys
 import unittest
+from collections import namedtuple
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 sys.path.append(os.path.join(ROOT, "src"))
@@ -42,6 +43,43 @@ class SpecialTest(unittest.TestCase):
         EXPECTED_ERROR = "6666"
         with self.assertRaisesRegex(KeyError, EXPECTED_ERROR):
             res = id2prnsigmap("6666")
+
+    def testsat2prn_synthetic(
+        self,
+    ):  # test sat2prn helper method with synthetic messages
+        MSM = namedtuple("MSM", ["identity", "DF394"])
+        EXPECTED_RESULTS = [
+            {1: "001", 2: "003", 3: "007", 4: "063"},
+            {1: "002", 2: "003", 3: "007", 4: "063"},
+            {1: "003", 2: "007", 3: "063", 4: "Reserved"},
+            {1: "193", 2: "195", 3: "196", 4: "199"},
+            {1: "120", 2: "121", 3: "122", 4: "123", 5: "126"},
+        ]
+        msgs = [
+            MSM(
+                "1077",
+                0b1010001000000000000000000000000000000000000000000000000000000010,
+            ),
+            MSM(
+                "1077",
+                0b0110001000000000000000000000000000000000000000000000000000000010,
+            ),
+            MSM(
+                "1127",
+                0b0010001000000000000000000000000000000000000000000000000000000011,
+            ),
+            MSM(
+                "1117",
+                0b1011001000000000000000000000000000000000000000000000000000000000,
+            ),
+            MSM(
+                "1107",
+                0b1111001000000000000000000000000000000000000000000000000000000000,
+            ),
+        ]
+        for i, msg in enumerate(msgs):
+            res = sat2prn(msg)
+            self.assertEqual(res, EXPECTED_RESULTS[i])
 
     def testsat2prn(self):  # test sat2prn helper method
         EXPECTED_RESULT = [
