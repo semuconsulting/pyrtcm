@@ -20,15 +20,16 @@ import pyrtcm.rtcmtypes_core as rtt
 from pyrtcm.rtcmhelpers import cell2prn, sat2prn, id2prnsigmap
 
 
-class StreamTest(unittest.TestCase):
+class SpecialTest(unittest.TestCase):
     def setUp(self):
         self.maxDiff = None
         dirname = os.path.dirname(__file__)
+        self.streamMSM3 = open(os.path.join(dirname, "pygpsdata-RTCMMSM3.log"), "rb")
         self.streamRTCM3 = open(os.path.join(dirname, "pygpsdata-RTCM3.log"), "rb")
 
     def tearDown(self):
+        self.streamMSM3.close()
         self.streamRTCM3.close()
-        pass
 
     def testid2prnsigmap(self):  # test id2prnsigmap helper method
         idx = 0
@@ -52,7 +53,7 @@ class StreamTest(unittest.TestCase):
 
         rtr = RTCMReader(self.streamRTCM3)
         idx = 0
-        for (raw, parsed) in rtr:
+        for raw, parsed in rtr:
             if raw is not None:
                 if parsed.identity in ["1077", "1087", "1097", "1107", "1127"]:
                     res = str(sat2prn(parsed))
@@ -64,26 +65,25 @@ class StreamTest(unittest.TestCase):
         EXPECTED_ERROR = "Invalid RTCM3 message type - must be MSM message."
         rtr = RTCMReader(self.streamRTCM3)
         with self.assertRaisesRegex(rte.RTCMTypeError, EXPECTED_ERROR):
-            for (raw, parsed) in rtr:
+            for raw, parsed in rtr:
                 if raw is not None:
                     if parsed.identity in ["1230"]:
                         res = str(sat2prn(parsed))
 
     def testcell2prn(self):  # test cell2prn helper method
         EXPECTED_RESULT = [
-            "{1: ('005', '1C'), 2: ('005', '2L'), 3: ('007', '1C'), 4: ('007', '2L'), 5: ('009', '1C'), 6: ('009', '2L'), 7: ('013', '1C'), 8: ('013', None), 9: ('014', '1C'), 10: ('014', '2L'), 11: ('015', '1C'), 12: ('015', '2L'), 13: ('017', '1C'), 14: ('017', '2L'), 15: ('019', '1C'), 16: ('019', None), 17: ('020', '1C'), 18: ('020', None), 19: ('030', '1C'), 20: ('030', '2L')}",
-            "{1: ('003', '1C'), 2: ('003', '2C'), 3: ('004', '1C'), 4: ('004', '2C'), 5: ('005', '1C'), 6: ('005', '2C'), 7: ('013', '1C'), 8: ('013', '2C'), 9: ('014', '1C'), 10: ('014', '2C'), 11: ('015', '1C'), 12: ('015', '2C'), 13: ('023', '1C'), 14: ('023', None)}",
-            "{1: ('007', '1C'), 2: ('007', '7Q'), 3: ('008', '1C'), 4: ('008', '7Q'), 5: ('021', '1C'), 6: ('021', '7Q'), 7: ('027', '1C'), 8: ('027', '7Q'), 9: ('030', '1C'), 10: ('030', '7Q')}",
-            "{1: ('007', None), 2: ('007', '7I'), 3: ('009', None), 4: ('009', '7I'), 5: ('010', '2I'), 6: ('010', '7I'), 7: ('020', '2I'), 8: ('020', None), 9: ('023', '2I'), 10: ('023', None), 11: ('028', '2I'), 12: ('028', None), 13: ('032', '2I'), 14: ('032', None), 15: ('037', '2I'), 16: ('037', None), 17: ('040', '2I'), 18: ('040', None), 19: ('043', '2I'), 20: ('043', None)}",
+            "{1: ('006', '1C'), 2: ('006', '2X'), 3: ('006', '5X'), 4: ('011', '1C'), 5: ('011', '2X'), 6: ('011', '5X'), 7: ('012', '1C'), 8: ('012', '2X'), 9: ('017', '1C'), 10: ('017', '2X'), 11: ('019', '1C'), 12: ('019', '2W'), 13: ('020', '1C'), 14: ('020', '2W'), 15: ('024', '1C'), 16: ('024', '2X'), 17: ('024', '5X'), 18: ('025', '1C'), 19: ('025', '2X'), 20: ('025', '5X')}",
+            "{1: ('002', '1C'), 2: ('002', '2C'), 3: ('009', '1C'), 4: ('009', '2C'), 5: ('015', '1C'), 6: ('015', '2C'), 7: ('016', '1C'), 8: ('016', '2C'), 9: ('017', '1C'), 10: ('017', '2C'), 11: ('018', '1C'), 12: ('018', '2C'), 13: ('019', '1C'), 14: ('019', '2C')}",
+            "{1: ('002', '1X'), 2: ('002', '6X'), 3: ('002', '8X'), 4: ('010', '1X'), 5: ('010', '6X'), 6: ('010', '8X'), 7: ('011', '1X'), 8: ('011', '6X'), 9: ('011', '8X'), 10: ('012', '1X'), 11: ('012', '6X'), 12: ('012', '8X'), 13: ('024', '1X'), 14: ('024', '6X'), 15: ('024', '8X'), 16: ('025', '1X'), 17: ('025', '6X'), 18: ('025', '8X'), 19: ('036', '1X'), 20: ('036', '6X'), 21: ('036', '8X')}",
         ]
 
-        rtr = RTCMReader(self.streamRTCM3)
+        rtr = RTCMReader(self.streamMSM3)
         idx = 0
-        for (raw, parsed) in rtr:
+        for raw, parsed in rtr:
             if raw is not None:
-                if parsed.identity in ["1077", "1087", "1097", "1107", "1127"]:
+                if parsed.identity in ["1073", "1083", "1093", "1103", "1123"]:
                     res = str(cell2prn(parsed))
-                    # print(f"{idx} {parsed.identity} {res} {parsed.DF395:>032b}")
+                    # print(f'"{res}",')
                     self.assertEqual(res, EXPECTED_RESULT[idx])
                     idx += 1
 
@@ -91,7 +91,7 @@ class StreamTest(unittest.TestCase):
         EXPECTED_ERROR = "Invalid RTCM3 message type - must be MSM message."
         rtr = RTCMReader(self.streamRTCM3)
         with self.assertRaisesRegex(rte.RTCMTypeError, EXPECTED_ERROR):
-            for (raw, parsed) in rtr:
+            for raw, parsed in rtr:
                 if raw is not None:
                     if parsed.identity in ["1230"]:
                         res = str(cell2prn(parsed))
