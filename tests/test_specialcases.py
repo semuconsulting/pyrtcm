@@ -45,19 +45,18 @@ class SpecialTest(unittest.TestCase):
 
     def testsat2prn(self):  # test sat2prn helper method
         EXPECTED_RESULT = [
-            "{1: '005', 2: '007', 3: '009', 4: '013', 5: '014', 6: '015', 7: '017', 8: '019', 9: '020', 10: '030'}",
-            "{1: '003', 2: '004', 3: '005', 4: '013', 5: '014', 6: '015', 7: '023'}",
-            "{1: '007', 2: '008', 3: '021', 4: '027', 5: '030'}",
-            "{1: '007', 2: '009', 3: '010', 4: '020', 5: '023', 6: '028', 7: '032', 8: '037', 9: '040', 10: '043'}",
+            "{1: '006', 2: '011', 3: '012', 4: '017', 5: '019', 6: '020', 7: '024', 8: '025'}",
+            "{1: '002', 2: '009', 3: '015', 4: '016', 5: '017', 6: '018', 7: '019'}",
+            "{1: '002', 2: '010', 3: '011', 4: '012', 5: '024', 6: '025', 7: '036'}",
         ]
 
-        rtr = RTCMReader(self.streamRTCM3)
+        rtr = RTCMReader(self.streamMSM3)
         idx = 0
         for raw, parsed in rtr:
             if raw is not None:
-                if parsed.identity in ["1077", "1087", "1097", "1107", "1127"]:
+                if parsed.identity in ["1073", "1083", "1093", "1103", "1123"]:
                     res = str(sat2prn(parsed))
-                    # print(res)
+                    # print(f'"{res}",')
                     self.assertEqual(res, EXPECTED_RESULT[idx])
                     idx += 1
 
