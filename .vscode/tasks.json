@@ -2,7 +2,8 @@
     // See https://go.microsoft.com/fwlink/?LinkId=733558
     // for the documentation about the tasks.json format
     // These Python project tasks assume you have installed and configured: 
-    // build, wheel, black, pylint, unittest, coverage, Sphinx, sphinx-rtd-theme
+    // build, wheel, black, pytest, pylint, unittest, coverage, Sphinx, sphinx-rtd-theme
+    // Use the Update Toolchain task to ensure the necessary tools are installed.
     "version": "2.0.0",
     "tasks": [
         {
@@ -18,6 +19,8 @@
                 "build",
                 "wheel",
                 "pylint",
+                "pytest",
+                "pytest-cov",
                 "black",
                 "coverage",
                 "Sphinx",
@@ -112,23 +115,7 @@
             "command": "${config:python.defaultInterpreterPath}",
             "args": [
                 "-m",
-                "unittest"
-            ],
-            "problemMatcher": []
-        },
-        {
-            "label": "Coverage",
-            "type": "shell",
-            "command": "${config:python.defaultInterpreterPath}",
-            "args": [
-                "-m",
-                "coverage",
-                "run",
-                "-m",
-                "unittest",
-                "&&",
-                "coverage",
-                "html",
+                "pytest"
             ],
             "problemMatcher": []
         },
@@ -197,7 +184,7 @@
                 "Format",
                 "PylintError",
                 "Build",
-                "Coverage",
+                "Test",
                 "Sphinx HTML"
             ],
             "problemMatcher": []

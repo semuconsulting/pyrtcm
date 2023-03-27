@@ -13,12 +13,13 @@ import os
 import sys
 import unittest
 
-ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
-sys.path.append(os.path.join(ROOT, "src"))
-
 from io import StringIO
-from pyrtcm import RTCMReader, RTCMMessage
-import pyrtcm.exceptions as rte
+from src.pyrtcm import (
+    RTCMReader,
+    RTCMMessage,
+    RTCMParseError,
+    RTCMMessageError,
+)
 import pyrtcm.rtcmtypes_core as rtt
 
 
@@ -322,7 +323,7 @@ class StreamTest(unittest.TestCase):
         EXPECTED_ERROR = (
             "Object is immutable. Updates to DF002 not permitted after initialisation."
         )
-        with self.assertRaisesRegex(rte.RTCMMessageError, EXPECTED_ERROR):
+        with self.assertRaisesRegex(RTCMMessageError, EXPECTED_ERROR):
             msg = RTCMReader.parse(self._raw1005)
             msg.DF002 = 9999
 
@@ -340,7 +341,7 @@ class StreamTest(unittest.TestCase):
 
     def testnopayload(self):  # test null payload
         EXPECTED_ERROR = "Payload must be specified"
-        with self.assertRaisesRegex(rte.RTCMMessageError, EXPECTED_ERROR):
+        with self.assertRaisesRegex(RTCMMessageError, EXPECTED_ERROR):
             msg = RTCMMessage(kwarg=0)
 
     def testgroups(self):  # test message with repeating group (1007)
@@ -366,7 +367,7 @@ class StreamTest(unittest.TestCase):
             i = 0
             raw = 0
             rtr = RTCMReader(stream, protfilter=7, quitonerror=rtt.ERR_RAISE)
-            with self.assertRaisesRegex(rte.RTCMParseError, EXPECTED_ERROR):
+            with self.assertRaisesRegex(RTCMParseError, EXPECTED_ERROR):
                 for raw, parsed in rtr:
                     if raw is not None:
                         print(parsed)

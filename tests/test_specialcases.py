@@ -8,16 +8,10 @@ Created on 7 Jul 2022
 # pylint: disable=line-too-long, invalid-name, missing-docstring, no-member
 
 import os
-import sys
 import unittest
 from collections import namedtuple
 
-ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
-sys.path.append(os.path.join(ROOT, "src"))
-
-from pyrtcm import RTCMReader, RTCMMessage
-import pyrtcm.exceptions as rte
-import pyrtcm.rtcmtypes_core as rtt
+from pyrtcm import RTCMReader, RTCMTypeError
 from pyrtcm.rtcmhelpers import cell2prn, sat2prn, id2prnsigmap
 
 
@@ -156,8 +150,8 @@ class SpecialTest(unittest.TestCase):
 
     def testsat2prnerr(self):  # test sat2prn helper method with invalid message
         EXPECTED_ERROR = "Invalid RTCM3 message type - must be MSM message."
-        rtr = RTCMReader(self.streamRTCM3)
-        with self.assertRaisesRegex(rte.RTCMTypeError, EXPECTED_ERROR):
+        with self.assertRaisesRegex(RTCMTypeError, EXPECTED_ERROR):
+            rtr = RTCMReader(self.streamRTCM3)
             for raw, parsed in rtr:
                 if raw is not None:
                     if parsed.identity in ["1230"]:
@@ -183,7 +177,7 @@ class SpecialTest(unittest.TestCase):
     def testcell2prnerr(self):  # test cell2prn helper method with invalid message
         EXPECTED_ERROR = "Invalid RTCM3 message type - must be MSM message."
         rtr = RTCMReader(self.streamRTCM3)
-        with self.assertRaisesRegex(rte.RTCMTypeError, EXPECTED_ERROR):
+        with self.assertRaisesRegex(RTCMTypeError, EXPECTED_ERROR):
             for raw, parsed in rtr:
                 if raw is not None:
                     if parsed.identity in ["1230"]:
