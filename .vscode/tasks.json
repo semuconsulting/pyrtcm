@@ -22,7 +22,6 @@
                 "pytest",
                 "pytest-cov",
                 "black",
-                "coverage",
                 "Sphinx",
                 "sphinx-rtd-theme",
             ],
@@ -183,8 +182,9 @@
                 "Clean",
                 "Format",
                 "PylintError",
-                "Build",
+                "Pylint",
                 "Test",
+                "Build",
                 "Sphinx HTML"
             ],
             "problemMatcher": []
