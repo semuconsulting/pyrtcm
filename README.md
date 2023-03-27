@@ -35,7 +35,7 @@ This is an independent project and we have no affiliation whatsoever with the Ra
 ![Contributors](https://img.shields.io/github/contributors/semuconsulting/pyrtcm.svg)
 ![Open Issues](https://img.shields.io/github/issues-raw/semuconsulting/pyrtcm)
 
-Parses RTCM3 messages into their constituent data fields. Refer to the `RTCM_MSGIDS` dictionary in [`rtcmtypes_core.py`](https://github.com/semuconsulting/pyrtcm/blob/main/pyrtcm/rtcmtypes_core.py) for a list of message types currently implemented. Additional message types can be readily added - see [Extensibility](#extensibility)).
+Parses RTCM3 messages into their constituent data fields. Refer to the `RTCM_MSGIDS` dictionary in [`rtcmtypes_core.py`](https://github.com/semuconsulting/pyrtcm/blob/main/src/pyrtcm/rtcmtypes_core.py) for a list of message types currently implemented. Additional message types can be readily added - see [Extensibility](#extensibility)).
 
 Sphinx API Documentation in HTML format is available at [https://www.semuconsulting.com/pyrtcm](https://www.semuconsulting.com/pyrtcm).
 
