@@ -161,12 +161,11 @@ The `payload` attribute always contains the raw payload as bytes.
 
 Attributes within repeating groups are parsed with a two-digit suffix ("DF030_01", "DF030_02", etc.). 
 
-**Tip:** To iterate through a repeating group of attributes (*e.g., DF406 (GNSS signal fine PhaseRange)*), the following construct can be used:
+**Tip:** To iterate through a repeating group of attributes (*e.g., DF406 (GNSS signal fine PhaseRange)*) as a list, the following construct can be used:
 
 ```
 df406group = [] # list of DF406 ((GNSS signal fine PhaseRange) values from repeating group in MSM 1077 message
-ncell = msg.NSat * msg.NSig # size of repeating group
-for i in range(ncell):
+for i in range(msg.NCell):
     df406 = getattr(msg, f"DF406_{i+1:02}")
     df406group.append(df406)
 ```
