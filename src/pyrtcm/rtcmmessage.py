@@ -282,7 +282,6 @@ class RTCMMessage:
                         lbl = f"({prn})"
                     if aname in ATT_NCELL:
                         prn, sig = cells[att2idx(att)]
-                        sig = "n/a" if sig is None else sig
                         lbl = f"({prn},{sig})"
 
                 stg += att + lbl + "=" + str(val)

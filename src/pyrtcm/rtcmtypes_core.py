@@ -141,13 +141,16 @@ INTS32 = "SNT032"  # 32 bit sign-magnitude integer
 UTF8 = "UTF008"  # Unicode UTF-8 Code Unit
 
 
-# ***************************************************
+# ****************************************************
 # THESE ARE THE RTCM PROTOCOL DATA FIELDS
 #
 # DF key: (data_type, scale_factor, description)
 # scale_factor of 0 means N/A (no scaling)
 #
-# ***************************************************
+# NOTICE 1: These values are provided in semicircles;
+#           multiply by π to use in orbit computations
+#
+# ****************************************************
 RTCM_DATA_FIELDS = {
     "DF001": (BIT1, 0, "Reserved Field"),
     "DF001_1": (BIT1, 0, "Reserved 1 bit"),
@@ -235,7 +238,7 @@ RTCM_DATA_FIELDS = {
     "DF076": (UINT10, 0, "GPS Week number"),
     "DF077": (BIT4, 0, "GPS SV Acc. (URA)"),
     "DF078": (BIT2, 1, "GPS CODE ON L2"),
-    "DF079": (INT14, P2_43, "GPS IDOT"),
+    "DF079": (INT14, P2_43, "GPS IDOT"),  # see NOTICE 1 above
     "DF080": (UINT8, 1, "GPS IODE"),
     "DF081": (UINT16, P2_P4, "GPS toc"),
     "DF082": (INT8, P2_55, "GPS af2"),
@@ -243,20 +246,20 @@ RTCM_DATA_FIELDS = {
     "DF084": (INT22, P2_31, "GPS af0"),
     "DF085": (UINT10, 1, "GPS IODC"),
     "DF086": (INT16, P2_5, "GPS Crs"),
-    "DF087": (INT16, P2_43, "GPS ∆n"),
-    "DF088": (INT32, P2_31, "GPS M0"),
+    "DF087": (INT16, P2_43, "GPS ∆n"),  # see NOTICE 1 above
+    "DF088": (INT32, P2_31, "GPS M0"),  # see NOTICE 1 above
     "DF089": (INT16, P2_29, "GPS Cuc"),
-    "DF090": (UINT32, 0, "GPS e (Eccentricity)"),
+    "DF090": (UINT32, P2_33, "GPS e (Eccentricity)"),
     "DF091": (INT16, P2_29, "GPS Cus"),
     "DF092": (UINT32, P2_19, "GPS A½"),
     "DF093": (UINT16, P2_P4, "GPS toe"),
     "DF094": (INT16, P2_29, "GPS Cic"),
-    "DF095": (INT32, P2_31, "GPS Ω0"),
+    "DF095": (INT32, P2_31, "GPS Ω0"),  # see NOTICE 1 above
     "DF096": (INT16, P2_29, "GPS Cis"),
-    "DF097": (INT32, P2_31, "GPS i0"),
+    "DF097": (INT32, P2_31, "GPS i0"),  # see NOTICE 1 above
     "DF098": (INT16, P2_5, "GPS Crc"),
-    "DF099": (INT32, P2_31, "GPS ω (Argument of Perigee)"),
-    "DF100": (INT24, P2_43, "GPS ΩDOT (Rate of Right Ascension)"),
+    "DF099": (INT32, P2_31, "GPS ω (Argument of Perigee)"),  # see NOTICE 1 above
+    "DF100": (INT24, P2_43, "GPS ΩDOT (Rate of Right Ascension)"),  # see NOTICE 1 above
     "DF101": (INT8, P2_31, "GPS tGD"),
     "DF102": (UINT6, 1, "GPS SV HEALTH"),
     "DF103": (BIT1, 1, "GPS L2 P data flag"),

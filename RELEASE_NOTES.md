@@ -1,5 +1,12 @@
 # pyrtcm Release Notes
 
+### RELEASE 1.0.7
+
+FIXES:
+
+1. Fix to MSM signal label mapping #27 - thanks to @jcmb for issue report.
+1. Fix DF090 scaling factor #30 - thanks to @augustomazzoni  for issue report.
+
 ### RELEASE 1.0.6
 
 FIXES:

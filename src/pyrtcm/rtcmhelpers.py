@@ -304,14 +304,14 @@ def sat2prn(msg: object) -> dict:
     """
 
     try:
-        prnmap, sigmap = id2prnsigmap(msg.identity)
+        prnmap, _ = id2prnsigmap(msg.identity)
 
         sats = {}
         nsat = 0
-        for idx in range(64, 0, -1):
-            if msg.DF394 & pow(2, idx):
+        for idx in range(1, 65):
+            if msg.DF394 & 2 ** (64 - idx):
                 nsat += 1
-                sats[nsat] = prnmap[64 - idx]
+                sats[nsat] = prnmap[idx]
 
         return sats
 
@@ -328,6 +328,10 @@ def cell2prn(msg: object) -> dict:
     Returns a dict mapping the satellite PRN and signal ID corresponding to each
     item in the MSM NCELL repeating group e.g. DF405_01, DF406_02, etc.
 
+    DF394 bitmask indicates which satellites are present.
+    DF395 bitmask indicates which signals are present.
+    DF396 bitmask maps satellite to signal.
+
     :param RTCMMessage msg: RTCM3 MSM message e.g. 1077
     :return: dict of {cell: (prn, sig)} values
     :rtype: dict
@@ -339,27 +343,27 @@ def cell2prn(msg: object) -> dict:
 
         sats = []
         nsat = 0
-        for idx in range(64, -1, -1):
-            if msg.DF394 & pow(2, idx):
-                sats.append(prnmap[64 - idx])
+        for idx in range(1, 65):
+            if msg.DF394 & 2 ** (64 - idx):
+                sats.append(prnmap[idx])
                 nsat += 1
 
         sigs = []
         nsig = 0
-        for idx in range(32, -1, -1):
-            if msg.DF395 & pow(2, idx):
-                sigs.append(sigmap[32 - idx])
+        for idx in range(1, 33):
+            if msg.DF395 & 2 ** (32 - idx):
+                sigs.append(sigmap[idx])
                 nsig += 1
 
-        idx = nsat * nsig
+        ncells = int(nsat * nsig)
         cells = {}
-        ncell = 0
-        for prn in range(nsat):
+        ncell = idx = 0
+        for sat in range(nsat):
             for sig in range(nsig):
-                idx -= 1
-                ncell += 1
-                csig = sigs[sig] if msg.DF396 & pow(2, idx) else None
-                cells[ncell] = (sats[prn], csig)
+                idx += 1
+                if msg.DF396 & 2 ** (ncells - idx):
+                    ncell += 1
+                    cells[ncell] = (sats[sat], sigs[sig])
 
         return cells
 
