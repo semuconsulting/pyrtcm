@@ -11,7 +11,7 @@ import os
 import unittest
 from collections import namedtuple
 
-from pyrtcm import RTCMReader, RTCMTypeError
+from pyrtcm import RTCMMessage, RTCMReader, RTCMTypeError
 from pyrtcm.rtcmhelpers import cell2prn, sat2prn, id2prnsigmap
 
 
@@ -182,6 +182,19 @@ class SpecialTest(unittest.TestCase):
                 if raw is not None:
                     if parsed.identity in ["1230"]:
                         res = str(cell2prn(parsed))
+
+    def testunknown(self):  # test (synthetic) unknown messages
+        EXPECTED_RESULTS = [
+            "<RTCM(4062, DF002=4062, Not_Yet_Implemented)>",
+            "<RTCM(999, DF002=999, Not_Yet_Implemented)>",
+        ]
+        PAYLOADS = [
+            b"\xfd\xe1\x81\xc9\x84\x00\x08\xc2\xb8\x88\x00\x38\x80\x09\xd0\x46\x00\x28",
+            b"\x3e\x71\x81\xc9\x84\x00\x08\xc2\xb8\x88\x00\x38\x80\x09\xd0\x46\x00\x28",
+        ]
+        for i, pay in enumerate(PAYLOADS):
+            msg = RTCMMessage(payload=pay)
+            self.assertEqual(str(msg), EXPECTED_RESULTS[i])
 
 
 if __name__ == "__main__":

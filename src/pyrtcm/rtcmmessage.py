@@ -259,12 +259,12 @@ class RTCMMessage:
         # if MSM message and labelmsm flag is set,
         # label NSAT and NCELL group attributes with
         # corresponding satellite PRN and signal ID
-        if self._labelmsm and "MSM" in RTCM_MSGIDS[self.identity]:
-            sats = sat2prn(self)
-            cells = cell2prn(self)
-            is_msm = True
-        else:
-            is_msm = False
+        is_msm = False
+        if not self._unknown:
+            if self._labelmsm and "MSM" in RTCM_MSGIDS[self.identity]:
+                sats = sat2prn(self)
+                cells = cell2prn(self)
+                is_msm = True
 
         stg = f"<RTCM({self.identity}, "
         for i, att in enumerate(self.__dict__):
