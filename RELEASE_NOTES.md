@@ -1,5 +1,11 @@
 # pyrtcm Release Notes
 
+### RELEASE CANDIDATE 1.0.8
+
+FIXES:
+
+1. Fixes KeyError when processing unknown proprietary message types #33 - thanks to @wtc-rsat for issue report.
+
 ### RELEASE 1.0.7
 
 FIXES:
