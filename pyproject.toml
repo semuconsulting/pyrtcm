@@ -57,7 +57,13 @@ test = [
 ]
 
 [tool.pylint]
-exit-zero = ""
+jobs = 0
+reports = "y"
+py-version = "3.7"
+#exit-zero = "y"
+fail-under = "9.8"
+fail-on = "E,F"
+clear-cache-post-run = "y"
 disable = """
     raw-checker-failed,
     bad-inline-option,
@@ -71,7 +77,7 @@ disable = """
 
 [tool.pytest.ini_options]
 minversion = "7.0"
-addopts = "--cov --cov-report html --cov-report term-missing --cov-fail-under 95"
+addopts = "--cov --cov-report term-missing --cov-fail-under 95"
 pythonpath = ["src"]
 
 [tool.coverage.run]
