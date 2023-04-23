@@ -18,16 +18,21 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install dependencies
+      - name: Install deploy dependencies
         run: |
-          python -m pip install --upgrade pip build setuptools wheel pylint pytest pytest-cov
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install .[deploy]
+      - name: Install test dependencies
+        run: |
+          pip install .[test]
+      - name: Install code dependencies
+        run: |
+          pip install .
       - name: Lint with pylint
         run: |
           pylint -E src/pyrtcm
-      #    - name: Test with pytest
-      #      run: |
-      #        python tests/testsuite.py
+      - name: Security vulnerability analysis with bandit
+        run: |
+          bandit -c pyproject.toml -r .
       - name: Generate coverage report
         run: |
           pytest --cov=pyrtcm --cov-report=xml
