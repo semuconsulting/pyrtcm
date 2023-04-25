@@ -74,6 +74,7 @@ skips = []
 [tool.pylint]
 jobs = 0
 reports = "y"
+recursive = "y"
 py-version = "3.7"
 fail-under = "9.8"
 fail-on = "E,F"
