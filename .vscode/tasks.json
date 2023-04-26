@@ -84,7 +84,7 @@
             "args": [
                 "-m",
                 "black",
-                "src/${config:modulename}"
+                "src"
             ],
             "problemMatcher": []
         },

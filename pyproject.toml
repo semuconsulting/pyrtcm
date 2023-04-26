@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=40.8.0", "wheel"]
+requires = ["setuptools>=66.0.0", "wheel"]
 build-backend = "setuptools.build_meta:__legacy__"
 
 [project]
@@ -48,19 +48,19 @@ changelog = "https://github.com/semuconsulting/pyrtcm/blob/master/RELEASE_NOTES.
 
 [project.optional-dependencies]
 deploy = [
-    "build >= 0.10",
-    "pip >= 23.0",
+    "build",
+    "pip",
     "setuptools >= 66.0",
-    "wheel >= 0.40"
+    "wheel"
 ]
 test = [
-    "bandit >= 1.7",
-    "black >= 23.1",
-    "pylint >= 2.17",
-    "pytest >= 7.2",
-    "pytest-cov >= 4.0",
-    "Sphinx >= 5.3",
-    "sphinx-rtd-theme >= 1.2.0",
+    "bandit",
+    "black",
+    "pylint",
+    "pytest",
+    "pytest-cov",
+    "Sphinx",
+    "sphinx-rtd-theme",
 ]
 
 [tool.black]
