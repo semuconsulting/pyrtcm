@@ -11,24 +11,25 @@ Created on 14 Feb 2022
 # pylint: disable=invalid-name
 
 from datetime import datetime, timedelta
-from pyrtcm.rtcmtypes_core import RTCM_DATA_FIELDS, RTCM_MSGIDS
+
 from pyrtcm.exceptions import RTCMTypeError
 from pyrtcm.rtcmtables import (
-    GPS_PRN_MAP,
-    GPS_SIG_MAP,
-    GLONASS_PRN_MAP,
-    GLONASS_SIG_MAP,
-    GALILEO_PRN_MAP,
-    GALILEO_SIG_MAP,
-    SBAS_PRN_MAP,
-    SBAS_SIG_MAP,
-    QZSS_PRN_MAP,
-    QZSS_SIG_MAP,
     BEIDOU_PRN_MAP,
     BEIDOU_SIG_MAP,
+    GALILEO_PRN_MAP,
+    GALILEO_SIG_MAP,
+    GLONASS_PRN_MAP,
+    GLONASS_SIG_MAP,
+    GPS_PRN_MAP,
+    GPS_SIG_MAP,
     IRNSS_PRN_MAP,
     IRNSS_SIG_MAP,
+    QZSS_PRN_MAP,
+    QZSS_SIG_MAP,
+    SBAS_PRN_MAP,
+    SBAS_SIG_MAP,
 )
+from pyrtcm.rtcmtypes_core import RTCM_DATA_FIELDS, RTCM_MSGIDS
 
 SCALEDP = 8
 

@@ -11,10 +11,10 @@ maintainers = [
   {name = "semuadmin", email = "semuadmin@semuconsulting.com"}
 ]
 description = "RTCM3 protocol parser"
-version = "1.0.8"
+version = "1.0.9"
 license = {file = "LICENSE"}
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 classifiers = [
     "Operating System :: OS Independent",
     "Development Status :: 5 - Production/Stable",
@@ -26,7 +26,6 @@ classifiers = [
     "Intended Audience :: Science/Research",
     "Intended Audience :: End Users/Desktop",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
@@ -64,8 +63,11 @@ test = [
 ]
 
 [tool.black]
-line-length = 88
-target-version = ['py37']
+target-version = ['py38']
+
+[tool.isort]
+py_version = 38
+profile = "black"
 
 [tool.bandit]
 exclude_dirs = ["docs", "examples", "tests"]
@@ -75,7 +77,7 @@ skips = []
 jobs = 0
 reports = "y"
 recursive = "y"
-py-version = "3.7"
+py-version = "3.8"
 fail-under = "9.8"
 fail-on = "E,F"
 clear-cache-post-run = "y"

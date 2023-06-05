@@ -1,6 +1,10 @@
 # pyrtcm Release Notes
 
-### RELEASE CANDIDATE 1.0.8
+### RELEASE CANDIDATE 1.0.9
+
+1. Remove Python 3.7 from workflows.
+
+### RELEASE 1.0.8
 
 FIXES:
 

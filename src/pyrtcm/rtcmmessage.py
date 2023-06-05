@@ -10,33 +10,33 @@ Created on 14 Feb 2022
 # pylint: disable=invalid-name
 
 import pyrtcm.exceptions as rte
+import pyrtcm.rtcmtypes_get as rtg
+from pyrtcm.rtcmhelpers import (
+    att2idx,
+    att2name,
+    attsiz,
+    bits2val,
+    cell2prn,
+    crc2bytes,
+    escapeall,
+    len2bytes,
+    num_setbits,
+    sat2prn,
+)
 from pyrtcm.rtcmtypes_core import (
-    RTCM_HDR,
-    RTCM_MSGIDS,
-    RTCM_DATA_FIELDS,
-    BOOL_GROUPS,
-    ATT_NSAT,
     ATT_NCELL,
-    NSAT,
-    NSIG,
+    ATT_NSAT,
+    BOOL_GROUPS,
     NCELL,
     NL1CA,
     NL1P,
     NL2CA,
     NL2P,
-)
-import pyrtcm.rtcmtypes_get as rtg
-from pyrtcm.rtcmhelpers import (
-    crc2bytes,
-    len2bytes,
-    bits2val,
-    attsiz,
-    num_setbits,
-    sat2prn,
-    cell2prn,
-    att2idx,
-    att2name,
-    escapeall,
+    NSAT,
+    NSIG,
+    RTCM_DATA_FIELDS,
+    RTCM_HDR,
+    RTCM_MSGIDS,
 )
 
 
