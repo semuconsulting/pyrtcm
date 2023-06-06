@@ -9,15 +9,7 @@ Information sourced from RTCM STANDARD 10403.3 © 2016 RTCM
 """
 # pylint: disable=too-many-lines, line-too-long
 
-from pyrtcm.rtcmtypes_core import (
-    NSAT,
-    NCELL,
-    NL1CA,
-    NL1P,
-    NL2CA,
-    NL2P,
-    NRES,
-)
+from pyrtcm.rtcmtypes_core import NCELL, NL1CA, NL1P, NL2CA, NL2P, NRES, NSAT
 
 # *************************************************************
 # MSM MESSAGE SUB-SECTION DEFINITIONS
