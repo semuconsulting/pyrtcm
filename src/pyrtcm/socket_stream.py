@@ -46,8 +46,7 @@ class SocketStream:
         """
 
         try:
-            data = self._socket.recv(self._bufsize)
-            self._buffer += data
+            self._buffer += self._socket.recv(self._bufsize)
         except (OSError, TimeoutError):
             return False
         return True
