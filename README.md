@@ -48,8 +48,8 @@ Contributions welcome - please refer to [CONTRIBUTING.MD](https://github.com/sem
 
 `pyrtcm` is compatible with Python >=3.8 and has no third-party library dependencies.
 
-In the following, `python` & `pip` refer to the Python 3 executables. You may need to type 
-`python3` or `pip3`, depending on your particular environment.
+In the following, `python3` & `pip` refer to the Python 3 executables. You may need to type 
+`python` or `pip3`, depending on your particular environment.
 
 ![Python version](https://img.shields.io/pypi/pyversions/pyrtcm.svg?style=flat)
 [![PyPI version](https://img.shields.io/pypi/v/pyrtcm.svg?style=flat)](https://pypi.org/project/pyrtcm/)
@@ -59,7 +59,7 @@ The recommended way to install the latest version of `pyrtcm` is with
 [pip](http://pypi.python.org/pypi/pip/):
 
 ```shell
-python -m pip install --upgrade pyrtcm
+python3 -m pip install --upgrade pyrtcm
 ```
 
 If required, `pyrtcm` can also be installed into a virtual environment, e.g.:
