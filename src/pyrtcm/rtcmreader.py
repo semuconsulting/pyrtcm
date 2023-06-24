@@ -239,23 +239,6 @@ class RTCMReader:
             else:
                 self._errorhandler(err)
 
-    def iterate(self, **kwargs) -> tuple:
-        """
-        DEPRECATED - WILL BE REMOVED IN VERSION >=1.0.6
-        USE STANDARD ITERATOR INSTEAD
-        Invoke the iterator within an exception handling framework.
-
-        :return: tuple of (raw_data as bytes, parsed_data as RTCMMessage)
-        :rtype: tuple
-        :raises: RTCM... Error (if quitonerror is set and stream is invalid)
-        """
-
-        while True:
-            try:
-                yield next(self)  # invoke the iterator
-            except StopIteration:
-                break
-
     @property
     def datastream(self) -> object:
         """

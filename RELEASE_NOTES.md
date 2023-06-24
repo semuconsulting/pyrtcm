@@ -1,6 +1,14 @@
 # pyrtcm Release Notes
 
-### RELEASE CANDIDATE 1.0.9
+### RELEASE CANDIDATE 1.0.10
+
+CHANGES:
+
+1. Deprecated `RTCMReader.iterate()` method removed - use the standard iterator instead e.g. `rtr = RTCMReader(**wkargs): for (raw,parse) in ubr: ...`, passing any `quitonerror` or `errorhandler` kwargs to the RTCMReader constructor.
+
+### RELEASE 1.0.9
+
+CHANGES:
 
 1. Remove Python 3.7 from workflows.
 
