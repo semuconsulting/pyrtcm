@@ -10,6 +10,9 @@ labels: ''
 assignees: semuadmin
 
 ---
+# pyrtcm Feature Request Template
+
+**NB**: Please raise any feature requests or queries in the [pyrtcm Discussions Channels](https://github.com/semuconsulting/pyrtcm/discussions) in the first instance.
 
 **Is your feature request related to a problem? Please describe.**
 

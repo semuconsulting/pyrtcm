@@ -10,6 +10,9 @@ labels: ''
 assignees: semuadmin
 
 ---
+# pyrtcm Bug Report Template
+
+**NB**: Please raise any general queries in the [pyrtcm Discussions Channels](https://github.com/semuconsulting/pyrtcm/discussions) in the first instance.
 
 **Describe the bug**
 
@@ -23,7 +26,7 @@ Please specify the pyrtcm version (`>>> pyrtcm.version`) and, where possible, in
 
 Steps to reproduce the behaviour:
 1. Any relevant device configuration (if other than factory defaults).
-2. Any causal rtcm command input(s).
+2. Any causal command input(s).
 
 **Expected Behaviour**
 
@@ -31,13 +34,13 @@ A clear and concise description of what you expected to happen.
 
 **Desktop (please complete the following information):**
 
-- The operating system you're using [e.g. Windows 10, MacOS Monterey, Ubuntu Bionic]
-- The type of serial connection [e.g. USB, UART1, I2C]
+- The operating system you're using [e.g. Windows 11, MacOS Ventura, Ubuntu Lunar]
+- The type of serial connection [e.g. USB, UART1]
 
 **GNSS/GPS Device (please complete the following information as best you can):**
 
-- Device Model/Generation: [e.g. u-blox NEO-9M]
-- Firmware Version: [e.g. SPG 4.03]
+- Device Model/Generation: [e.g. u-blox ZED-F9P]
+- Firmware Version: [e.g. HPG 1.32]
 - Protocol: [e.g. 32.00]
  
 This information is typically output by the device at startup via a series of NMEA TXT messages. 
