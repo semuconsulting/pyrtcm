@@ -549,7 +549,7 @@ RTCM_DATA_FIELDS = {
     "DF451": (BIT2, 1, "QZSS Codes on L2 Channel"),
     "DF452": (UINT10, 1, "QZSS Week Number"),
     "DF453": (UINT4, 0, "QZSS URA"),
-    "DF454": (UINT16, 1, "QZSS SV health"),
+    "DF454": (UINT6, 1, "QZSS SV health"),
     "DF455": (INT8, P2_31, "QZSS TGD"),
     "DF456": (UINT10, 1, "QZSS IODC"),
     "DF457": (BIT1, 1, "QZSS Fit Interval"),
