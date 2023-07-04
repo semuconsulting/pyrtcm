@@ -6,6 +6,10 @@ CHANGES:
 
 1. Deprecated `RTCMReader.iterate()` method removed - use the standard iterator instead e.g. `rtr = RTCMReader(**wkargs): for (raw,parse) in ubr: ...`, passing any `quitonerror` or `errorhandler` kwargs to the RTCMReader constructor.
 
+FIXES:
+
+1. Fix incorrect DF454 datafield length - thanks to @k-stf for contribution. Fixes #37
+
 ### RELEASE 1.0.9
 
 CHANGES:
