@@ -338,7 +338,7 @@ class StreamTest(unittest.TestCase):
         ) as stream:
             i = 0
             raw = 0
-            rtr = RTCMReader(stream, protfilter=7, quitonerror=rtt.ERR_RAISE)
+            rtr = RTCMReader(stream, quitonerror=rtt.ERR_RAISE)
             with self.assertRaisesRegex(RTCMParseError, EXPECTED_ERROR):
                 for raw, parsed in rtr:
                     if raw is not None:
@@ -356,7 +356,6 @@ class StreamTest(unittest.TestCase):
             self.catchio()
             rtr = RTCMReader(
                 stream,
-                protfilter=7,
                 quitonerror=rtt.ERR_LOG,
                 errorhandler=lambda e: print(f"I ignored the following error: {e}"),
             )
@@ -378,7 +377,6 @@ class StreamTest(unittest.TestCase):
             self.catchio()
             rtr = RTCMReader(
                 stream,
-                protfilter=7,
                 quitonerror=rtt.ERR_LOG,
                 errorhandler=None,
             )
