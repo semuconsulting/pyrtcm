@@ -314,7 +314,7 @@ class StreamTest(unittest.TestCase):
     def testnopayload(self):  # test null payload
         EXPECTED_ERROR = "Payload must be specified"
         with self.assertRaisesRegex(RTCMMessageError, EXPECTED_ERROR):
-            msg = RTCMMessage(kwarg=0)
+            msg = RTCMMessage()
 
     def testgroups(self):  # test message with repeating group (1007)
         EXPECTED_RESULT = "<RTCM(1007, DF002=1007, DF003=1234, DF029=3, DF030_01=A, DF030_02=B, DF030_03=C, DF031=234)>"
