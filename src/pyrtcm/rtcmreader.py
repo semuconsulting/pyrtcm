@@ -259,7 +259,7 @@ class RTCMReader:
         return self._stream
 
     @staticmethod
-    def parse(message: bytes, validate=1, scaling=True, labelmsm=True) -> object:
+    def parse(message: bytes, validate=1, scaling=True, labelmsm=True) -> "RTCMMessage":
         """
         Parse RTCM message to RTCMMessage object.
 
