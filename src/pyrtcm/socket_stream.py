@@ -24,16 +24,16 @@ class SocketStream:
     socket stream class.
     """
 
-    def __init__(self, sock: socket, **kwargs):
+    def __init__(self, sock: socket, bufsize: int = 4096):
         """
         Constructor.
 
         :param sock socket: socket object
-        :param int bufsize: (kwarg) internal buffer size (4096)
+        :param int bufsize: internal buffer size (4096)
         """
 
         self._socket = sock
-        self._bufsize = kwargs.get("bufsize", 4096)
+        self._bufsize = bufsize
         self._buffer = bytearray()
         self._recv()  # populate initial buffer
 

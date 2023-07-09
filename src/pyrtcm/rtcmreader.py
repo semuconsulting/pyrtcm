@@ -35,29 +35,38 @@ class RTCMReader:
     rtcmReader class.
     """
 
-    def __init__(self, datastream, **kwargs):
+    def __init__(
+        self,
+        datastream,
+        quitonerror=1,
+        errorhandler=None,
+        validate=1,
+        scaling=True,
+        labelmsm=True,
+        bufsize=4096,
+    ):
         """Constructor.
 
         :param datastream stream: input data stream
-        :param int quitonerror: (kwarg) 0 = ignore,  1 = log and continue, 2 = (re)raise (1)
-        :param int errorhandler: (kwarg) error handling object or function (None)
-        :param int validate: (kwarg) 0 = ignore invalid checksum, 1 = validate checksum (1)
-        :param bool scaling: (kwarg) apply attribute scaling True/False (True)
-        :param bool labelmsm: (kwarg) whether to label MSM NSAT and NCELL attributes (True)
-        :param int bufsize: (kwarg) socket recv buffer size (4096)
+        :param int quitonerror: 0 = ignore,  1 = log and continue, 2 = (re)raise (1)
+        :param int errorhandler: error handling object or function (None)
+        :param int validate: 0 = ignore invalid checksum, 1 = validate checksum (1)
+        :param bool scaling: apply attribute scaling True/False (True)
+        :param bool labelmsm: whether to label MSM NSAT and NCELL attributes (True)
+        :param int bufsize: socket recv buffer size (4096)
         :raises: RTCMStreamError (if mode is invalid)
         """
 
-        bufsize = int(kwargs.get("bufsize", 4096))
+        bufsize = bufsize
         if isinstance(datastream, socket):
             self._stream = SocketStream(datastream, bufsize=bufsize)
         else:
             self._stream = datastream
-        self._quitonerror = int(kwargs.get("quitonerror", rtt.ERR_LOG))
-        self._errorhandler = kwargs.get("errorhandler", None)
-        self._validate = int(kwargs.get("validate", rtt.VALCKSUM))
-        self._scaling = int(kwargs.get("scaling", True))
-        self._labelmsm = int(kwargs.get("labelmsm", True))
+        self._quitonerror = quitonerror
+        self._errorhandler = errorhandler
+        self._validate = validate
+        self._scaling = scaling
+        self._labelmsm = labelmsm
 
     def __iter__(self):
         """Iterator."""
@@ -175,7 +184,6 @@ class RTCMReader:
         Parse any RTCM3 data in the stream.
 
         :param bytes hdr: first 2 bytes of RTCM3 header
-        :param bool validate: (kwarg) validate CRC Y/N
         :return: tuple of (raw_data as bytes, parsed_stub as RTCMMessage)
         :rtype: tuple
         """
@@ -251,23 +259,20 @@ class RTCMReader:
         return self._stream
 
     @staticmethod
-    def parse(message: bytes, **kwargs) -> object:
+    def parse(message: bytes, validate=1, scaling=True, labelmsm=True) -> object:
         """
         Parse RTCM message to RTCMMessage object.
 
         :param bytes message: RTCM raw message bytes
-        :param int validate: (kwargs) 0 = don't validate CRC, 1 = validate CRC (1)
-        :param bool scaling: (kwargs) apply attribute scaling True/False (True)
-        :param bool labelmsm: (kwarg) whether to label MSM NSAT and NCELL attributes (True)
+        :param int validate: 0 = don't validate CRC, 1 = validate CRC (1)
+        :param bool scaling: apply attribute scaling True/False (True)
+        :param bool labelmsm: hether to label MSM NSAT and NCELL attributes (True)
         :return: RTCMMessage object
         :rtype: RTCMMessage
         :raises: RTCMParseError (if data stream contains invalid data or unknown message type)
         """
         # pylint: disable=unused-argument
 
-        validate = kwargs.get("validate", rtt.VALCKSUM)
-        scaling = int(kwargs.get("scaling", True))
-        labelmsm = int(kwargs.get("labelmsm", True))
         if validate & rtt.VALCKSUM:
             if calc_crc24q(message):
                 raise rte.RTCMParseError(
