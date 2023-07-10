@@ -1,5 +1,11 @@
 # pyrtcm Release Notes
 
+### RELEASE CANDIDATE 1.0.11
+
+CHANGES:
+
+1. Update constructor arguments and docstrings to clarify API (no functional changes) - thanks to @zakkie for contribution.
+
 ### RELEASE 1.0.10
 
 CHANGES:
