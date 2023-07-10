@@ -47,7 +47,7 @@ class RTCMReader:
         scaling=True,
         labelmsm=True,
         bufsize=4096,
-    ):
+    ):  # pylint: disable=too-many-arguments
         """Constructor.
 
         :param datastream stream: input data stream
@@ -60,7 +60,6 @@ class RTCMReader:
         :raises: RTCMStreamError (if mode is invalid)
         """
 
-        bufsize = bufsize
         if isinstance(datastream, socket):
             self._stream = SocketStream(datastream, bufsize=bufsize)
         else:
