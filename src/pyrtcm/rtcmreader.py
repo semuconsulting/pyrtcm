@@ -5,11 +5,14 @@ Reads and parses individual RTCM3 messages from any stream
 which supports a read(n) -> bytes method.
 
 RTCM3 transport layer bit format:
-+-------+--------+--------+--------+----------------+--------+
-| 0xd3  | 000000 | length |  type  |    content     |  crc   |
-+-------+--------+--------+--------+----------------+--------+
-|<- 8 ->|<- 6 -->|<- 10 ->|<- 12 ->|<-- variable -->|<- 24 ->|
-|                         |<- payload; length x 8 ->|        |
+
++--------+--------+---------+---------+----------------+---------+
+|  0xd3  | 000000 | length  |  type   |    content     |   crc   |
++========+========+=========+=========+================+=========+
+| 8 bits | 6 bits | 10 bits | 12 bits |    variable    | 24 bits |
++--------+--------+---------+---------+----------------+---------+
+|                           |   payload; length x 8    |         |
++--------+--------+---------+---------+----------------+---------+
 
 Returns both the raw binary data (as bytes) and the parsed data
 (as RTCMMessage object).
