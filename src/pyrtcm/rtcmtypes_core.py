@@ -776,7 +776,7 @@ RTCM_MSGIDS = {
     "4095": "Ashtech",
 }
 
-# list of MSM attributes to label if `labelmsm` kwarg is True
+# list of MSM attributes to label if `labelmsm` is True
 ATT_NSAT = ["DF397", "DF398", "DF399", "GNSSSpecific"]
 ATT_NCELL = [
     "DF400",

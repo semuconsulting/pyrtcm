@@ -43,12 +43,12 @@ from pyrtcm.rtcmtypes_core import (
 class RTCMMessage:
     """RTCM Message Class."""
 
-    def __init__(self, **kwargs):
+    def __init__(self, payload=None, scaling=True, labelmsm=True):
         """Constructor.
 
-        :param bytes payload: (kwarg) message payload (mandatory)
-        :param bool scaling: (kwarg) whether to apply attribute scaling True/False (True)
-        :param bool labelmsm: (kwarg) whether to label MSM NSAT and NCELL attributes (True)
+        :param bytes payload: message payload (mandatory)
+        :param bool scaling: whether to apply attribute scaling True/False (True)
+        :param bool labelmsm: whether to label MSM NSAT and NCELL attributes (True)
         :raises: RTCMMessageError
         """
         # pylint: disable=unused-argument
@@ -56,12 +56,12 @@ class RTCMMessage:
         # object is mutable during initialisation only
         super().__setattr__("_immutable", False)
 
-        self._payload = kwargs.get("payload", None)
+        self._payload = payload
         if self._payload is None:
             raise rte.RTCMMessageError("Payload must be specified")
         self._payblen = len(self._payload) * 8  # length of payload in bits
-        self._scaling = int(kwargs.get("scaling", True))
-        self._labelmsm = int(kwargs.get("labelmsm", True))
+        self._scaling = scaling
+        self._labelmsm = labelmsm
         self._unknown = False
         self._do_attributes()
 
