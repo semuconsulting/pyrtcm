@@ -38,9 +38,9 @@ class RTCMReader:
     def __init__(
         self,
         datastream,
-        quitonerror=1,
+        quitonerror=rtt.ERR_LOG,
         errorhandler=None,
-        validate=1,
+        validate=rtt.VALCKSUM,
         scaling=True,
         labelmsm=True,
         bufsize=4096,
@@ -57,7 +57,6 @@ class RTCMReader:
         :raises: RTCMStreamError (if mode is invalid)
         """
 
-        bufsize = bufsize
         if isinstance(datastream, socket):
             self._stream = SocketStream(datastream, bufsize=bufsize)
         else:
@@ -266,7 +265,7 @@ class RTCMReader:
         :param bytes message: RTCM raw message bytes
         :param int validate: 0 = don't validate CRC, 1 = validate CRC (1)
         :param bool scaling: apply attribute scaling True/False (True)
-        :param bool labelmsm: hether to label MSM NSAT and NCELL attributes (True)
+        :param bool labelmsm: whether to label MSM NSAT and NCELL attributes (True)
         :return: RTCMMessage object
         :rtype: RTCMMessage
         :raises: RTCMParseError (if data stream contains invalid data or unknown message type)
