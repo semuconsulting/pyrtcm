@@ -9,6 +9,8 @@ Created on 14 Feb 2022
 """
 # pylint: disable=invalid-name
 
+import warnings
+
 import pyrtcm.exceptions as rte
 import pyrtcm.rtcmtypes_get as rtg
 from pyrtcm.rtcmhelpers import (
@@ -43,7 +45,7 @@ from pyrtcm.rtcmtypes_core import (
 class RTCMMessage:
     """RTCM Message Class."""
 
-    def __init__(self, payload=None, scaling=True, labelmsm=True):
+    def __init__(self, payload=None, scaling=True, labelmsm=True, **kwargs):
         """Constructor.
 
         :param bytes payload: message payload (mandatory)
@@ -66,6 +68,10 @@ class RTCMMessage:
         self._do_attributes()
 
         self._immutable = True  # once initialised, object is immutable
+
+        if kwargs:
+            keys = ", ".join(kwargs.keys())
+            warnings.warn(f"these arguments were DEPRECATED: {keys}")
 
     def _do_attributes(self):
         """

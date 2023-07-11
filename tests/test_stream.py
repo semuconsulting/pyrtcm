@@ -12,6 +12,7 @@ Created on 3 Oct 2020
 import os
 import sys
 import unittest
+import warnings
 
 from io import StringIO
 from src.pyrtcm import (
@@ -386,6 +387,30 @@ class StreamTest(unittest.TestCase):
             stream.close()
             output = self.restoreio()
             self.assertEqual(output, EXPECTED_ERROR)
+
+    def testDeprecated_RTCMReader(self):
+        # test for constructor
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            RTCMReader("dummy stream", deprecated_arguments=1)
+            assert len(w) == 1
+            assert "DEPRECATED" in str(w[-1].message)
+
+        # test for parse() method
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            payload = self._raw1005[3:-3]
+            RTCMReader.parse(self._raw1005ex, deprecated_arguments=1)
+            assert len(w) == 1
+            assert "DEPRECATED" in str(w[-1].message)
+
+    def testDeprecated_RTCMMessage(self):
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            payload = self._raw1005[3:-3]
+            RTCMMessage(payload=payload, deprecated_arguments=1)
+            assert len(w) == 1
+            assert "DEPRECATED" in str(w[-1].message)
 
 
 if __name__ == "__main__":

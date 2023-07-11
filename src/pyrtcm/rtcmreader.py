@@ -21,6 +21,7 @@ Created on 14 Feb 2022
 :license: BSD 3-Clause
 """
 
+import warnings
 from socket import socket
 
 import pyrtcm.exceptions as rte
@@ -44,6 +45,7 @@ class RTCMReader:
         scaling=True,
         labelmsm=True,
         bufsize=4096,
+        **kwargs,
     ):
         """Constructor.
 
@@ -66,6 +68,10 @@ class RTCMReader:
         self._validate = validate
         self._scaling = scaling
         self._labelmsm = labelmsm
+
+        if kwargs:
+            keys = ", ".join(kwargs.keys())
+            warnings.warn(f"these arguments were DEPRECATED: {keys}")
 
     def __iter__(self):
         """Iterator."""
@@ -258,7 +264,9 @@ class RTCMReader:
         return self._stream
 
     @staticmethod
-    def parse(message: bytes, validate=1, scaling=True, labelmsm=True) -> "RTCMMessage":
+    def parse(
+        message: bytes, validate=1, scaling=True, labelmsm=True, **kwargs
+    ) -> "RTCMMessage":
         """
         Parse RTCM message to RTCMMessage object.
 
@@ -271,6 +279,10 @@ class RTCMReader:
         :raises: RTCMParseError (if data stream contains invalid data or unknown message type)
         """
         # pylint: disable=unused-argument
+
+        if kwargs:
+            keys = ", ".join(kwargs.keys())
+            warnings.warn(f"these arguments were DEPRECATED: {keys}")
 
         if validate & rtt.VALCKSUM:
             if calc_crc24q(message):
