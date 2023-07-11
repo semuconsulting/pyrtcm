@@ -43,7 +43,9 @@ from pyrtcm.rtcmtypes_core import (
 class RTCMMessage:
     """RTCM Message Class."""
 
-    def __init__(self, payload=None, scaling=True, labelmsm=True):
+    def __init__(
+        self, payload: bytes = None, scaling: bool = True, labelmsm: bool = True
+    ):
         """Constructor.
 
         :param bytes payload: message payload (mandatory)

@@ -41,22 +41,22 @@ class RTCMReader:
     def __init__(
         self,
         datastream,
-        quitonerror=rtt.ERR_LOG,
-        errorhandler=None,
-        validate=rtt.VALCKSUM,
-        scaling=True,
-        labelmsm=True,
-        bufsize=4096,
+        validate: int = rtt.VALCKSUM,
+        quitonerror: int = rtt.ERR_LOG,
+        scaling: bool = True,
+        labelmsm: bool = True,
+        bufsize: int = 4096,
+        errorhandler: object = None,
     ):  # pylint: disable=too-many-arguments
         """Constructor.
 
         :param datastream stream: input data stream
-        :param int quitonerror: 0 = ignore,  1 = log and continue, 2 = (re)raise (1)
-        :param int errorhandler: error handling object or function (None)
         :param int validate: 0 = ignore invalid checksum, 1 = validate checksum (1)
+        :param int quitonerror: 0 = ignore,  1 = log and continue, 2 = (re)raise (1)
         :param bool scaling: apply attribute scaling True/False (True)
         :param bool labelmsm: whether to label MSM NSAT and NCELL attributes (True)
         :param int bufsize: socket recv buffer size (4096)
+        :param int errorhandler: error handling object or function (None)
         :raises: RTCMStreamError (if mode is invalid)
         """
 
@@ -261,7 +261,12 @@ class RTCMReader:
         return self._stream
 
     @staticmethod
-    def parse(message: bytes, validate=1, scaling=True, labelmsm=True) -> "RTCMMessage":
+    def parse(
+        message: bytes,
+        validate: int = rtt.VALCKSUM,
+        scaling: bool = True,
+        labelmsm: bool = True,
+    ) -> "RTCMMessage":
         """
         Parse RTCM message to RTCMMessage object.
 
