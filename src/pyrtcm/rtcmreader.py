@@ -56,7 +56,7 @@ class RTCMReader:
         :param bool scaling: apply attribute scaling True/False (True)
         :param bool labelmsm: whether to label MSM NSAT and NCELL attributes (True)
         :param int bufsize: socket recv buffer size (4096)
-        :param int errorhandler: error handling object or function (None)
+        :param object errorhandler: error handling object or function (None)
         :raises: RTCMStreamError (if mode is invalid)
         """
 
