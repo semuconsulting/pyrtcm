@@ -1,6 +1,6 @@
 # pyrtcm Release Notes
 
-### RELEASE CANDIDATE 1.0.11
+### RELEASE 1.0.11
 
 CHANGES:
 
