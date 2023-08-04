@@ -31,8 +31,6 @@ from pyrtcm.rtcmtables import (
 )
 from pyrtcm.rtcmtypes_core import RTCM_DATA_FIELDS, RTCM_MSGIDS
 
-SCALEDP = 8
-
 
 def att2idx(att: str) -> int:
     """
@@ -98,7 +96,7 @@ def bits2val(att: str, scale: float, bitfield: int) -> object:
     # apply any scaling factor
     else:
         if scale not in (0, 1):
-            val = round(val * scale, SCALEDP)
+            val *= scale
 
     return val
 
