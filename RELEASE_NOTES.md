@@ -1,5 +1,11 @@
 # pyrtcm Release Notes
 
+### RELEASE CANDIDATE 1.0.12
+
+FIXES:
+
+1. Amend rounding factor to improve accuracy - Fixes #40. Thanks to @alainmuls for issue report.
+
 ### RELEASE 1.0.11
 
 CHANGES:
