@@ -219,7 +219,6 @@ The following examples are available in the /examples folder:
 1. `rtcmserial.py` - illustrates how to stream RTCM data from serial/UART port.
 1. `rtcmfile.py` - illustrates how to stream RTCM data from binary log file.
 1. `rtcmsocket.py` illustrates how to implement a TCP Socket reader for RTCM messages using RTCMReader iterator functionality.
-1. `rtcmbuild.py` - illustrates how to construct RTCM payload from constituent datafields.
 1. `ntripclient.py` - illustrates a simple [NTRIP](https://en.wikipedia.org/wiki/Networked_Transport_of_RTCM_via_Internet_Protocol) client using pyrtcm to parse the RTCM3 output.
 
 ---
