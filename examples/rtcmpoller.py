@@ -96,7 +96,7 @@ if __name__ == "__main__":
     DELAY = 1
 
     with Serial(port, baudrate, timeout=timeout) as serial_stream:
-        ubxreader = RTCMReader(serial_stream)
+        rtcreader = RTCMReader(serial_stream)
 
         serial_lock = Lock()
         read_queue = Queue()
@@ -107,7 +107,7 @@ if __name__ == "__main__":
             target=io_data,
             args=(
                 serial_stream,
-                ubxreader,
+                rtcreader,
                 read_queue,
                 send_queue,
                 stop_event,
