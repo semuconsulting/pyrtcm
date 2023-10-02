@@ -43,14 +43,12 @@ from pyrtcm.rtcmtypes_core import (
 class RTCMMessage:
     """RTCM Message Class."""
 
-    def __init__(
-        self, payload: bytes = None, scaling: bool = True, labelmsm: bool = True
-    ):
+    def __init__(self, payload: bytes = None, scaling: bool = True, labelmsm: int = 1):
         """Constructor.
 
         :param bytes payload: message payload (mandatory)
         :param bool scaling: whether to apply attribute scaling True/False (True)
-        :param bool labelmsm: whether to label MSM NSAT and NCELL attributes (True)
+        :param int labelmsm: whether to label MSM NSAT and NCELL attributes (0 = none, 1 = RINEX, 2 = freq)
         :raises: RTCMMessageError
         """
         # pylint: disable=unused-argument
@@ -266,7 +264,8 @@ class RTCMMessage:
         if not self._unknown:
             if self._labelmsm and "MSM" in RTCM_MSGIDS[self.identity]:
                 sats = sat2prn(self)
-                cells = cell2prn(self)
+                sigcode = 0 if self._labelmsm == 2 else 1  # freq band or RINEX code
+                cells = cell2prn(self, sigcode)
                 is_msm = True
 
         stg = f"<RTCM({self.identity}, "
