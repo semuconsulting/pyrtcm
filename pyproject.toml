@@ -11,7 +11,7 @@ maintainers = [
   {name = "semuadmin", email = "semuadmin@semuconsulting.com"}
 ]
 description = "RTCM3 protocol parser"
-version = "1.0.12"
+version = "1.0.13"
 license = {file = "LICENSE"}
 readme = "README.md"
 requires-python = ">=3.8"

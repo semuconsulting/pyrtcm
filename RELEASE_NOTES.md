@@ -1,6 +1,12 @@
 # pyrtcm Release Notes
 
-### RELEASE CANDIDATE 1.0.12
+### RELEASE CANDIDATE 1.0.13
+
+ENHANCEMENTS:
+
+1. Enhance MSM signal attribute labelling to support either frequency band (e.g. "L1") or signal RINEX code (e.g. "1C"). The `labelmsm` keyword argument is now an integer rather than a boolean, with values 0 = no label, 1 = label with signal RINEX code (the existing default behaviour), 2 = label with frequency band
+
+### RELEASE 1.0.12
 
 FIXES:
 

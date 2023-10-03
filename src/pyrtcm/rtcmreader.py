@@ -44,7 +44,7 @@ class RTCMReader:
         validate: int = rtt.VALCKSUM,
         quitonerror: int = rtt.ERR_LOG,
         scaling: bool = True,
-        labelmsm: bool = True,
+        labelmsm: int = 1,
         bufsize: int = 4096,
         errorhandler: object = None,
     ):  # pylint: disable=too-many-arguments
@@ -54,7 +54,7 @@ class RTCMReader:
         :param int validate: 0 = ignore invalid checksum, 1 = validate checksum (1)
         :param int quitonerror: 0 = ignore,  1 = log and continue, 2 = (re)raise (1)
         :param bool scaling: apply attribute scaling True/False (True)
-        :param bool labelmsm: whether to label MSM NSAT and NCELL attributes (True)
+        :param int labelmsm: whether to label MSM NSAT and NCELL attributes (0 = none, 1 = RINEX, 2 = freq)
         :param int bufsize: socket recv buffer size (4096)
         :param object errorhandler: error handling object or function (None)
         :raises: RTCMStreamError (if mode is invalid)
@@ -265,7 +265,7 @@ class RTCMReader:
         message: bytes,
         validate: int = rtt.VALCKSUM,
         scaling: bool = True,
-        labelmsm: bool = True,
+        labelmsm: int = 1,
     ) -> "RTCMMessage":
         """
         Parse RTCM message to RTCMMessage object.
@@ -273,7 +273,7 @@ class RTCMReader:
         :param bytes message: RTCM raw message bytes
         :param int validate: 0 = don't validate CRC, 1 = validate CRC (1)
         :param bool scaling: apply attribute scaling True/False (True)
-        :param bool labelmsm: whether to label MSM NSAT and NCELL attributes (True)
+        :param int labelmsm: whether to label MSM NSAT and NCELL attributes (0 = none, 1 = RINEX, 2 = freq)
         :return: RTCMMessage object
         :rtype: RTCMMessage
         :raises: RTCMParseError (if data stream contains invalid data or unknown message type)

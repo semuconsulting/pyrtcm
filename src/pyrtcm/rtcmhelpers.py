@@ -320,7 +320,7 @@ def sat2prn(msg: object) -> dict:
         ) from err
 
 
-def cell2prn(msg: object) -> dict:
+def cell2prn(msg: object, sigcode: int = 1) -> dict:
     """
     Map MSM cell to satellite PRN and signal ID for a given RTCM3 MSM message.
 
@@ -332,6 +332,7 @@ def cell2prn(msg: object) -> dict:
     DF396 bitmask maps satellite to signal.
 
     :param RTCMMessage msg: RTCM3 MSM message e.g. 1077
+    :param int sigcode: 0 = use frequency band, 1 = use signal RINEX code
     :return: dict of {cell: (prn, sig)} values
     :rtype: dict
     :raises: RTCMTypeError if not MSM message type
@@ -351,7 +352,9 @@ def cell2prn(msg: object) -> dict:
         nsig = 0
         for idx in range(1, 33):
             if msg.DF395 & 2 ** (32 - idx):
-                sigs.append(sigmap[idx])
+                sgc = sigmap[idx]
+                fqc = sgc[1] if sigcode else sgc[0]
+                sigs.append(fqc)
                 nsig += 1
 
         ncells = int(nsat * nsig)
