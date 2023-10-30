@@ -4,15 +4,11 @@ build-backend = "setuptools.build_meta:__legacy__"
 
 [project]
 name = "pyrtcm"
-authors = [
-    {name = "semuadmin", email = "semuadmin@semuconsulting.com"},
-]
-maintainers = [
-  {name = "semuadmin", email = "semuadmin@semuconsulting.com"}
-]
+authors = [{ name = "semuadmin", email = "semuadmin@semuconsulting.com" }]
+maintainers = [{ name = "semuadmin", email = "semuadmin@semuconsulting.com" }]
 description = "RTCM3 protocol parser"
 version = "1.0.13"
-license = {file = "LICENSE"}
+license = { file = "LICENSE" }
 readme = "README.md"
 requires-python = ">=3.8"
 classifiers = [
@@ -30,14 +26,14 @@ classifiers = [
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "License :: OSI Approved :: BSD License",
     "Topic :: Utilities",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Scientific/Engineering :: GIS",
-    ]
-
-dependencies = [
 ]
+
+dependencies = []
 
 [project.urls]
 homepage = "https://github.com/semuconsulting/pyrtcm"
@@ -46,12 +42,7 @@ repository = "https://github.com/semuconsulting/pyrtcm"
 changelog = "https://github.com/semuconsulting/pyrtcm/blob/master/RELEASE_NOTES.md"
 
 [project.optional-dependencies]
-deploy = [
-    "build",
-    "pip",
-    "setuptools >= 66.0",
-    "wheel"
-]
+deploy = ["build", "pip", "setuptools >= 66.0", "wheel"]
 test = [
     "bandit",
     "black",
