@@ -9,7 +9,7 @@ Information sourced from RTCM STANDARD 10403.3 © 2016 RTCM
 """
 # pylint: disable=too-many-lines, line-too-long
 
-from pyrtcm.rtcmtypes_core import NCELL, NL1CA, NL1P, NL2CA, NL2P, NRES, NSAT
+from pyrtcm.rtcmtypes_core import NCELL, NRES, NSAT
 
 # *************************************************************
 # MSM MESSAGE SUB-SECTION DEFINITIONS
@@ -1472,7 +1472,7 @@ RTCM_PAYLOADS_GET = {
     "1125": MSM5,
     "1126": MSM6,
     "1127": MSM7,
-    # IRNSS
+    # IRNSS (NavIC)
     "1131": MSM1,
     "1132": MSM2,
     "1133": MSM3,
@@ -1485,27 +1485,30 @@ RTCM_PAYLOADS_GET = {
         "DF003": "Reference Station ID",
         "DF421": "GLONASS Code-Phase bias indicator",
         "DF001_3": "Reserved",
-        "DF422": "GLONASS FDMA signals mask",
+        "DF422_1": "GLONASS FDMA signals mask L1 C/A",
+        "DF422_2": "GLONASS FDMA signals mask L1 P",
+        "DF422_3": "GLONASS FDMA signals mask L2 C/A",
+        "DF422_4": "GLONASS FDMA signals mask L2 P",
         "groupL1CA": (
-            NL1CA,  # = 1 if bit 1 (MSB) in DF422 is set, otherwise 0
+            "DF422_1",
             {
                 "DF423": "GLONASS L1 C/A Code-Phase Bias",
             },
         ),
         "groupL1P": (
-            NL1P,  # = 1 if bit 2 in DF422 is set, otherwise 0
+            "DF422_2",
             {
                 "DF424": "GLONASS L1 P Code-Phase Bias",
             },
         ),
         "groupL2CA": (
-            NL2CA,  # = 1 if bit 3 in DF422 is set, otherwise 0
+            "DF422_3",
             {
                 "DF425": "GLONASS L2 C/A Code-Phase Bias",
             },
         ),
         "groupL2P": (
-            NL2P,  # = 1 if bit 4 (LSB) in DF422 is set, otherwise 0
+            "DF422_4",
             {
                 "DF426": "GLONASS L2 P Code-Phase Bias",
             },

@@ -28,10 +28,6 @@ from pyrtcm.rtcmtypes_core import (
     ATT_NSAT,
     BOOL_GROUPS,
     NCELL,
-    NL1CA,
-    NL1P,
-    NL2CA,
-    NL2P,
     NSAT,
     NSIG,
     RTCM_DATA_FIELDS,
@@ -78,9 +74,8 @@ class RTCMMessage:
         index = []  # array of (nested) group indices
 
         try:
-            pdict = (
-                self._get_dict()
-            )  # get payload definition dict for this message identity
+            # get payload definition dict for this message identity
+            pdict = self._get_dict()
             if pdict is None:  # unknown (or not yet implemented) message identity
                 self._do_unknown()
                 return
@@ -172,8 +167,9 @@ class RTCMMessage:
         # pylint: disable=no-member
 
         # if attribute is part of a (nested) repeating group, suffix name with index
+        # one index for each nested level (unless it's a 'boolean' group)
         keyr = key
-        for i in index:  # one index for each nested level (unless it's a boolean group)
+        for i in index:
             if i > 0 and keyr not in BOOL_GROUPS:
                 keyr += f"_{i:02d}"
 
@@ -192,27 +188,22 @@ class RTCMMessage:
         offset += atts
 
         # add special attributes to keep track of
-        # MSM / 1230 message group sizes
+        # MSM message group sizes
         # NB: This is predicated on MSM payload dictionaries
         # always having attributes DF394, DF395 and DF396
         # in that order
         if key == "DF394":  # num of satellites in MSM message
             setattr(self, NSAT, num_setbits(bitfield))
-        if key == "DF395":  # num of signals in MSM message
+        elif key == "DF395":  # num of signals in MSM message
             setattr(self, NSIG, num_setbits(bitfield))
-        if key == "DF396":  # num of cells in MSM message
+        elif key == "DF396":  # num of cells in MSM message
             setattr(self, NCELL, num_setbits(bitfield))
-        if key == "DF422":  # bitmask of bias entries in 1230 message
-            setattr(self, NL1CA, (bitfield & 8) >> 3)  # MSB
-            setattr(self, NL1P, (bitfield & 4) >> 2)
-            setattr(self, NL2CA, (bitfield & 2) >> 1)
-            setattr(self, NL2P, bitfield & 1)  # LSB
 
         return offset
 
     def _getbits(self, position: int, length: int) -> int:
         """
-        Get unisgned integer value of masked bits in bytes.
+        Get unsigned integer value of masked bits in bytes.
 
         :param int position: position in bitfield, from leftmost bit
         :param int length: length of masked bits
