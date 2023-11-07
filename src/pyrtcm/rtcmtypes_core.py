@@ -27,14 +27,9 @@ ERR_IGNORE = 0
 NSAT = "NSat"
 NSIG = "NSig"
 NCELL = "NCell"
-NL1CA = "_NL1CA"
-NL1P = "_NL1P"
-NL2CA = "_NL2CA"
-NL2P = "_NL2P"
-# Number of Residuals groups in MT1023 and MT1024
+# number of Residuals groups in MT1023 and MT1024
 NRES = 16
-# list of 'group' attributes which have
-# an occurrence of 0 or 1
+# list of 'group' attributes which have an occurrence of 0 or 1
 BOOL_GROUPS = ("DF423", "DF424", "DF425", "DF426")
 
 
@@ -517,7 +512,10 @@ RTCM_DATA_FIELDS = {
     "DF419": (UINT4, 1, "GLONASS Satellite Frequency Channel Number"),
     "DF420": (BIT1, 0, "Half-cycle ambiguity indicator"),
     "DF421": (BIT1, 0, "GLONASS Code-Phase Bias Indicator"),
-    "DF422": (BIT4, 0, "GLONASS FDMA Signals Mask"),
+    "DF422_1": (BIT1, 0, "GLONASS FDMA Signals Mask L1 C/A"),
+    "DF422_2": (BIT1, 0, "GLONASS FDMA Signals Mask L1 P"),
+    "DF422_3": (BIT1, 0, "GLONASS FDMA Signals Mask L2 C/A"),
+    "DF422_4": (BIT1, 0, "GLONASS FDMA Signals Mask L2 P"),
     "DF423": (INT16, 0.02, "GLONASS L1 C/A Code-Phase Bias"),
     "DF424": (INT16, 0.02, "GLONASS L1 P Code-Phase Bias"),
     "DF425": (INT16, 0.02, "GLONASS L2 C/A Code-Phase Bias"),
