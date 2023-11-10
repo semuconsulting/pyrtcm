@@ -1,6 +1,12 @@
 # pyrtcm Release Notes
 
-### RELEASE CANDIDATE 1.0.13
+### RELEASE 1.0.14
+
+CHANGES:
+
+1. Minor internal streamlining of RTCM 1230 message processing.
+
+### RELEASE 1.0.13
 
 ENHANCEMENTS:
 
