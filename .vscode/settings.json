@@ -1,12 +1,7 @@
 {
     "python.testing.pytestEnabled": false,
     "python.testing.unittestEnabled": true,
-    // for Windows, assumes symlink has been set up for python3<==>python
-    "python.defaultInterpreterPath": "python3",
     "editor.formatOnSave": true,
-    "[python]": {
-        "editor.defaultFormatter": "ms-python.black-formatter"
-    },
     "modulename": "${workspaceFolderBasename}",
     "distname": "${workspaceFolderBasename}",
     "moduleversion": "1.0.14"
