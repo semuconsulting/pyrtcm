@@ -225,7 +225,7 @@ b'\xd3\x00\x13>\xd0\x00\x03\x8aX\xd9I<\x87/4\x10\x9d\x07\xd6\xafH Z\xd7\xf7'
 
 The following examples are available in the /examples folder:
 
-1. `rtcmpoller.py` - illustrates how illustrates how to read and display RTCM messages 'concurrently' with other tasks using threads and queues. This represents a useful generic pattern for many end user applications.
+1. `rtcmpoller.py` - illustrates how to read and display RTCM messages 'concurrently' with other tasks using threads and queues. This represents a useful generic pattern for many end user applications.
 1. `rtcmfile.py` - illustrates how to stream RTCM data from binary log file.
 1. `rtcmsocket.py` illustrates how to implement a TCP Socket reader for RTCM messages using RTCMReader iterator functionality.
 1. `ntripclient.py` - illustrates a simple [NTRIP](https://en.wikipedia.org/wiki/Networked_Transport_of_RTCM_via_Internet_Protocol) client using pyrtcm to parse the RTCM3 output.
