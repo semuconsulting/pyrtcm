@@ -404,6 +404,7 @@ RTCM_DATA_FIELDS = {
     "DF244": (INT14, 0.01, "NI: Ionospheric gradient in north  (ppm)"),
     "DF245": (INT14, 0.01, "EI: Ionospheric gradient in east  (ppm)"),
     # 'DF246-DF251': RESERVED,
+    "DF248": (UINT30, 1, "Galileo Epoch Time (TOW)"),
     "DF252": (UINT6, 0, "Galileo Satellite ID"),
     "DF286": (BIT8, 0, "Galileo SISA (E1,E5b"),
     "DF287": (BIT2, 0, "Galileo E1-B Signal Health Status"),
