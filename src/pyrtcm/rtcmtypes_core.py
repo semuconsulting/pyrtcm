@@ -404,6 +404,7 @@ RTCM_DATA_FIELDS = {
     "DF244": (INT14, 0.01, "NI: Ionospheric gradient in north  (ppm)"),
     "DF245": (INT14, 0.01, "EI: Ionospheric gradient in east  (ppm)"),
     # 'DF246-DF251': RESERVED,
+    "DF248": (UINT30, 1, "Galileo Epoch Time (TOW)"),
     "DF252": (UINT6, 0, "Galileo Satellite ID"),
     "DF286": (BIT8, 0, "Galileo SISA (E1,E5b"),
     "DF287": (BIT2, 0, "Galileo E1-B Signal Health Status"),
@@ -610,8 +611,7 @@ RTCM_DATA_FIELDS = {
     "DF544": (BIT2, 1, "NAVIC/IRNSS 2 spare bits after IDOT"),
     "DF545": (BIT2, 1, "NAVIC/IRNSS 2 spare bits after i0"),
     "DF546": (UINT30, 1, "NAVIC/IRNSS Epoch Time (TOW)"),
-    "GNSSSpecific": (UINT4, 0, "Extended Satellite Information"),
-    "GNSSEpoch": (UINT30, 0, "GNSS Epoch Time"),
+    "ExtSatInfo": (UINT4, 0, "Extended Satellite Information"),
 }
 
 # ***************************************************************************
@@ -775,7 +775,7 @@ RTCM_MSGIDS = {
 }
 
 # list of MSM attributes to label if `labelmsm` is True
-ATT_NSAT = ["DF397", "DF398", "DF399", "GNSSSpecific"]
+ATT_NSAT = ["DF397", "DF398", "DF399", "DF419", "ExtSatInfo"]
 ATT_NCELL = [
     "DF400",
     "DF401",
