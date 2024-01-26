@@ -5,6 +5,7 @@
 CHANGES:
 
 1. MSM GNSSEpoch field now parsed into appropriate datafield(s) e.g. GLONASS GNSSEpoch = {"DF416": "GLONASS Day Of Week", "DF034": "GLONASS Epoch Time (tk)"}.
+2. MSM Extended Satellite Information field parsed into appropriate datafield e.g. DF419 for GLONASS, ExtSatInfo for other GNSS.
 
 ### RELEASE 1.0.14
 

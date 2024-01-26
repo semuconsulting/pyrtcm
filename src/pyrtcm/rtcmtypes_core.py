@@ -611,8 +611,7 @@ RTCM_DATA_FIELDS = {
     "DF544": (BIT2, 1, "NAVIC/IRNSS 2 spare bits after IDOT"),
     "DF545": (BIT2, 1, "NAVIC/IRNSS 2 spare bits after i0"),
     "DF546": (UINT30, 1, "NAVIC/IRNSS Epoch Time (TOW)"),
-    "GNSSSpecific": (UINT4, 0, "Extended Satellite Information"),
-    "GNSSEpoch": (UINT30, 0, "GNSS Epoch Time"),
+    "ExtSatInfo": (UINT4, 0, "Extended Satellite Information"),
 }
 
 # ***************************************************************************
@@ -776,7 +775,7 @@ RTCM_MSGIDS = {
 }
 
 # list of MSM attributes to label if `labelmsm` is True
-ATT_NSAT = ["DF397", "DF398", "DF399", "GNSSSpecific"]
+ATT_NSAT = ["DF397", "DF398", "DF399", "DF419", "ExtSatInfo"]
 ATT_NCELL = [
     "DF400",
     "DF401",

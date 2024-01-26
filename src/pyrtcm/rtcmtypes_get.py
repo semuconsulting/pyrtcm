@@ -67,7 +67,7 @@ MSM_SAT_57 = {
     "groupsat2": (
         NSAT,
         {
-            "GNSSSpecific": "Extended Satellite Information",
+            "ExtSatInfo": "Extended Satellite Information",  # Reserved for future use
         },
     ),
     "groupsat3": (
@@ -84,6 +84,32 @@ MSM_SAT_57 = {
     ),
 }
 
+MSM_SAT_57_GLONASS = {
+    "groupsat1": (
+        NSAT,
+        {
+            "DF397": "The number of integer milliseconds in GNSS Satellite rough ranges",
+        },
+    ),
+    "groupsat2": (
+        NSAT,
+        {
+            "DF419": "Satellite Frequency Channel Number",
+        },
+    ),
+    "groupsat3": (
+        NSAT,
+        {
+            "DF398": "GNSS Satellite rough ranges modulo 1 millisecond",
+        },
+    ),
+    "groupsat4": (
+        NSAT,
+        {
+            "DF399": "GNSS Satellite rough PhaseRangeRates",
+        },
+    ),
+}
 
 MSM_SIG_1 = {
     "groupsig1": (
@@ -1507,7 +1533,7 @@ RTCM_PAYLOADS_GET = {
         "DF416": "GLONASS Day Of Week",
         "DF034": "GLONASS Epoch Time (tk)",
         **MSM_HDR2,
-        **MSM_SAT_57,
+        **MSM_SAT_57_GLONASS,
         **MSM_SIG_5,
     },
     "1086": {
@@ -1523,7 +1549,7 @@ RTCM_PAYLOADS_GET = {
         "DF416": "GLONASS Day Of Week",
         "DF034": "GLONASS Epoch Time (tk)",
         **MSM_HDR2,
-        **MSM_SAT_57,
+        **MSM_SAT_57_GLONASS,
         **MSM_SIG_7,
     },
     # Galileo
