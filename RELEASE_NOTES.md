@@ -1,5 +1,11 @@
 # pyrtcm Release Notes
 
+### RELEASE 1.0.16
+
+CHANGES:
+
+1. PRN SIG mapping streamlined - `id2prnsigmap()` helper method replaced by dictionary `PRNSIGMAP`.
+
 ### RELEASE 1.0.15
 
 CHANGES:
