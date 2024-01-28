@@ -23,9 +23,9 @@ from pyrtcm.rtcmhelpers import (
     sat2prn,
 )
 from pyrtcm.rtcmtypes_core import (
+    ATT_BOOL,
     ATT_NCELL,
     ATT_NSAT,
-    BOOL_GROUPS,
     NCELL,
     NSAT,
     NSIG,
@@ -169,7 +169,7 @@ class RTCMMessage:
         # one index for each nested level (unless it's a 'boolean' group)
         keyr = key
         for i in index:
-            if i > 0 and keyr not in BOOL_GROUPS:
+            if i > 0 and keyr not in ATT_BOOL:
                 keyr += f"_{i:02d}"
 
         # get value of required number of bits at current payload offset

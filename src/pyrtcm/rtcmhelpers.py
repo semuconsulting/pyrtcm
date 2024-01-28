@@ -14,7 +14,7 @@ from datetime import datetime, timedelta
 
 from pyrtcm.exceptions import RTCMTypeError
 from pyrtcm.rtcmtables import PRNSIGMAP
-from pyrtcm.rtcmtypes_core import RTCM_DATA_FIELDS, RTCM_MSGIDS
+from pyrtcm.rtcmtypes_core import RTCM_DATA_FIELDS
 
 
 def att2idx(att: str) -> int:

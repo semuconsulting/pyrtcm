@@ -11,11 +11,13 @@ Created on 18 Feb 2022
 """
 # pylint: disable=line-too-long
 
+from platform import python_version
+from platform import version as osver
 from sys import argv
-from datetime import datetime
-from platform import version as osver, python_version
-from pyrtcm.rtcmreader import RTCMReader
+from time import process_time_ns
+
 from pyrtcm._version import __version__ as rtcmver
+from pyrtcm.rtcmreader import RTCMReader
 
 RTCMMESSAGES = [
     b"\xd3\x00\x13>\xd0\x00\x03\x8aX\xd9I<\x87/4\x10\x9d\x07\xd6\xafH Z\xd7\xf7",
@@ -59,7 +61,7 @@ def benchmark(**kwargs) -> float:
     :raises: UBXStreamError
     """
 
-    cyc = int(kwargs.get("cycles", 15000))
+    cyc = int(kwargs.get("cycles", 10000))
     txnc = len(RTCMMESSAGES)
     txnt = txnc * cyc
 
@@ -71,15 +73,15 @@ def benchmark(**kwargs) -> float:
         f"\nTxn per cycle: {txnc:,}",
     )
 
-    start = datetime.now()
+    start = process_time_ns()
     print(f"\nBenchmark test started at {start}")
     for i in range(cyc):
         progbar(i, cyc)
         for msg in RTCMMESSAGES:
             _ = RTCMReader.parse(msg)
-    end = datetime.now()
+    end = process_time_ns()
     print(f"Benchmark test ended at {end}.")
-    duration = (end - start).total_seconds()
+    duration = (end - start) / 1e9
     rate = round(txnt / duration, 2)
 
     print(

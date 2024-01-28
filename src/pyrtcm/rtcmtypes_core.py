@@ -27,11 +27,7 @@ ERR_IGNORE = 0
 NSAT = "NSat"
 NSIG = "NSig"
 NCELL = "NCell"
-# number of Residuals groups in MT1023 and MT1024
-NRES = 16
-# list of 'group' attributes which have an occurrence of 0 or 1
-BOOL_GROUPS = ("DF423", "DF424", "DF425", "DF426")
-
+NRES = 16  # number of Residuals groups in MT1023 and MT1024
 
 # Power of 2 scaling constants
 P2_P4 = 16  # 2**4
@@ -774,6 +770,8 @@ RTCM_MSGIDS = {
     "4095": "Ashtech",
 }
 
+# list of 'group' attributes which have an occurrence of 0 or 1
+ATT_BOOL = ("DF423", "DF424", "DF425", "DF426")
 # list of MSM attributes to label if `labelmsm` is True
 ATT_NSAT = ["DF397", "DF398", "DF399", "DF419", "ExtSatInfo"]
 ATT_NCELL = [
