@@ -86,18 +86,6 @@ def bits2val(att: str, scale: float, bitfield: int) -> object:
     return val
 
 
-def num_setbits(val: int) -> int:
-    """
-    Get number of set bits in integer.
-
-    :param int val: integer value
-    :return: number of bits set
-    :rtype: int
-    """
-
-    return bin(val).count("1")
-
-
 def calc_crc24q(message: bytes) -> int:
     """
     Perform CRC24Q cyclic redundancy check.

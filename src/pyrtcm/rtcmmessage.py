@@ -20,7 +20,6 @@ from pyrtcm.rtcmhelpers import (
     crc2bytes,
     escapeall,
     len2bytes,
-    num_setbits,
     sat2prn,
 )
 from pyrtcm.rtcmtypes_core import (
@@ -192,12 +191,14 @@ class RTCMMessage:
         # NB: This is predicated on MSM payload dictionaries
         # always having attributes DF394, DF395 and DF396
         # in that order
-        if key == "DF394":  # num of satellites in MSM message
-            setattr(self, NSAT, num_setbits(bitfield))
-        elif key == "DF395":  # num of signals in MSM message
-            setattr(self, NSIG, num_setbits(bitfield))
-        elif key == "DF396":  # num of cells in MSM message
-            setattr(self, NCELL, num_setbits(bitfield))
+        if key in ("DF394", "DF395", "DF396"):
+            n = bin(bitfield).count("1")  # number of bits set
+            if key == "DF394":  # num of satellites in MSM message
+                setattr(self, NSAT, n)
+            elif key == "DF395":  # num of signals in MSM message
+                setattr(self, NSIG, n)
+            elif key == "DF396":  # num of cells in MSM message
+                setattr(self, NCELL, n)
 
         return offset
 
