@@ -21,7 +21,7 @@ The `pyrtcm` homepage is located at [https://github.com/semuconsulting/pyrtcm](h
 This is an independent project and we have no affiliation whatsoever with the Radio Technical Commission for Maritime Services.
 
 **FYI** There are companion libraries which handle standard NMEA 0183 &copy; and UBX &copy; (u-blox) GNSS/GPS messages:
-- [pyubx2](http://github.com/semuconsulting/pyubx2) (**FYI** installing `pyubx2` via pip also installs `pynmeagps` and `pyrtcm`)
+- [pyubx2](http://github.com/semuconsulting/pyubx2)
 - [pynmeagps](http://github.com/semuconsulting/pynmeagps)
 
 ## <a name="currentstatus">Current Status</a>
@@ -35,7 +35,7 @@ This is an independent project and we have no affiliation whatsoever with the Ra
 ![Contributors](https://img.shields.io/github/contributors/semuconsulting/pyrtcm.svg)
 ![Open Issues](https://img.shields.io/github/issues-raw/semuconsulting/pyrtcm)
 
-Parses RTCM3 messages into their constituent data fields. Refer to the `RTCM_MSGIDS` dictionary in [`rtcmtypes_core.py`](https://github.com/semuconsulting/pyrtcm/blob/main/src/pyrtcm/rtcmtypes_core.py) for a list of message types currently implemented. Additional message types can be readily added - see [Extensibility](#extensibility)).
+Parses RTCM3 messages into their constituent data fields - `DF002`, `DF003`, etc. Refer to the `RTCM_MSGIDS` dictionary in [`rtcmtypes_core.py`](https://github.com/semuconsulting/pyrtcm/blob/main/src/pyrtcm/rtcmtypes_core.py) for a list of message types currently implemented. Additional message types can be readily added - see [Extensibility](#extensibility).
 
 Sphinx API Documentation in HTML format is available at [https://www.semuconsulting.com/pyrtcm](https://www.semuconsulting.com/pyrtcm).
 
@@ -140,15 +140,17 @@ Example:
 <RTCM(1005, DF002=1005, DF003=0, DF021=0, DF022=1, DF023=1, DF024=1, DF141=0, DF025=4444030.8028, DF142=1, DF001_1=0, DF026=3085671.2349, DF364=0, DF027=3366658.256)>
 ```
 
-The `RTCMMessage` object exposes different public attributes depending on its message type or 'identity'. Attributes are defined as data fields ("DF002", "DF003", etc.) e.g. the `1005` message contains the following data fields:
+The `RTCMMessage` object exposes different public attributes depending on its message type or 'identity'. Attributes are defined as data fields ("DF002", "DF003", etc.) e.g. the `1087` multiple signal message (MSM) contains the following data fields:
 
 ```python
 >>> print(msg)
-<RTCM(1005, DF002=1005, DF003=0, DF021=0, DF022=1, DF023=1, DF024=1, DF141=0, DF025=4444030.8028, DF142=1, DF001_1=0, DF026=3085671.2349, DF364=0, DF027=3366658.256)>
+<RTCM(1087, DF002=1087, DF003=0, DF416=2, DF034=42119001, DF393=1, DF409=0, DF001_7=0, DF411=0, DF412=0, DF417=0, DF418=0, DF394=4039168114821169152, NSat=7, DF395=1090519040, NSig=2, DF396=16382, NCell=13, DF397_01(003)=69, DF397_02(004)=64, DF397_03(005)=73, DF397_04(013)=76, DF397_05(014)=66, DF397_06(015)=70, DF397_07(023)=78, DF419_01(003)=12, DF419_02(004)=13, DF419_03(005)=8, DF419_04(013)=5, DF419_05(014)=0, DF419_06(015)=7, DF419_07(023)=10, DF398_01(003)=0.6337890625, DF398_02(004)=0.3427734375, DF398_03(005)=0.25390625, DF398_04(013)=0.310546875, DF398_05(014)=0.5126953125, DF398_06(015)=0.8271484375, DF398_07(023)=0.8837890625, DF399_01(003)=-665, DF399_02(004)=29, DF399_03(005)=672, DF399_04(013)=-573, DF399_05(014)=-211, DF399_06(015)=312, DF399_07(023)=317, DF405_01(003,1C)=0.00024936161935329437, ... , DF404_12(015,2C)=0.3947, DF404_13(023,1C)=0.6146)>
 >>> msg.identity
-'1005'
->>> msg.DF024
-1
+'1087'
+>>> msg.DF034
+42119001
+>>> msg.DF419_03
+8
 ```
 
 Helper methods are available to interpret the individual datafields:
@@ -265,7 +267,7 @@ gnssdump -h
 ---
 ## <a name="gui">Graphical Client</a>
 
-A python/tkinter graphical GPS client which supports NMEA, UBX and RTCM3 protocols is available at: 
+A python/tkinter graphical GPS client which supports NMEA, UBX, RTCM3, NTRIP and SPARTN protocols is available at: 
 
 [https://github.com/semuconsulting/PyGPSClient](https://github.com/semuconsulting/PyGPSClient)
 

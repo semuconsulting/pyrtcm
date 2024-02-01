@@ -81,11 +81,11 @@ def benchmark(**kwargs) -> float:
             _ = RTCMReader.parse(msg)
     end = process_time_ns()
     print(f"Benchmark test ended at {end}.")
-    duration = (end - start) / 1e9
-    rate = round(txnt / duration, 2)
+    duration = end - start
+    rate = round(txnt * 1e9 / duration, 2)
 
     print(
-        f"\n{txnt:,} messages processed in {duration:,.3f} seconds = {rate:,.2f} txns/second.\n"
+        f"\n{txnt:,} messages processed in {duration/1e9:,.3f} seconds = {rate:,.2f} txns/second.\n"
     )
 
     return rate

@@ -7,6 +7,7 @@ Information sourced from RTCM STANDARD 10403.3 © 2016 RTCM
 
 :author: semuadmin
 """
+
 # pylint: disable=line-too-long
 
 NMEA_HDR = [b"\x24\x47", b"\x24\x50"]

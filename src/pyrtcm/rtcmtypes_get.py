@@ -7,6 +7,7 @@ Information sourced from RTCM STANDARD 10403.3 © 2016 RTCM
 
 :author: semuadmin
 """
+
 # pylint: disable=too-many-lines, line-too-long
 
 from pyrtcm.rtcmtypes_core import NCELL, NRES, NSAT

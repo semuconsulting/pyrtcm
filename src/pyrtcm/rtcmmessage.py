@@ -7,6 +7,7 @@ Created on 14 Feb 2022
 :copyright: SEMU Consulting © 2022
 :license: BSD 3-Clause
 """
+
 # pylint: disable=invalid-name
 
 import pyrtcm.exceptions as rte
