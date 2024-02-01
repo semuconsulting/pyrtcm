@@ -140,7 +140,7 @@ Example:
 <RTCM(1005, DF002=1005, DF003=0, DF021=0, DF022=1, DF023=1, DF024=1, DF141=0, DF025=4444030.8028, DF142=1, DF001_1=0, DF026=3085671.2349, DF364=0, DF027=3366658.256)>
 ```
 
-The `RTCMMessage` object exposes different public attributes depending on its message type or 'identity'. Attributes are defined as data fields ("DF002", "DF003", etc.) e.g. the `1087` multiple signal message (MSM) contains the following data fields:
+The `RTCMMessage` object exposes different public attributes depending on its message type or 'identity'. Attributes are defined as data fields (`DF002`, `DF003`, etc.) e.g. the `1087` multiple signal message (MSM) contains the following data fields:
 
 ```python
 >>> print(msg)
@@ -152,6 +152,8 @@ The `RTCMMessage` object exposes different public attributes depending on its me
 >>> msg.DF419_03
 8
 ```
+
+Attributes within repeating groups are parsed with a two-digit suffix (`DF419_01`, `DF419_02`, etc.). Attributes within MSM NSAT and NCELL repeating groups can optionally be labelled with their corresponding satellite PRN and signal ID when the `__str__()` (`print()`) method is invoked, by setting the keyword argument `labelmsm` to True - e.g. `DF404_13(023,1C)` signifies that the 13th item in the DF404 ("fine Phase Range Rate") group refers to satellite PRN 023, signal ID 1C.
 
 Helper methods are available to interpret the individual datafields:
 
@@ -170,8 +172,6 @@ Helper methods are available to interpret the individual datafields:
 
 The `payload` attribute always contains the raw payload as bytes.
 
-Attributes within repeating groups are parsed with a two-digit suffix ("DF030_01", "DF030_02", etc.). 
-
 **Tip:** To iterate through a repeating group of attributes (*e.g., DF406 (GNSS signal fine PhaseRange)*) as a list, the following construct can be used:
 
 ```
@@ -180,8 +180,6 @@ for i in range(msg.NCell):
     df406 = getattr(msg, f"DF406_{i+1:02}")
     df406group.append(df406)
 ```
-
-Attributes within MSM NSAT and NCELL repeating groups can optionally be labelled with their corresponding satellite PRN and signal ID when the `__str__()` method is invoked, by setting the keyword argument `labelmsm` to True (e.g. `DF405_10(014,2C)` signifies that the 10th item in the DF405 group refers to satellite PRN 014, signal ID 2C).
 
 ---
 ## <a name="generating">Generating</a>
