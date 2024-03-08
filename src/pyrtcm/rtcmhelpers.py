@@ -8,28 +8,14 @@ Created on 14 Feb 2022
 :copyright: SEMU Consulting © 2022
 :license: BSD 3-Clause
 """
+
 # pylint: disable=invalid-name
 
 from datetime import datetime, timedelta
 
 from pyrtcm.exceptions import RTCMTypeError
-from pyrtcm.rtcmtables import (
-    BEIDOU_PRN_MAP,
-    BEIDOU_SIG_MAP,
-    GALILEO_PRN_MAP,
-    GALILEO_SIG_MAP,
-    GLONASS_PRN_MAP,
-    GLONASS_SIG_MAP,
-    GPS_PRN_MAP,
-    GPS_SIG_MAP,
-    IRNSS_PRN_MAP,
-    IRNSS_SIG_MAP,
-    QZSS_PRN_MAP,
-    QZSS_SIG_MAP,
-    SBAS_PRN_MAP,
-    SBAS_SIG_MAP,
-)
-from pyrtcm.rtcmtypes_core import RTCM_DATA_FIELDS, RTCM_MSGIDS
+from pyrtcm.rtcmtables import PRNSIGMAP
+from pyrtcm.rtcmtypes_core import RTCM_DATA_FIELDS
 
 
 def att2idx(att: str) -> int:
@@ -99,21 +85,6 @@ def bits2val(att: str, scale: float, bitfield: int) -> object:
             val *= scale
 
     return val
-
-
-def num_setbits(val: int) -> int:
-    """
-    Get number of set bits in integer.
-
-    :param int val: integer value
-    :return: number of bits set
-    :rtype: int
-    """
-
-    i = 0
-    for x in bin(val)[2:]:
-        i += int(x)
-    return i
 
 
 def calc_crc24q(message: bytes) -> int:
@@ -303,7 +274,7 @@ def sat2prn(msg: object) -> dict:
     """
 
     try:
-        prnmap, _ = id2prnsigmap(msg.identity)
+        prnmap, _ = PRNSIGMAP[str(msg.identity)[0:3]]
 
         sats = {}
         nsat = 0
@@ -339,7 +310,7 @@ def cell2prn(msg: object, sigcode: int = 1) -> dict:
     """
 
     try:
-        prnmap, sigmap = id2prnsigmap(msg.identity)
+        prnmap, sigmap = PRNSIGMAP[str(msg.identity)[0:3]]
 
         sats = []
         nsat = 0
@@ -373,45 +344,6 @@ def cell2prn(msg: object, sigcode: int = 1) -> dict:
         raise RTCMTypeError(
             "Invalid RTCM3 message type - must be MSM message."
         ) from err
-
-
-def id2prnsigmap(ident: str) -> tuple:
-    """
-    Map RTCM3 message identity to MSM satellite PRN and signal ID maps.
-
-    :param str ident: RTCM3 MSM message identity e.g. "1077"
-    :return: tuple of (PRNMAP, SIGMAP)
-    :rtype: tuple
-    :raises: KeyError if ident unknown
-    """
-
-    gnss = RTCM_MSGIDS[ident][0:3]
-    if gnss == "GPS":
-        PRNMAP = GPS_PRN_MAP
-        SIGMAP = GPS_SIG_MAP
-    elif gnss == "GLO":
-        PRNMAP = GLONASS_PRN_MAP
-        SIGMAP = GLONASS_SIG_MAP
-    elif gnss == "GAL":
-        PRNMAP = GALILEO_PRN_MAP
-        SIGMAP = GALILEO_SIG_MAP
-    elif gnss == "SBA":
-        PRNMAP = SBAS_PRN_MAP
-        SIGMAP = SBAS_SIG_MAP
-    elif gnss == "QZS":
-        PRNMAP = QZSS_PRN_MAP
-        SIGMAP = QZSS_SIG_MAP
-    elif gnss == "Bei":
-        PRNMAP = BEIDOU_PRN_MAP
-        SIGMAP = BEIDOU_SIG_MAP
-    elif gnss == "IRN":
-        PRNMAP = IRNSS_PRN_MAP
-        SIGMAP = IRNSS_SIG_MAP
-    else:
-        PRNMAP = None
-        SIGMAP = None
-
-    return (PRNMAP, SIGMAP)
 
 
 def escapeall(val: bytes) -> str:

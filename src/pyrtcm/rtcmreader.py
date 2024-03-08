@@ -108,7 +108,7 @@ class RTCMReader:
                 raw_data = None
                 parsed_data = None
                 byte1 = self._read_bytes(1)  # read the first byte
-                # if not rtcm, NMEA or RTCM3, discard and continue
+                # if not UBX, NMEA or RTCM3, discard and continue
                 if byte1 not in (b"\xb5", b"\x24", b"\xd3"):
                     continue
                 byte2 = self._read_bytes(1)
@@ -155,14 +155,13 @@ class RTCMReader:
 
         # read the rest of the UBX message from the buffer
         byten = self._read_bytes(4)
-        clsid = byten[0:1]
-        msgid = byten[1:2]
+        msgid = byten[0:2]
         lenb = byten[2:4]
         leni = int.from_bytes(lenb, "little", signed=False)
         byten = self._read_bytes(leni + 2)
         plb = byten[0:leni]
         cksum = byten[leni : leni + 2]
-        raw_data = hdr + clsid + msgid + lenb + plb + cksum
+        raw_data = hdr + msgid + lenb + plb + cksum
         parsed_data = None
         return (raw_data, parsed_data)
 

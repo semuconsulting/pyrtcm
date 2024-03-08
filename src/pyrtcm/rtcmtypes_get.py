@@ -7,6 +7,7 @@ Information sourced from RTCM STANDARD 10403.3 © 2016 RTCM
 
 :author: semuadmin
 """
+
 # pylint: disable=too-many-lines, line-too-long
 
 from pyrtcm.rtcmtypes_core import NCELL, NRES, NSAT
@@ -29,7 +30,7 @@ MSM_HDR2 = {
     "DF418": "GNSS Smoothing Interval",
     "DF394": "GNSS Satellite Mask",  # NSAT = num of set bits
     "DF395": "GNSS Signal Mask",  # NSIG = num of set bits
-    "DF396": "GNSS Cell Mask",  # size = NSAT * NSIG
+    "DF396": "GNSS Cell Mask",  # size = NSAT * NSIG; NCELL = num of set bits
 }
 
 MSM_SAT_123 = {

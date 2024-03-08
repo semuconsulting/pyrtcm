@@ -319,3 +319,14 @@ IRNSS_SIG_MAP = {
     31: "Reserved",
     32: "Reserved",
 }
+
+# {identity[0:3]: (prnmap, sigmap)}
+PRNSIGMAP = {
+    "107": (GPS_PRN_MAP, GPS_SIG_MAP),
+    "108": (GLONASS_PRN_MAP, GLONASS_SIG_MAP),
+    "109": (GALILEO_PRN_MAP, GALILEO_SIG_MAP),
+    "110": (SBAS_PRN_MAP, SBAS_SIG_MAP),
+    "111": (QZSS_PRN_MAP, QZSS_SIG_MAP),
+    "112": (BEIDOU_PRN_MAP, BEIDOU_SIG_MAP),
+    "113": (IRNSS_PRN_MAP, IRNSS_SIG_MAP),
+}

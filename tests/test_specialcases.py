@@ -12,7 +12,7 @@ import unittest
 from collections import namedtuple
 
 from pyrtcm import RTCMMessage, RTCMReader, RTCMTypeError
-from pyrtcm.rtcmhelpers import cell2prn, sat2prn, id2prnsigmap
+from pyrtcm.rtcmhelpers import cell2prn, sat2prn
 
 
 class SpecialTest(unittest.TestCase):
@@ -25,18 +25,6 @@ class SpecialTest(unittest.TestCase):
     def tearDown(self):
         self.streamMSM3.close()
         self.streamRTCM3.close()
-
-    def testid2prnsigmap(self):  # test id2prnsigmap helper method
-        idx = 0
-        for ident in ["1077", "1087", "1097", "1107", "1117", "1127", "1110"]:
-            res = str(id2prnsigmap(ident))
-            idx += 1
-        self.assertEqual(idx, 7)
-
-    def testid2prnsigmaperr(self):  # test id2prnsigmap helper method with invalid ident
-        EXPECTED_ERROR = "6666"
-        with self.assertRaisesRegex(KeyError, EXPECTED_ERROR):
-            res = id2prnsigmap("6666")
 
     def testsat2prn_synthetic(
         self,
