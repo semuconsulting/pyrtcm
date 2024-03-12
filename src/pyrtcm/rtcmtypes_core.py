@@ -229,28 +229,64 @@ RTCM_DATA_FIELDS = {
     "DF076": (UINT10, 0, "GPS Week number"),
     "DF077": (BIT4, 0, "GPS SV Acc. (URA)"),
     "DF078": (BIT2, 1, "GPS CODE ON L2"),
-    "DF079": (INT14, P2_43, "GPS IDOT"),  # see NOTICE 1 above
-    "DF080": (UINT8, 1, "GPS IODE"),
-    "DF081": (UINT16, P2_P4, "GPS toc"),
-    "DF082": (INT8, P2_55, "GPS af2"),
-    "DF083": (INT16, P2_43, "GPS af1"),
-    "DF084": (INT22, P2_31, "GPS af0"),
-    "DF085": (UINT10, 1, "GPS IODC"),
-    "DF086": (INT16, P2_5, "GPS Crs"),
-    "DF087": (INT16, P2_43, "GPS ∆n"),  # see NOTICE 1 above
-    "DF088": (INT32, P2_31, "GPS M0"),  # see NOTICE 1 above
-    "DF089": (INT16, P2_29, "GPS Cuc"),
+    "DF079": (INT14, P2_43, "GPS IDOT (Issue of Data, Time)"),  # see NOTICE 1 above
+    "DF080": (UINT8, 1, "GPS IODE (Issue of Data, Ephemeris)"),
+    "DF081": (UINT16, P2_P4, "GPS toc (Reference Time, Clock)"),
+    "DF082": (INT8, P2_55, "GPS af2 (Clock correction drift rate)"),
+    "DF083": (INT16, P2_43, "GPS af1 (Clock correction drift)"),
+    "DF084": (INT22, P2_31, "GPS af0 (Clock correction bias)"),
+    "DF085": (UINT10, 1, "GPS IODC (Issue of Data, Clock)"),
+    "DF086": (
+        INT16,
+        P2_5,
+        "GPS Crs (Amplitude of sine harmonic correction term to the orbit radius)",
+    ),
+    "DF087": (
+        INT16,
+        P2_43,
+        "GPS ∆n (Mean motion difference from computed value)",
+    ),  # see NOTICE 1 above
+    "DF088": (INT32, P2_31, "GPS M0 (Mean Anomaly)"),  # see NOTICE 1 above
+    "DF089": (
+        INT16,
+        P2_29,
+        "GPS Cuc (Amplitude of cosine harmonic correction term to argument of latitude)",
+    ),
     "DF090": (UINT32, P2_33, "GPS e (Eccentricity)"),
-    "DF091": (INT16, P2_29, "GPS Cus"),
-    "DF092": (UINT32, P2_19, "GPS A½"),
-    "DF093": (UINT16, P2_P4, "GPS toe"),
-    "DF094": (INT16, P2_29, "GPS Cic"),
-    "DF095": (INT32, P2_31, "GPS Ω0"),  # see NOTICE 1 above
-    "DF096": (INT16, P2_29, "GPS Cis"),
-    "DF097": (INT32, P2_31, "GPS i0"),  # see NOTICE 1 above
-    "DF098": (INT16, P2_5, "GPS Crc"),
+    "DF091": (
+        INT16,
+        P2_29,
+        "GPS Cus (Amplitude of sine harmonic correction term to argument of latitude)",
+    ),
+    "DF092": (UINT32, P2_19, "GPS A½ (Square root of Semi-major Axis)"),
+    "DF093": (UINT16, P2_P4, "GPS toe (Reference Time, Ephemeris)"),
+    "DF094": (
+        INT16,
+        P2_29,
+        "GPS Cic (Amplitude of cosine harmonic correction term to angle of inclination)",
+    ),
+    "DF095": (
+        INT32,
+        P2_31,
+        "GPS Ω0 (Longitude of Ascending Node)",
+    ),  # see NOTICE 1 above
+    "DF096": (
+        INT16,
+        P2_29,
+        "GPS Cis (Amplitude of sine harmonic correction term to angle of inclination)",
+    ),
+    "DF097": (INT32, P2_31, "GPS i0 (Inclination)"),  # see NOTICE 1 above
+    "DF098": (
+        INT16,
+        P2_5,
+        "GPS Crc (Amplitude of cosine harmonic correction term to orbit radius)",
+    ),
     "DF099": (INT32, P2_31, "GPS ω (Argument of Perigee)"),  # see NOTICE 1 above
-    "DF100": (INT24, P2_43, "GPS ΩDOT (Rate of Right Ascension)"),  # see NOTICE 1 above
+    "DF100": (
+        INT24,
+        P2_43,
+        "GPS ΩDOT (Rate of Change of Right Ascension)",
+    ),  # see NOTICE 1 above
     "DF101": (INT8, P2_31, "GPS tGD"),
     "DF102": (UINT6, 1, "GPS SV HEALTH"),
     "DF103": (BIT1, 1, "GPS L2 P data flag"),
