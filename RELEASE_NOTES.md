@@ -1,5 +1,11 @@
 # pyrtcm Release Notes
 
+### RELEASE 1.0.17
+
+ENHANCEMENTS:
+
+1. Add proprietary IGS SSR 4076 messages, as defined in https://files.igs.org/pub/data/format/igs_ssr_v1.pdf. NB not fully tested as available NTRIP sources only cover a subset of the 4076 subtypes defined.
+
 ### RELEASE 1.0.16
 
 CHANGES:
