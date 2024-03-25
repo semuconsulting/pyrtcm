@@ -830,7 +830,7 @@ RTCM_MSGIDS = {
     "4072": "Mitsubishi Electric Corp",
     "4073": "Unicore Communications Inc",
     "4075": "Alberding GmbH",
-    "4076": "International GNSS Service (IGS)",
+    # "4076": "International GNSS Service (IGS)",
     "4076_021": "GPS SSR Orbit Correction",
     "4076_022": "GPS SSR Clock Correction",
     "4076_023": "GPS SSR Combined Orbit and Clock Correction",

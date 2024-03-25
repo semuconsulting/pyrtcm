@@ -2068,7 +2068,7 @@ RTCM_PAYLOADS_GET = {
         "IDF008": "SSR Provider ID",
         "IDF009": "SSR Solution ID",
         "IDF041": "VTEC Quality Indicator",
-        "IDF035": "Number of Ionospheric Layers",  # Nil - 1
+        "IDF035": "Number of Ionospheric Layers",  # Nᴵᴸ - 1
         "groupion": (
             "IDF035",
             {
