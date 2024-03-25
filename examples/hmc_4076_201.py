@@ -4,7 +4,7 @@ hmc_4076_201.py
 Produces multi-dimensional array of harmonic coefficients from
 binary NTRIP log containing 4076_201 message.
 
-Dimensions of hmc array are [layer][coefficent][value].
+Dimensions of hmc array are {layer:{coefficent:[values]}}.
 
 Usage:
 
@@ -22,7 +22,7 @@ COEFFS = {
 }
 
 
-def main(fname):
+def main(fname: str):
     """
     Main routine.
 
@@ -34,25 +34,23 @@ def main(fname):
         for _, parsed in rtr:
             if parsed.identity == "4076_201":
                 layers = parsed.IDF035 + 1  # number of ionospheric layers
-                hmc = []
+                hmc = {}
                 # for each ionospheric layer
                 for lyr in range(layers):
                     lyrheight = getattr(parsed, f"IDF036_{lyr+1:02d}")
-                    hmc.append(lyr)
-                    hmc[lyr] = []
+                    hmc[lyr] = {}
                     # for each coefficient (cosine & sine)
-                    for c, coeff in enumerate(COEFFS.values()):
-                        hmc[lyr].append(c)
-                        hmc[lyr][c] = []
+                    for field, coeff in COEFFS.values():
+                        hmc[lyr][coeff] = []
                         i = 0
                         eof = False
                         # for each coefficient value
                         while not eof:
                             try:
-                                hmc[lyr][c].append(
+                                hmc[lyr][coeff].append(
                                     getattr(
                                         parsed,
-                                        f"{coeff[0]}_{lyr+1:02d}_{i+1:02d}",
+                                        f"{field}_{lyr+1:02d}_{i+1:02d}",
                                     )
                                 )
                                 i += 1
@@ -60,11 +58,14 @@ def main(fname):
                                 eof = True
 
                         print(
-                            f"Layer {lyr+1} {lyrheight} km -",
-                            f"Harmonic Coefficients {coeff[1]} ({len(hmc[lyr][c])})",
+                            f"\nLayer {lyr+1} {lyrheight} km -",
+                            f"Harmonic Coefficients {coeff} ({len(hmc[lyr][coeff])}):",
                         )
-                        for i, hc in enumerate(hmc[lyr][c]):
-                            print(f"{i+1}: {hc}")
+                        for i, hc in enumerate(hmc[lyr][coeff]):
+                            print(f"{i+1:03d}: {hc}")
+
+        print("\nEntire contents of hmc array:")
+        print(hmc)
 
 
 if __name__ == "__main__":
