@@ -28,6 +28,8 @@ from pyrtcm.rtcmtypes_core import (
     ATT_NCELL,
     ATT_NSAT,
     NCELL,
+    NHARMCOEFFC,
+    NHARMCOEFFS,
     NSAT,
     NSIG,
     RTCM_DATA_FIELDS,
@@ -133,6 +135,8 @@ class RTCMMessage:
             if numr == "DF379":
                 numr += f"_{index[-1]:02d}"
             rng = getattr(self, numr)
+            if numr == "IDF035":  # 4076_201 range is n-1
+                rng += 1
 
         index.append(0)  # add a (nested) group index level
         # recursively process each group attribute,
@@ -200,6 +204,17 @@ class RTCMMessage:
                 setattr(self, NSIG, n)
             elif key == "DF396":  # num of cells in MSM message
                 setattr(self, NCELL, n)
+        # add special coefficient attributes for message 4076_201
+        if key == "IDF038":
+            i = index[0]
+            N = getattr(self, f"IDF037_{i:02d}") + 1
+            M = getattr(self, f"IDF038_{i:02d}") + 1
+            nc = int(((N + 1) * (N + 2) / 2) - ((N - M) * (N - M + 1) / 2))
+            ns = int(nc - (N + 1))
+            # ncs = (N + 1) * (N + 1) - (N - M) * (N - M + 1)
+            # print(f"DEBUG nc {nc} ns {ns} ncs {ncs} nc+ns {nc+ns}")
+            setattr(self, NHARMCOEFFC, nc)
+            setattr(self, NHARMCOEFFS, ns)
 
         return offset
 
@@ -338,7 +353,13 @@ class RTCMMessage:
         :rtype: str
         """
 
-        return str(self._payload[0] << 4 | self._payload[1] >> 4)
+        id = self._payload[0] << 4 | self._payload[1] >> 4
+
+        if id == 4076:  # proprietary IGS SSR message type
+            subtype = (self._payload[1] & 0x1) << 7 | self._payload[2] >> 1
+            id = f"{id}_{subtype:03d}"
+
+        return str(id)
 
     @property
     def payload(self) -> bytes:
