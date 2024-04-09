@@ -153,7 +153,7 @@ The `RTCMMessage` object exposes different public attributes depending on its me
 8
 ```
 
-Attributes within repeating groups are parsed with a two-digit suffix (`DF419_01`, `DF419_02`, etc.). Attributes within MSM NSAT and NCELL repeating groups can optionally be labelled with their corresponding satellite PRN and signal ID when the `__str__()` (`print()`) method is invoked, by setting the keyword argument `labelmsm` to True - e.g. `DF404_13(023,1C)` signifies that the 13th item in the DF404 ("fine Phase Range Rate") group refers to satellite PRN 023, signal ID 1C.
+Attributes within repeating groups are parsed with a two-digit suffix (`DF419_01`, `DF419_02`, etc. See [example below](#iterating) for an illustration of how to iterate through grouped attributes). Attributes within MSM NSAT and NCELL repeating groups can optionally be labelled with their corresponding satellite PRN and signal ID when the `__str__()` (`print()`) method is invoked, by setting the keyword argument `labelmsm` to True - e.g. `DF404_13(023,1C)` signifies that the 13th item in the DF404 ("fine Phase Range Rate") group refers to satellite PRN 023, signal ID 1C.
 
 Helper methods are available to interpret the individual datafields:
 
@@ -172,13 +172,22 @@ Helper methods are available to interpret the individual datafields:
 
 The `payload` attribute always contains the raw payload as bytes.
 
-**Tip:** To iterate through a repeating group of attributes (*e.g., DF406 (GNSS signal fine PhaseRange)*) as a list, the following construct can be used:
+#### <a name="iterating">Iterating Through Group Attributes</a>
 
+To iterate through a group of one or more repeating attributes in a given `RTCMMessage` object, the following construct can be used (in this illustration, repeating attributes DF405, DF406, DF407, DF408, DF420 and DF404 are extracted from an MSM 1077 message `msg` and collated in the array `msmarray`):
+
+```python
+  msmarray = []
+  for i in range(msg.NCell): # msg = MSM 1077, number of cells = NCell
+    vals = []
+    for attr in ("DF405", "DF406", "DF407", "DF408", "DF420", "DF404"):
+      val = getattr(msg, f"{attr}_{i+1:02d}")
+      vals.append(val)
+    msmarray.append(vals)
+    print(msmarray)
 ```
-df406group = [] # list of DF406 ((GNSS signal fine PhaseRange) values from repeating group in MSM 1077 message
-for i in range(msg.NCell):
-    df406 = getattr(msg, f"DF406_{i+1:02}")
-    df406group.append(df406)
+```shell
+[[0.00014309026300907135, 0.00014193402603268623, 341, 45.0, 0, -0.9231], [0.00014183297753334045, 0.00014339853078126907, 341, 38.0, 0, -0.9194], ... etc.]
 ```
 
 ---
