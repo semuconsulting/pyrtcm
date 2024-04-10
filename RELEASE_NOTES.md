@@ -1,5 +1,11 @@
 # pyrtcm Release Notes
 
+### RELEASE 1.0.18
+
+FIXES:
+
+1. Fix IGM05/06 message parsing (e.g. 4076_025, 4076_066, etc.).
+
 ### RELEASE 1.0.17
 
 ENHANCEMENTS:
