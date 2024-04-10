@@ -177,14 +177,14 @@ The `payload` attribute always contains the raw payload as bytes.
 To iterate through a group of one or more repeating attributes in a given `RTCMMessage` object, the following construct can be used (in this illustration, repeating attributes DF405, DF406, DF407, DF408, DF420 and DF404 are extracted from an MSM 1077 message `msg` and collated in the array `msmarray`):
 
 ```python
-  msmarray = []
-  for i in range(msg.NCell): # msg = MSM 1077, number of cells = NCell
-    vals = []
-    for attr in ("DF405", "DF406", "DF407", "DF408", "DF420", "DF404"):
-      val = getattr(msg, f"{attr}_{i+1:02d}")
-      vals.append(val)
-    msmarray.append(vals)
-    print(msmarray)
+msmarray = []
+for i in range(msg.NCell): # msg = MSM 1077, number of cells = NCell
+  vals = []
+  for attr in ("DF405", "DF406", "DF407", "DF408", "DF420", "DF404"):
+    val = getattr(msg, f"{attr}_{i+1:02d}")
+    vals.append(val)
+  msmarray.append(vals)
+print(msmarray)
 ```
 ```shell
 [[0.00014309026300907135, 0.00014193402603268623, 341, 45.0, 0, -0.9231], [0.00014183297753334045, 0.00014339853078126907, 341, 38.0, 0, -0.9194], ... etc.]
