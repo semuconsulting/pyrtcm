@@ -492,8 +492,8 @@ IGM05 = {
         {
             "IDF011": "GNSS Satellite ID",
             "IDF023": "No. of Biases Processed",
-            "groupbias": (
-                "IDF023",
+            "groupbias": (  # nested group
+                "IDF023+1",  # +1 signifies 1 nested group index must be added
                 {
                     "IDF024": "GNSS Signal and Tracking Mode Identifier",
                     "IDF025": "Code Bias",
@@ -522,8 +522,8 @@ IGM06 = {
             "IDF023": "No. of Biases Processed",
             "IDF026": "Yaw Angle",
             "IDF027": "Yaw Rate",
-            "groupbias": (
-                "IDF023",
+            "groupbias": (  # nested group
+                "IDF023+1",  # +1 signifies 1 nested group index must be added
                 {
                     "IDF024": "GNSS Signal and Tracking Mode Identifier",
                     "IDF029": "Signal Integer Indicator",
@@ -1423,7 +1423,7 @@ RTCM_PAYLOADS_GET = {
                 "DF068": "GPS Satellite ID",
                 "DF379": "No. of Code Biases Processed",
                 "groupbias": (  # nested group
-                    "DF379",
+                    "DF379+1",  # +1 signifies 1 nested group index must be added
                     {
                         "DF380": "GPS Signal and Tracking Mode Indicator",
                         "DF383": "Code Bias",
@@ -1551,7 +1551,7 @@ RTCM_PAYLOADS_GET = {
                 "DF384": "GLONASS Satellite ID",
                 "DF379": "No. of Code Biases Processed",
                 "groupbias": (  # nested group
-                    "DF379",
+                    "DF379+1",  # +1 signifies 1 nested group index must be added
                     {
                         "DF381": "GLONASS Signal and Tracking Mode Indicator",
                         "DF383": "Code Bias",

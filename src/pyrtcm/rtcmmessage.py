@@ -130,10 +130,12 @@ class RTCMMessage:
         if isinstance(numr, int):  # fixed number of repeats
             rng = numr
         else:  # number of repeats is defined in named attribute
-            # if attribute is within a group
-            # append group index to name e.g. "DF379_01", "IDF023_03"
-            if numr in ("DF379", "IDF023"):
-                numr += f"_{index[-1]:02d}"
+            # "+n" suffix signifies that one or more nested group indices
+            # must be appended to name e.g. "DF379_01", "IDF023_03"
+            if "+" in numr:
+                numr, nestlevel = numr.split("+")
+                for i in range(int(nestlevel)):
+                    numr += f"_{index[i]:02d}"
             rng = getattr(self, numr)
             if numr == "IDF035":  # 4076_201 range is n-1
                 rng += 1

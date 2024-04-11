@@ -1,5 +1,11 @@
 # pyrtcm Release Notes
 
+### RELEASE 1.0.19
+
+ENHANCEMENTS
+
+1. Internal streamlining of nested group parsing - no functional changes.
+
 ### RELEASE 1.0.18
 
 FIXES:
