@@ -4,7 +4,7 @@
 
 ENHANCEMENTS
 
-1. Internal streamlining of nested group parsing - no functional changes.
+1. Minor internal streamlining of nested group parsing - no functional changes.
 
 ### RELEASE 1.0.18
 
