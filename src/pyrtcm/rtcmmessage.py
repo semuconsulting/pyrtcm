@@ -24,9 +24,9 @@ from pyrtcm.rtcmhelpers import (
     sat2prn,
 )
 from pyrtcm.rtcmtypes_core import (
-    ATT_BOOL,
     ATT_NCELL,
     ATT_NSAT,
+    BOOL,
     NCELL,
     NHARMCOEFFC,
     NHARMCOEFFS,
@@ -36,6 +36,8 @@ from pyrtcm.rtcmtypes_core import (
     RTCM_HDR,
     RTCM_MSGIDS,
 )
+
+BOOL = "B"
 
 
 class RTCMMessage:
@@ -173,10 +175,14 @@ class RTCMMessage:
         # pylint: disable=no-member
 
         # if attribute is part of a (nested) repeating group, suffix name with index
-        # one index for each nested level (unless it's a 'boolean' group)
+        # one index for each nested level (unless it's a "BOOL" group)
+        if "+" in key:
+            key, marker = key.split("+")
+        else:
+            marker = ""
         keyr = key
         for i in index:
-            if i > 0 and keyr not in ATT_BOOL:
+            if i > 0 and marker != BOOL:  # BOOL signifies occurrence = 0 or 1
                 keyr += f"_{i:02d}"
 
         # get value of required number of bits at current payload offset

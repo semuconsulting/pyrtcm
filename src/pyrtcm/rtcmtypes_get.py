@@ -1991,27 +1991,27 @@ RTCM_PAYLOADS_GET = {
         "DF422_3": "GLONASS FDMA signals mask L2 C/A",
         "DF422_4": "GLONASS FDMA signals mask L2 P",
         "groupL1CA": (
-            "DF422_1",
+            "DF422_1",  # occurrence either 0 or 1
             {
-                "DF423": "GLONASS L1 C/A Code-Phase Bias",
+                "DF423+B": "GLONASS L1 C/A Code-Phase Bias",
             },
         ),
         "groupL1P": (
-            "DF422_2",
+            "DF422_2",  # occurrence either 0 or 1
             {
-                "DF424": "GLONASS L1 P Code-Phase Bias",
+                "DF424+B": "GLONASS L1 P Code-Phase Bias",
             },
         ),
         "groupL2CA": (
-            "DF422_3",
+            "DF422_3",  # occurrence either 0 or 1
             {
-                "DF425": "GLONASS L2 C/A Code-Phase Bias",
+                "DF425+B": "GLONASS L2 C/A Code-Phase Bias",
             },
         ),
         "groupL2P": (
-            "DF422_4",
+            "DF422_4",  # occurrence either 0 or 1
             {
-                "DF426": "GLONASS L2 P Code-Phase Bias",
+                "DF426+B": "GLONASS L2 P Code-Phase Bias",
             },
         ),
     },

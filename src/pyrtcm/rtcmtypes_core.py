@@ -10,7 +10,27 @@ Information sourced from RTCM STANDARD 10403.3 © 2016 RTCM
 
 # pylint: disable=line-too-long
 
-NMEA_HDR = [b"\x24\x47", b"\x24\x50"]
+NMEA_HDR = [
+    b"$V",
+    b"$M",
+    b"$P",
+    b"$B",
+    b"$D",
+    b"$I",
+    b"$L",
+    b"$G",
+    b"$F",
+    b"$S",
+    b"$H",
+    b"$R",
+    b"$E",
+    b"$Y",
+    b"$A",
+    b"$C",
+    b"$Z",
+    b"$T",
+    b"$W",
+]
 UBX_HDR = b"\xb5\x62"
 RTCM_HDR = b"\xd3"
 NMEA_PROTOCOL = 1
@@ -31,6 +51,7 @@ NCELL = "NCell"
 NRES = 16  # number of Residuals groups in MT1023 and MT1024
 NHARMCOEFFC = "_NHarmCoeffC"  # number of cosine harmonic coefficients in 4076
 NHARMCOEFFS = "_NHarmCoeffS"  # number of sine harmonic coefficients in 4076
+BOOL = "B"
 
 # Power of 2 scaling constants
 P2_P4 = 16  # 2**4
@@ -71,7 +92,7 @@ BIT10 = "BIT010"  # 10 bit bit field
 BIT12 = "BIT012"  # 12 bit bit field
 BIT32 = "BIT032"  # 32 bit bit field
 BIT64 = "BIT064"  # 64 bit bit field
-BITX = "BIT999"  # variable bit field TODO check against usage
+BITX = "BIT999"  # variable bit field
 CHAR8 = "CHA008"  # 8 bit characters, ISO 8859-1 (not limited to ASCII)
 INT6 = "INT006"  # 6 bit 2’s complement integer
 INT8 = "INT008"  # 8 bit 2’s complement integer
@@ -903,8 +924,6 @@ RTCM_MSGIDS = {
     "4095": "Ashtech",
 }
 
-# list of 'group' attributes which have an occurrence of 0 or 1
-ATT_BOOL = ("DF423", "DF424", "DF425", "DF426")
 # list of MSM attributes to label if `labelmsm` is True
 ATT_NSAT = ["DF397", "DF398", "DF399", "DF419", "ExtSatInfo"]
 ATT_NCELL = [
