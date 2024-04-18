@@ -5,15 +5,15 @@ Usage:
 
 python3 msmparser.py "../tests/pygpsdata-RTCM3.log"
 
+pyrtcm parses MSM messages into a flat data structure, with repeating
+element names suffixed by a 2-digit index (e.g. `DF405_02`) and
+(optionally) labelled with their corresponding satellite PRN and signal ID
+e.g. `DF405_02(005,2L)`. Note that indices start at 1, not 0.
+
 Each RTCM3 MSM message contains data for multiple satellites and cells
 (combination of satellite and signal). The mapping between each
 data item and its corresponding satellite PRN or signal ID can be performed
 by pyrtcm helper functions `sat2prn` and `cell2prn`.
-
-pyrtcm parses MSM messages into a flat data structure, with repeating
-element names suffixed by a 2-digit index (e.g. `DF405_02`) and
-(optionally) labelled with their corresponding satellite PRN and signal ID
-e.g. `DF405_02(005,2L)` 
 
 It is sometimes more convenient to parse the data into one or more
 iterable arrays, with each array element corresponding to a particular
@@ -37,17 +37,12 @@ Created on 18 Apr 2024
 
 from sys import argv
 
-from pyrtcm import (
-    ATT_NCELL,
-    ATT_NSAT,
-    RTCMMessage,
-    RTCMReader,
-    cell2prn,
-    sat2prn,
-)
+from pyrtcm import ATT_NCELL  # list of all sat attribute names
+from pyrtcm import ATT_NSAT  # list of all cell attribute names
+from pyrtcm import RTCMMessage, RTCMReader, cell2prn, sat2prn
 
-# map of GNSS name, epoch attribute name
-GNSS = {
+# map of msg identity to GNSS name, epoch attribute name
+GNSSMAP = {
     "107": ("GPS", "DF004"),
     "108": ("GLONASS", "DF034"),
     "109": ("GALILEO", "DF248"),
@@ -66,10 +61,10 @@ def process_msm(msg: RTCMMessage) -> tuple:
     :rtype: tuple
     """
 
-    satmap = sat2prn(msg)  # array of satellite PRN
-    cellmap = cell2prn(msg)  # array of cells (satellite PRN, signal ID)
+    satmap = sat2prn(msg)  # maps indices to satellite PRNs
+    cellmap = cell2prn(msg)  # maps indices to cells (satellite PRN, signal ID)
     meta = {}
-    gmap = GNSS[msg.identity[0:3]]
+    gmap = GNSSMAP[msg.identity[0:3]]
     meta["identity"] = msg.identity
     meta["gnss"] = gmap[0]
     meta["station"] = msg.DF003
@@ -77,20 +72,20 @@ def process_msm(msg: RTCMMessage) -> tuple:
     meta["sats"] = msg.NSat
     meta["cells"] = msg.NCell
     msmsats = []
-    for i in range(msg.NSat):  # iterate through satellites
+    for i in range(1, msg.NSat + 1):  # iterate through satellites
         sats = {}
-        sats["PRN"] = satmap[i + 1]
+        sats["PRN"] = satmap[i]
         for attr in ATT_NSAT:
-            if hasattr(msg, f"{attr}_{i+1:02d}"):
-                sats[attr] = getattr(msg, f"{attr}_{i+1:02d}")
+            if hasattr(msg, f"{attr}_{i:02d}"):
+                sats[attr] = getattr(msg, f"{attr}_{i:02d}")
         msmsats.append(sats)
     msmcells = []
-    for i in range(msg.NCell):  # iterate through satellite/signal cells
+    for i in range(1, msg.NCell + 1):  # iterate through cells (satellite/signal)
         cells = {}
-        cells["PRN"], cells["SIGNAL"] = cellmap[i + 1]
+        cells["PRN"], cells["SIGNAL"] = cellmap[i]
         for attr in ATT_NCELL:
-            if hasattr(msg, f"{attr}_{i+1:02d}"):
-                cells[attr] = getattr(msg, f"{attr}_{i+1:02d}")
+            if hasattr(msg, f"{attr}_{i:02d}"):
+                cells[attr] = getattr(msg, f"{attr}_{i:02d}")
         msmcells.append(cells)
 
     return (meta, msmsats, msmcells)
