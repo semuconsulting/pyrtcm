@@ -110,7 +110,8 @@ def main(fname: str):
                     # to then iterate through a specific data item,
                     # e.g. the satellite DF398 (rough range) value:
                     for sat in msmarray[1]:  # satellite data array
-                        print(f"PRN {sat["PRN"]}: {sat["DF398"]}")
+                        print(f'PRN {sat["PRN"]}: {sat["DF398"]}')
+
 
 if __name__ == "__main__":
 
