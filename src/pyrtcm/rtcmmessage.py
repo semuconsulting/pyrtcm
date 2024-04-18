@@ -275,14 +275,11 @@ class RTCMMessage:
 
         # if MSM message and labelmsm flag is set,
         # label NSAT and NCELL group attributes with
-        # corresponding satellite PRN and signal ID
-        is_msm = False
+        # corresponding satellite PRN and signal ID (RINEX code or freq band)
         if not self._unknown:
-            if self._labelmsm and "MSM" in RTCM_MSGIDS[self.identity]:
+            if self._labelmsm and self.ismsm:
                 sats = sat2prn(self)
-                sigcode = 0 if self._labelmsm == 2 else 1  # freq band or RINEX code
-                cells = cell2prn(self, sigcode)
-                is_msm = True
+                cells = cell2prn(self, 0 if self._labelmsm == 2 else 1)
 
         stg = f"<RTCM({self.identity}, "
         for i, att in enumerate(self.__dict__):
@@ -293,7 +290,7 @@ class RTCMMessage:
                     val = escapeall(val)
                 # label MSM NSAT and NCELL group attributes
                 lbl = ""
-                if is_msm:
+                if self._labelmsm and self.ismsm:
                     aname = att2name(att)
                     if aname in ATT_NSAT:
                         prn = sats[att2idx(att)]
@@ -380,3 +377,17 @@ class RTCMMessage:
         """
 
         return self._payload
+
+    @property
+    def ismsm(self) -> bool:
+        """
+        Check if message is Multiple Signal Message (MSM) type.
+
+        :return: True/False
+        :rtype: bool
+        """
+
+        try:
+            return "MSM" in RTCM_MSGIDS[self.identity]
+        except KeyError:
+            return False
