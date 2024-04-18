@@ -1,6 +1,10 @@
 """
 msmparser.py
 
+Usage:
+
+python3 msmparser.py "../tests/pygpsdata-RTCM3.log"
+
 Each RTCM3 MSM message contains data for multiple satellites and cells
 (combination of satellite and signal). The mapping between each
 data item and its corresponding satellite PRN or signal ID can be performed
@@ -31,6 +35,8 @@ Created on 18 Apr 2024
 :license: BSD 3-Clause
 """
 
+from sys import argv
+
 from pyrtcm import (
     ATT_NCELL,
     ATT_NSAT,
@@ -39,9 +45,6 @@ from pyrtcm import (
     cell2prn,
     sat2prn,
 )
-
-# binary log of RTCM3 messages e.g. from NTRIP caster or ZED-F9P receiver
-INFILE = "./tests/pygpsdata-RTCM3.log"
 
 # map of GNSS name, epoch attribute name
 GNSS = {
@@ -93,16 +96,27 @@ def process_msm(msg: RTCMMessage) -> tuple:
     return (meta, msmsats, msmcells)
 
 
-with open(INFILE, "rb") as stream:
-    rtr = RTCMReader(stream)
-    for raw, parsed in rtr:
-        if parsed is not None:
-            if parsed.ismsm:
-                # print(parsed)
-                msmarray = process_msm(parsed)
-                print(msmarray)
+def main(fname: str):
+    """
+    Main routine.
 
-                # to then iterate through a specific data item,
-                # e.g. the satellite DF398 (rough range) value:
-                for sat in msmarray[1]:  # satellite data array
-                    print(f"PRN {sat["PRN"]}: {sat["DF398"]}")
+    :param str fname: fully qualified path to input file
+    """
+
+    with open(fname, "rb") as stream:
+        rtr = RTCMReader(stream)
+        for _, parsed in rtr:
+            if parsed is not None:
+                if parsed.ismsm:
+                    # print(parsed)
+                    msmarray = process_msm(parsed)
+                    print(msmarray)
+
+                    # to then iterate through a specific data item,
+                    # e.g. the satellite DF398 (rough range) value:
+                    for sat in msmarray[1]:  # satellite data array
+                        print(f"PRN {sat["PRN"]}: {sat["DF398"]}")
+
+if __name__ == "__main__":
+
+    main(argv[1])
