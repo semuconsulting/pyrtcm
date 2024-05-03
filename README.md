@@ -35,7 +35,7 @@ This is an independent project and we have no affiliation whatsoever with the Ra
 ![Contributors](https://img.shields.io/github/contributors/semuconsulting/pyrtcm.svg)
 ![Open Issues](https://img.shields.io/github/issues-raw/semuconsulting/pyrtcm)
 
-Parses RTCM3 messages into their constituent data fields - `DF002`, `DF003`, etc. Refer to the `RTCM_MSGIDS` dictionary in [`rtcmtypes_core.py`](https://github.com/semuconsulting/pyrtcm/blob/main/src/pyrtcm/rtcmtypes_core.py) for a list of message types currently implemented. Additional message types can be readily added - see [Extensibility](#extensibility).
+Parses RTCM3 messages into their constituent data fields - `DF002`, `DF003`, etc. Refer to the `RTCM_MSGIDS` dictionary in [`rtcmtypes_core.py`](https://github.com/semuconsulting/pyrtcm/blob/main/src/pyrtcm/rtcmtypes_core.py#L695) for a list of message types currently implemented. Additional message types can be readily added - see [Extensibility](#extensibility).
 
 Sphinx API Documentation in HTML format is available at [https://www.semuconsulting.com/pyrtcm](https://www.semuconsulting.com/pyrtcm).
 
@@ -97,32 +97,35 @@ Individual RTCM messages can then be read using the `RTCMReader.read()` function
 
 Example -  Serial input:
 ```python
->>> from serial import Serial
->>> from pyrtcm import RTCMReader
->>> stream = Serial('/dev/tty.usbmodem14101', 9600, timeout=3)
->>> rtr = RTCMReader(stream)
->>> (raw_data, parsed_data) = rtr.read()
->>> print(parsed_data)
+from serial import Serial
+from pyrtcm import RTCMReader
+stream = Serial('/dev/tty.usbmodem14101', 9600, timeout=3)
+rtr = RTCMReader(stream)
+(raw_data, parsed_data) = rtr.read()
+print(parsed_data)
+```
+```
  <RTCM(1077, DF002=1077, DF003=0, GNSSEpoch=204137001, DF393=1, DF409=0, DF001_7=0, DF411=0, DF412=0, DF417=0, DF418=0, DF394=760738918298550272, NSat=10, DF395=1073807360, NSig=2, DF396=1044459, DF397_01(005)=75, DF397_02(007)=75, DF397_03(009)=81, ..., DF404_19(030,1C)=0.0, DF404_20(030,2L)=0.0)>,
 ```
 
 Example - File input (using iterator).
 ```python
->>> from pyrtcm import RTCMReader
->>> stream = open('rtcmdata.log', 'rb')
->>> rtr = RTCMReader(stream)
->>> for (raw_data, parsed_data) in rtr: print(parsed_data)
-...
+from pyrtcm import RTCMReader
+stream = open('rtcmdata.log', 'rb')
+rtr = RTCMReader(stream)
+for (raw_data, parsed_data) in rtr:
+  print(parsed_data)
 ```
 
 Example - Socket input (using iterator):
 ```python
->>> import socket
->>> from pyrtcm import RTCMReader
->>> stream = socket.socket(socket.AF_INET, socket.SOCK_STREAM):
->>> stream.connect(("localhost", 50007))
->>> rtr = RTCMReader(stream)
->>> for (raw_data, parsed_data) in rtr: print(parsed_data)
+import socket
+from pyrtcm import RTCMReader
+stream = socket.socket(socket.AF_INET, socket.SOCK_STREAM):
+stream.connect(("localhost", 50007))
+rtr = RTCMReader(stream)
+for (raw_data, parsed_data) in rtr:
+  print(parsed_data)
 ```
 
 ---
@@ -134,22 +137,26 @@ You can parse individual RTCM messages using the static `RTCMReader.parse(data)`
 
 Example:
 ```python
->>> from pyrtcm import RTCMReader
->>> msg = RTCMReader.parse(b"\xd3\x00\x13>\xd0\x00\x03\x8aX\xd9I<\x87/4\x10\x9d\x07\xd6\xafH Z\xd7\xf7")
->>> print(msg)
+from pyrtcm import RTCMReader
+msg = RTCMReader.parse(b"\xd3\x00\x13>\xd0\x00\x03\x8aX\xd9I<\x87/4\x10\x9d\x07\xd6\xafH Z\xd7\xf7")
+print(msg)
+```
+```
 <RTCM(1005, DF002=1005, DF003=0, DF021=0, DF022=1, DF023=1, DF024=1, DF141=0, DF025=4444030.8028, DF142=1, DF001_1=0, DF026=3085671.2349, DF364=0, DF027=3366658.256)>
 ```
 
 The `RTCMMessage` object exposes different public attributes depending on its message type or 'identity'. Attributes are defined as data fields (`DF002`, `DF003`, etc.) e.g. the `1087` multiple signal message (MSM) contains the following data fields:
 
 ```python
->>> print(msg)
+print(msg)
+print(msg.identity)
+print(msg.DF034)
+print(msg.DF419_03)
+```
+```
 <RTCM(1087, DF002=1087, DF003=0, DF416=2, DF034=42119001, DF393=1, DF409=0, DF001_7=0, DF411=0, DF412=0, DF417=0, DF418=0, DF394=4039168114821169152, NSat=7, DF395=1090519040, NSig=2, DF396=16382, NCell=13, DF397_01(003)=69, DF397_02(004)=64, DF397_03(005)=73, DF397_04(013)=76, DF397_05(014)=66, DF397_06(015)=70, DF397_07(023)=78, DF419_01(003)=12, DF419_02(004)=13, DF419_03(005)=8, DF419_04(013)=5, DF419_05(014)=0, DF419_06(015)=7, DF419_07(023)=10, DF398_01(003)=0.6337890625, DF398_02(004)=0.3427734375, DF398_03(005)=0.25390625, DF398_04(013)=0.310546875, DF398_05(014)=0.5126953125, DF398_06(015)=0.8271484375, DF398_07(023)=0.8837890625, DF399_01(003)=-665, DF399_02(004)=29, DF399_03(005)=672, DF399_04(013)=-573, DF399_05(014)=-211, DF399_06(015)=312, DF399_07(023)=317, DF405_01(003,1C)=0.00024936161935329437, ... , DF404_12(015,2C)=0.3947, DF404_13(023,1C)=0.6146)>
->>> msg.identity
 '1087'
->>> msg.DF034
 42119001
->>> msg.DF419_03
 8
 ```
 
@@ -158,15 +165,17 @@ Attributes within repeating groups are parsed with a two-digit suffix (`DF419_01
 Helper methods are available to interpret the individual datafields:
 
 ```python
->>> from pyrtcm import RTCM_DATA_FIELDS, datasiz, datascale, datadesc
->>> dfname = "DF012"
->>> RTCM_DATA_FIELDS[dfname]
+from pyrtcm import RTCM_DATA_FIELDS, datasiz, datascale, datadesc
+dfname = "DF012"
+print(RTCM_DATA_FIELDS[dfname])
+print(datasiz(dfname))
+print(datascale(dfname))
+print(datadesc(dfname))
+```
+```
 (INT20, 0.0001, "GPS L1 PhaseRange - L1 Pseudorange")
->>> datasiz(dfname) # size in bits
 20
->>> datascale(dfname) # scaling factor
 0.0001
->>> datadesc(dfname) # description
 'GPS L1 PhaseRange - L1 Pseudorange'
 ```
 
@@ -203,9 +212,11 @@ You can create an `RTCMMessage` object by calling the constructor with the follo
 Example:
 
 ```python
->>> from pyrtcm import RTCMMessage
->>> msg = RTCMMessage(payload=b">\xd0\x00\x03\x8aX\xd9I<\x87/4\x10\x9d\x07\xd6\xafH ")
->>> print(msg)
+from pyrtcm import RTCMMessage
+msg = RTCMMessage(payload=b">\xd0\x00\x03\x8aX\xd9I<\x87/4\x10\x9d\x07\xd6\xafH ")
+print(msg)
+```
+```
 <RTCM(1005, DF002=1005, DF003=0, DF021=0, DF022=1, DF023=1, DF024=1, DF141=0, DF025=4444030.8028, DF142=1, DF001_1=0, DF026=3085671.2349, DF364=0, DF027=3366658.256)>
 ```
 
@@ -217,16 +228,18 @@ The `RTCMMessage` class implements a `serialize()` method to convert a `RTCMMess
 e.g. to create and send a `1005` message type:
 
 ```python
->>> from serial import Serial
->>> serialOut = Serial('COM7', 38400, timeout=5)
->>> from pyrtcm import RTCMMessage
->>> msg = RTCMMessage(payload=b">\xd0\x00\x03\x8aX\xd9I<\x87/4\x10\x9d\x07\xd6\xafH ")
->>> print(msg)
+from serial import Serial
+from pyrtcm import RTCMMessage
+serialOut = Serial('COM7', 38400, timeout=5)
+msg = RTCMMessage(payload=b">\xd0\x00\x03\x8aX\xd9I<\x87/4\x10\x9d\x07\xd6\xafH ")
+print(msg)
+output = msg.serialize()
+print(output)
+serialOut.write(output)
+```
+```
 <RTCM(1005, DF002=1005, DF003=0, DF021=0, DF022=1, DF023=1, DF024=1, DF141=0, DF025=4444030.8028, DF142=1, DF001_1=0, DF026=3085671.2349, DF364=0, DF027=3366658.256)>
->>> output = msg.serialize()
->>> output
 b'\xd3\x00\x13>\xd0\x00\x03\x8aX\xd9I<\x87/4\x10\x9d\x07\xd6\xafH Z\xd7\xf7'
->>> serialOut.write(output)
 ```
 
 ---
@@ -236,8 +249,9 @@ The following examples are available in the /examples folder:
 
 1. `rtcmpoller.py` - illustrates how to read and display RTCM messages 'concurrently' with other tasks using threads and queues. This represents a useful generic pattern for many end user applications.
 1. `rtcmfile.py` - illustrates how to stream RTCM data from binary log file.
-1. `rtcmsocket.py` illustrates how to implement a TCP Socket reader for RTCM messages using RTCMReader iterator functionality.
-1. `ntripclient.py` - illustrates a simple [NTRIP](https://en.wikipedia.org/wiki/Networked_Transport_of_RTCM_via_Internet_Protocol) client using pyrtcm to parse the RTCM3 output.
+1. `rtcmsocket.py` - illustrates how to implement a TCP Socket reader for RTCM messages using RTCMReader iterator functionality.
+1. `msmparser.py` - illustrates how to parse RTCM3 MSM (multiple signal messages) into a series of iterable data arrays keyed on satellite PRN and signal ID.
+1. `rtcm_ntrip_client.py` - illustrates a simple [NTRIP](https://en.wikipedia.org/wiki/Networked_Transport_of_RTCM_via_Internet_Protocol) client using pyrtcm to parse the RTCM3 output.
 
 ---
 ## <a name="extensibility">Extensibility</a>

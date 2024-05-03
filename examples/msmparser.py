@@ -3,7 +3,8 @@ msmparser.py
 
 Usage:
 
-python3 msmparser.py "../tests/pygpsdata-RTCM3.log"
+python3 msmparser.py infile="../tests/pygpsdata-RTCM3.log"
+
 
 Each RTCM3 MSM message contains data for multiple satellites and cells
 (combination of satellite and signal). The mapping between each
@@ -91,14 +92,17 @@ def process_msm(msg: RTCMMessage) -> tuple:
     return (meta, msmsats, msmcells)
 
 
-def main(fname: str):
+def main(**kwargs):
+
     """
     Main routine.
 
     :param str fname: fully qualified path to input file
     """
 
-    with open(fname, "rb") as stream:
+    infile = kwargs.get("infile", "../tests/pygpsdata-RTCM3.log")
+    with open(infile, "rb") as stream:
+
         rtr = RTCMReader(stream)
         for _, parsed in rtr:
             if parsed is not None:
@@ -118,4 +122,4 @@ def main(fname: str):
 
 if __name__ == "__main__":
 
-    main(argv[1])
+    main(**dict(arg.split("=") for arg in argv[1:]))

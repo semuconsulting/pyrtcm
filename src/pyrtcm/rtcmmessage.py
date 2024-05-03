@@ -24,9 +24,9 @@ from pyrtcm.rtcmhelpers import (
     sat2prn,
 )
 from pyrtcm.rtcmtypes_core import (
-    ATT_BOOL,
     ATT_NCELL,
     ATT_NSAT,
+    BOOL,
     NCELL,
     NHARMCOEFFC,
     NHARMCOEFFS,
@@ -36,6 +36,8 @@ from pyrtcm.rtcmtypes_core import (
     RTCM_HDR,
     RTCM_MSGIDS,
 )
+
+BOOL = "B"
 
 
 class RTCMMessage:
@@ -130,10 +132,12 @@ class RTCMMessage:
         if isinstance(numr, int):  # fixed number of repeats
             rng = numr
         else:  # number of repeats is defined in named attribute
-            # if attribute is within a group
-            # append group index to name e.g. "DF379_01", "IDF023_03"
-            if numr in ("DF379", "IDF023"):
-                numr += f"_{index[-1]:02d}"
+            # "+n" suffix signifies that one or more nested group indices
+            # must be appended to name e.g. "DF379_01", "IDF023_03"
+            if "+" in numr:
+                numr, nestlevel = numr.split("+")
+                for i in range(int(nestlevel)):
+                    numr += f"_{index[i]:02d}"
             rng = getattr(self, numr)
             if numr == "IDF035":  # 4076_201 range is n-1
                 rng += 1
@@ -171,10 +175,14 @@ class RTCMMessage:
         # pylint: disable=no-member
 
         # if attribute is part of a (nested) repeating group, suffix name with index
-        # one index for each nested level (unless it's a 'boolean' group)
+        # one index for each nested level (unless it's a "BOOL" group)
+        if "+" in key:
+            key, marker = key.split("+")
+        else:
+            marker = ""
         keyr = key
         for i in index:
-            if i > 0 and keyr not in ATT_BOOL:
+            if i > 0 and marker != BOOL:  # BOOL signifies occurrence = 0 or 1
                 keyr += f"_{i:02d}"
 
         # get value of required number of bits at current payload offset
@@ -267,14 +275,11 @@ class RTCMMessage:
 
         # if MSM message and labelmsm flag is set,
         # label NSAT and NCELL group attributes with
-        # corresponding satellite PRN and signal ID
-        is_msm = False
+        # corresponding satellite PRN and signal ID (RINEX code or freq band)
         if not self._unknown:
-            if self._labelmsm and "MSM" in RTCM_MSGIDS[self.identity]:
+            if self._labelmsm and self.ismsm:
                 sats = sat2prn(self)
-                sigcode = 0 if self._labelmsm == 2 else 1  # freq band or RINEX code
-                cells = cell2prn(self, sigcode)
-                is_msm = True
+                cells = cell2prn(self, 0 if self._labelmsm == 2 else 1)
 
         stg = f"<RTCM({self.identity}, "
         for i, att in enumerate(self.__dict__):
@@ -285,7 +290,7 @@ class RTCMMessage:
                     val = escapeall(val)
                 # label MSM NSAT and NCELL group attributes
                 lbl = ""
-                if is_msm:
+                if self._labelmsm and self.ismsm:
                     aname = att2name(att)
                     if aname in ATT_NSAT:
                         prn = sats[att2idx(att)]
@@ -372,3 +377,17 @@ class RTCMMessage:
         """
 
         return self._payload
+
+    @property
+    def ismsm(self) -> bool:
+        """
+        Check if message is Multiple Signal Message (MSM) type.
+
+        :return: True/False
+        :rtype: bool
+        """
+
+        try:
+            return "MSM" in RTCM_MSGIDS[self.identity]
+        except KeyError:
+            return False

@@ -492,8 +492,8 @@ IGM05 = {
         {
             "IDF011": "GNSS Satellite ID",
             "IDF023": "No. of Biases Processed",
-            "groupbias": (
-                "IDF023",
+            "groupbias": (  # nested group
+                "IDF023+1",  # +1 signifies 1 nested group index must be added
                 {
                     "IDF024": "GNSS Signal and Tracking Mode Identifier",
                     "IDF025": "Code Bias",
@@ -522,8 +522,8 @@ IGM06 = {
             "IDF023": "No. of Biases Processed",
             "IDF026": "Yaw Angle",
             "IDF027": "Yaw Rate",
-            "groupbias": (
-                "IDF023",
+            "groupbias": (  # nested group
+                "IDF023+1",  # +1 signifies 1 nested group index must be added
                 {
                     "IDF024": "GNSS Signal and Tracking Mode Identifier",
                     "IDF029": "Signal Integer Indicator",
@@ -1423,7 +1423,7 @@ RTCM_PAYLOADS_GET = {
                 "DF068": "GPS Satellite ID",
                 "DF379": "No. of Code Biases Processed",
                 "groupbias": (  # nested group
-                    "DF379",
+                    "DF379+1",  # +1 signifies 1 nested group index must be added
                     {
                         "DF380": "GPS Signal and Tracking Mode Indicator",
                         "DF383": "Code Bias",
@@ -1551,7 +1551,7 @@ RTCM_PAYLOADS_GET = {
                 "DF384": "GLONASS Satellite ID",
                 "DF379": "No. of Code Biases Processed",
                 "groupbias": (  # nested group
-                    "DF379",
+                    "DF379+1",  # +1 signifies 1 nested group index must be added
                     {
                         "DF381": "GLONASS Signal and Tracking Mode Indicator",
                         "DF383": "Code Bias",
@@ -1991,27 +1991,27 @@ RTCM_PAYLOADS_GET = {
         "DF422_3": "GLONASS FDMA signals mask L2 C/A",
         "DF422_4": "GLONASS FDMA signals mask L2 P",
         "groupL1CA": (
-            "DF422_1",
+            "DF422_1",  # occurrence either 0 or 1
             {
-                "DF423": "GLONASS L1 C/A Code-Phase Bias",
+                "DF423+B": "GLONASS L1 C/A Code-Phase Bias",
             },
         ),
         "groupL1P": (
-            "DF422_2",
+            "DF422_2",  # occurrence either 0 or 1
             {
-                "DF424": "GLONASS L1 P Code-Phase Bias",
+                "DF424+B": "GLONASS L1 P Code-Phase Bias",
             },
         ),
         "groupL2CA": (
-            "DF422_3",
+            "DF422_3",  # occurrence either 0 or 1
             {
-                "DF425": "GLONASS L2 C/A Code-Phase Bias",
+                "DF425+B": "GLONASS L2 C/A Code-Phase Bias",
             },
         ),
         "groupL2P": (
-            "DF422_4",
+            "DF422_4",  # occurrence either 0 or 1
             {
-                "DF426": "GLONASS L2 P Code-Phase Bias",
+                "DF426+B": "GLONASS L2 P Code-Phase Bias",
             },
         ),
     },

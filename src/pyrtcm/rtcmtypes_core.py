@@ -10,7 +10,27 @@ Information sourced from RTCM STANDARD 10403.3 © 2016 RTCM
 
 # pylint: disable=line-too-long
 
-NMEA_HDR = [b"\x24\x47", b"\x24\x50"]
+NMEA_HDR = [
+    b"$V",
+    b"$M",
+    b"$P",
+    b"$B",
+    b"$D",
+    b"$I",
+    b"$L",
+    b"$G",
+    b"$F",
+    b"$S",
+    b"$H",
+    b"$R",
+    b"$E",
+    b"$Y",
+    b"$A",
+    b"$C",
+    b"$Z",
+    b"$T",
+    b"$W",
+]
 UBX_HDR = b"\xb5\x62"
 RTCM_HDR = b"\xd3"
 NMEA_PROTOCOL = 1
@@ -31,6 +51,7 @@ NCELL = "NCell"
 NRES = 16  # number of Residuals groups in MT1023 and MT1024
 NHARMCOEFFC = "_NHarmCoeffC"  # number of cosine harmonic coefficients in 4076
 NHARMCOEFFS = "_NHarmCoeffS"  # number of sine harmonic coefficients in 4076
+BOOL = "B"
 
 # Power of 2 scaling constants
 P2_P4 = 16  # 2**4
@@ -71,7 +92,7 @@ BIT10 = "BIT010"  # 10 bit bit field
 BIT12 = "BIT012"  # 12 bit bit field
 BIT32 = "BIT032"  # 32 bit bit field
 BIT64 = "BIT064"  # 64 bit bit field
-BITX = "BIT999"  # variable bit field TODO check against usage
+BITX = "BIT999"  # variable bit field
 CHAR8 = "CHA008"  # 8 bit characters, ISO 8859-1 (not limited to ASCII)
 INT6 = "INT006"  # 6 bit 2’s complement integer
 INT8 = "INT008"  # 8 bit 2’s complement integer
@@ -824,12 +845,13 @@ RTCM_MSGIDS = {
     "1230": "GLONASS L1 and L2 Code-Phase Biases",
     # "1240-1263": "SSR Messages"
     #
-    # Proprietary messages have not yet been implemented
+    # NB: Only those proprietary messages with public
+    # domain definitions have been implemented.
     #
     # "4001-4095":"Proprietary Messages",
-    "4072": "Mitsubishi Electric Corp",
-    "4073": "Unicore Communications Inc",
-    "4075": "Alberding GmbH",
+    # "4072": "Mitsubishi Electric Corp",
+    # "4073": "Unicore Communications Inc",
+    # "4075": "Alberding GmbH",
     # "4076": "International GNSS Service (IGS)",
     "4076_021": "GPS SSR Orbit Correction",
     "4076_022": "GPS SSR Clock Correction",
@@ -882,29 +904,27 @@ RTCM_MSGIDS = {
     # "4076_141-160": "Reserved for NavIC/IRNSS",
     # "4076_161-200": "Reserved",
     "4076_201": "GNSS SSR Ionosphere VTEC Spherical Harmonics",
-    "4077": "Hemisphere GNSS Inc.",
-    "4078": "ComNav Technology Ltd.",
-    "4079": "SubCarrier Systems Corp. (SCSC) The makers of SNIP",
-    "4080": "NavCom Technology, Inc.",
-    "4081": "Seoul National University GNSS Lab",
-    "4082": "Cooperative Research Centre for Spatial Information",
-    "4083": "German Aerospace Center, Institute of Communications and Navigation (DLR)",
-    "4084": "Geodetics, Inc.",
-    "4085": "European GNSS Supervisory Authority",
-    "4086": "inPosition GmbH",
-    "4087": "Fugro",
-    "4088": "IfEN GmbH",
-    "4089": "Septentrio Satellite Navigation",
-    "4090": "Geo++",
-    "4091": "Topcon Positioning Systems",
-    "4092": "Leica Geosystems",
-    "4093": "NovAtel Inc.",
-    "4094": "Trimble Navigation Ltd.",
-    "4095": "Ashtech",
+    # "4077": "Hemisphere GNSS Inc.",
+    # "4078": "ComNav Technology Ltd.",
+    # "4079": "SubCarrier Systems Corp. (SCSC) The makers of SNIP",
+    # "4080": "NavCom Technology, Inc.",
+    # "4081": "Seoul National University GNSS Lab",
+    # "4082": "Cooperative Research Centre for Spatial Information",
+    # "4083": "German Aerospace Center, Institute of Communications and Navigation (DLR)",
+    # "4084": "Geodetics, Inc.",
+    # "4085": "European GNSS Supervisory Authority",
+    # "4086": "inPosition GmbH",
+    # "4087": "Fugro",
+    # "4088": "IfEN GmbH",
+    # "4089": "Septentrio Satellite Navigation",
+    # "4090": "Geo++",
+    # "4091": "Topcon Positioning Systems",
+    # "4092": "Leica Geosystems",
+    # "4093": "NovAtel Inc.",
+    # "4094": "Trimble Navigation Ltd.",
+    # "4095": "Ashtech",
 }
 
-# list of 'group' attributes which have an occurrence of 0 or 1
-ATT_BOOL = ("DF423", "DF424", "DF425", "DF426")
 # list of MSM attributes to label if `labelmsm` is True
 ATT_NSAT = ["DF397", "DF398", "DF399", "DF419", "ExtSatInfo"]
 ATT_NCELL = [
