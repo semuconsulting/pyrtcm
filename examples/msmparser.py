@@ -5,15 +5,15 @@ Usage:
 
 python3 msmparser.py "../tests/pygpsdata-RTCM3.log"
 
-pyrtcm parses MSM messages into a flat data structure, with repeating
-element names suffixed by a 2-digit index (e.g. `DF405_02`) and
-(optionally) labelled with their corresponding satellite PRN and signal ID
-e.g. `DF405_02(005,2L)`. Note that indices start at 1, not 0.
-
 Each RTCM3 MSM message contains data for multiple satellites and cells
 (combination of satellite and signal). The mapping between each
 data item and its corresponding satellite PRN or signal ID can be performed
 by pyrtcm helper functions `sat2prn` and `cell2prn`.
+
+pyrtcm parses MSM messages into a flat data structure, with repeating
+element names suffixed by a 2-digit index (e.g. `DF405_02`) and
+(optionally) labelled with their corresponding satellite PRN and signal ID
+e.g. `DF405_02(005,2L)`. Note that indices start at 1, not 0.
 
 It is sometimes more convenient to parse the data into one or more
 iterable arrays, with each array element corresponding to a particular
@@ -39,7 +39,7 @@ from sys import argv
 
 from pyrtcm import ATT_NCELL  # list of all sat attribute names
 from pyrtcm import ATT_NSAT  # list of all cell attribute names
-from pyrtcm import RTCMMessage, RTCMReader, cell2prn, sat2prn
+from pyrtcm import RTCM_MSGIDS, RTCMMessage, RTCMReader, cell2prn, sat2prn
 
 # map of msg identity to GNSS name, epoch attribute name
 GNSSMAP = {
@@ -102,15 +102,18 @@ def main(fname: str):
         rtr = RTCMReader(stream)
         for _, parsed in rtr:
             if parsed is not None:
-                if parsed.ismsm:
-                    # print(parsed)
-                    msmarray = process_msm(parsed)
-                    print(msmarray)
+                try:
+                    if "MSM" in RTCM_MSGIDS[parsed.identity]:
+                        # print(parsed)
+                        msmarray = process_msm(parsed)
+                        print(msmarray)
 
-                    # to then iterate through a specific data item,
-                    # e.g. the satellite DF398 (rough range) value:
-                    for sat in msmarray[1]:  # satellite data array
-                        print(f'PRN {sat["PRN"]}: {sat["DF398"]}')
+                        # to then iterate through a specific data item,
+                        # e.g. the satellite DF398 (rough range) value:
+                        for sat in msmarray[1]:  # satellite data array
+                            print(f'PRN {sat["PRN"]}: {sat["DF398"]}')
+                except KeyError:
+                    pass  # unimplemented message type
 
 
 if __name__ == "__main__":
