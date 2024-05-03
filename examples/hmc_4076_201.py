@@ -8,7 +8,7 @@ Dimensions of hmc array are {layer:{coefficent:[values]}}.
 
 Usage:
 
-python3 hmc_4076_201.py "inputfile"
+python3 hmc_4076_201.py infile="../tests/pygpsdata-NTRIP-4076.log"
 
 """
 
@@ -61,14 +61,16 @@ def process_message(parsed: RTCMMessage):
     print(hmc)
 
 
-def main(fname: str):
+def main(**kwargs):
     """
     Main routine.
 
     :param str fname: fully qualified path to input file
     """
 
-    with open(fname, "rb") as infile:
+    infile = kwargs.get("infile", "../tests/pygpsdata-NTRIP-4076.log")
+
+    with open(infile, "rb") as infile:
         rtr = RTCMReader(infile)
         for _, parsed in rtr:
             if parsed.identity == "4076_201":
@@ -77,4 +79,4 @@ def main(fname: str):
 
 if __name__ == "__main__":
 
-    main(argv[1])
+    main(**dict(arg.split("=") for arg in argv[1:]))
