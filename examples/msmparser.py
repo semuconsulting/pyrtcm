@@ -5,6 +5,7 @@ Usage:
 
 python3 msmparser.py infile="../tests/pygpsdata-RTCM3.log"
 
+
 Each RTCM3 MSM message contains data for multiple satellites and cells
 (combination of satellite and signal). The mapping between each
 data item and its corresponding satellite PRN or signal ID can be performed
@@ -92,6 +93,7 @@ def process_msm(msg: RTCMMessage) -> tuple:
 
 
 def main(**kwargs):
+
     """
     Main routine.
 
@@ -100,6 +102,7 @@ def main(**kwargs):
 
     infile = kwargs.get("infile", "../tests/pygpsdata-RTCM3.log")
     with open(infile, "rb") as stream:
+
         rtr = RTCMReader(stream)
         for _, parsed in rtr:
             if parsed is not None:
