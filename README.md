@@ -251,7 +251,7 @@ The following examples are available in the /examples folder:
 1. `rtcmfile.py` - illustrates how to stream RTCM data from binary log file.
 1. `rtcmsocket.py` - illustrates how to implement a TCP Socket reader for RTCM messages using RTCMReader iterator functionality.
 1. `msmparser.py` - illustrates how to parse RTCM3 MSM (multiple signal messages) into a series of iterable data arrays keyed on satellite PRN and signal ID.
-1. `ntripclient.py` - illustrates a simple [NTRIP](https://en.wikipedia.org/wiki/Networked_Transport_of_RTCM_via_Internet_Protocol) client using pyrtcm to parse the RTCM3 output.
+1. `rtcm_ntrip_client.py` - illustrates a simple [NTRIP](https://en.wikipedia.org/wiki/Networked_Transport_of_RTCM_via_Internet_Protocol) client using pyrtcm to parse the RTCM3 output.
 
 ---
 ## <a name="extensibility">Extensibility</a>
