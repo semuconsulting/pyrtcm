@@ -412,10 +412,9 @@ def parse_4076_201(msg: object):
     if msg.identity != "4076_201":
         return None
 
-    layers = msg.IDF035 + 1  # number of ionospheric layers
     hmc = {}
     # for each ionospheric layer
-    for lyr in range(layers):
+    for lyr in range(msg.IDF035 + 1):  # number of ionospheric layers
         hmc[lyr] = {}
         hmc[lyr]["Layer Height"] = getattr(msg, f"IDF036_{lyr+1:02d}")
         # for each coefficient (cosine & sine)
