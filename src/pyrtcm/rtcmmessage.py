@@ -26,7 +26,6 @@ from pyrtcm.rtcmhelpers import (
 from pyrtcm.rtcmtypes_core import (
     ATT_NCELL,
     ATT_NSAT,
-    BOOL,
     NCELL,
     NHARMCOEFFC,
     NHARMCOEFFS,
@@ -48,7 +47,7 @@ class RTCMMessage:
 
         :param bytes payload: message payload (mandatory)
         :param bool scaling: whether to apply attribute scaling True/False (True)
-        :param int labelmsm: whether to label MSM NSAT and NCELL attributes (0 = none, 1 = RINEX, 2 = freq)
+        :param int labelmsm: MSM NSAT and NCELL attribute label (0 = none, 1 = RINEX, 2 = freq)
         :raises: RTCMMessageError
         """
         # pylint: disable=unused-argument
@@ -96,7 +95,7 @@ class RTCMMessage:
 
     def _set_attribute(self, offset: int, pdict: dict, key: str, index: list) -> tuple:
         """
-        Recursive routine to set individual or grouped payload attributes.
+        Recursive routine to set individual, conditional or grouped payload attributes.
 
         :param int offset: payload offset in bits
         :param dict pdict: dict representing payload definition
@@ -108,10 +107,42 @@ class RTCMMessage:
         """
 
         att = pdict[key]  # get attribute type
-        if isinstance(att, tuple):  # repeating group of attributes
-            (offset, index) = self._set_attribute_group(att, offset, index)
+        if isinstance(att, tuple):  # attribute group
+            siz, _ = att
+            if isinstance(siz, tuple):  # conditional group of attributes
+                (offset, index) = self._set_attribute_optional(att, offset, index)
+            else:  # repeating group of attributes
+                (offset, index) = self._set_attribute_group(att, offset, index)
         else:  # single attribute
             offset = self._set_attribute_single(att, offset, key, index)
+
+        return (offset, index)
+
+    def _set_attribute_optional(self, attg: tuple, offset: int, index: list) -> tuple:
+        """
+        Process conditional group of attributes - group is present if attribute value
+        = specific value, otherwise absent.
+
+        :param tuple attg: attribute group - tuple of ((attribute name, condition), group dict)
+        :param int offset: payload offset in bits
+        :param list index: repeating group index array
+        :return: (offset, index[])
+        :rtype: tuple
+        """
+
+        (numr, con), gdict = attg  # (attribute, condition), group dictionary
+        # "+n" suffix signifies that one or more nested group indices
+        # must be appended to name e.g. "DF379_01", "IDF023_03"
+        # if "+" in numr:
+        #     numr, nestlevel = numr.split("+")
+        #     for i in range(int(nestlevel)):
+        #         numr += f"_{index[i]:02d}"
+
+        # recursively process each group attribute,
+        # incrementing the payload offset as we go
+        if getattr(self, numr) == con:
+            for key1 in gdict:
+                (offset, index) = self._set_attribute(offset, gdict, key1, index)
 
         return (offset, index)
 
@@ -175,14 +206,9 @@ class RTCMMessage:
         # pylint: disable=no-member
 
         # if attribute is part of a (nested) repeating group, suffix name with index
-        # one index for each nested level (unless it's a "BOOL" group)
-        if "+" in key:
-            key, marker = key.split("+")
-        else:
-            marker = ""
         keyr = key
-        for i in index:
-            if i > 0 and marker != BOOL:  # BOOL signifies occurrence = 0 or 1
+        for i in index:  # one index for each nested level
+            if i > 0:
                 keyr += f"_{i:02d}"
 
         # get value of required number of bits at current payload offset
@@ -358,13 +384,13 @@ class RTCMMessage:
         :rtype: str
         """
 
-        id = self._payload[0] << 4 | self._payload[1] >> 4
+        mid = self._payload[0] << 4 | self._payload[1] >> 4
 
-        if id == 4076:  # proprietary IGS SSR message type
+        if mid == 4076:  # proprietary IGS SSR message type
             subtype = (self._payload[1] & 0x1) << 7 | self._payload[2] >> 1
-            id = f"{id}_{subtype:03d}"
+            mid = f"{mid}_{subtype:03d}"
 
-        return str(id)
+        return str(mid)
 
     @property
     def payload(self) -> bytes:

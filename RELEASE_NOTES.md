@@ -1,5 +1,11 @@
 # pyrtcm Release Notes
 
+### RELEASE 1.0.20
+
+ENHANCEMENTS
+
+1. Internal streamlining of conditional group parsing & updated docstrings - no functional changes.
+
 ### RELEASE 1.0.19
 
 ENHANCEMENTS
