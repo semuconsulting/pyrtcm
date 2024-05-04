@@ -199,6 +199,10 @@ print(msmarray)
 [[0.00014309026300907135, 0.00014193402603268623, 341, 45.0, 0, -0.9231], [0.00014183297753334045, 0.00014339853078126907, 341, 38.0, 0, -0.9194], ... etc.]
 ```
 
+The following dedicated helper methods are available to parse selected RTCM3 message types into a series of iterable data arrays:
+- `parse_msm` - for MSM message types (e.g. 1077, 1125, etc.).
+- `parse_4076_201` - for 4076_201 SSR (harmonic coefficients) message types.
+
 ---
 ## <a name="generating">Generating</a>
 

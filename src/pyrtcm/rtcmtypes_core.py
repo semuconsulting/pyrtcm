@@ -940,3 +940,20 @@ ATT_NCELL = [
     "DF408",
     "DF420",
 ]
+
+# map of MSM msg identity to GNSS name, epoch attribute name
+GNSSMAP = {
+    "107": ("GPS", "DF004"),
+    "108": ("GLONASS", "DF034"),
+    "109": ("GALILEO", "DF248"),
+    "110": ("SBAS", "DF004"),
+    "111": ("QZSS", "DF428"),
+    "112": ("BEIDOU", "DF427"),
+    "113": ("NAVIC", "DF546"),
+}
+
+# map of 4076_201 coefficients
+COEFFS = {
+    0: ("IDF039", "Cosine Coefficients"),
+    1: ("IDF040", "Sine Coefficients"),
+}
