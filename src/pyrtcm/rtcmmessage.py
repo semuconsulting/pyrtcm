@@ -103,31 +103,31 @@ class RTCMMessage:
 
         """
 
-        atyp = pdict[anam]  # get attribute type
-        if isinstance(atyp, tuple):  # attribute group
-            asiz, _ = atyp
-            if isinstance(asiz, tuple):  # conditional group of attributes
-                (offset, index) = self._set_attribute_optional(atyp, offset, index)
+        adef = pdict[anam]  # get attribute definition
+        if isinstance(adef, tuple):  # attribute group
+            gtyp, _ = adef
+            if isinstance(gtyp, tuple):  # conditional group of attributes
+                (offset, index) = self._set_attribute_optional(adef, offset, index)
             else:  # repeating group of attributes
-                (offset, index) = self._set_attribute_group(atyp, offset, index)
+                (offset, index) = self._set_attribute_group(adef, offset, index)
         else:  # single attribute
             offset = self._set_attribute_single(anam, offset, index)
 
         return (offset, index)
 
-    def _set_attribute_optional(self, atyp: tuple, offset: int, index: list) -> tuple:
+    def _set_attribute_optional(self, adef: tuple, offset: int, index: list) -> tuple:
         """
         Process conditional group of attributes - group is present if attribute value
         = specific value, otherwise absent.
 
-        :param tuple atyp: attribute type - tuple of ((attribute name, condition), group dict)
+        :param tuple adef: attribute definition - tuple of ((attribute name, condition), group dict)
         :param int offset: payload offset in bits
         :param list index: repeating group index array
         :return: (offset, index[])
         :rtype: tuple
         """
 
-        (anam, con), gdict = atyp  # (attribute, condition), group dictionary
+        (anam, con), gdict = adef  # (attribute name, condition), group dictionary
         # "+n" suffix signifies that one or more nested group indices
         # must be appended to name e.g. "DF379_01", "IDF023_03"
         # if "+" in anam:
@@ -143,11 +143,11 @@ class RTCMMessage:
 
         return (offset, index)
 
-    def _set_attribute_group(self, atyp: tuple, offset: int, index: list) -> tuple:
+    def _set_attribute_group(self, adef: tuple, offset: int, index: list) -> tuple:
         """
         Process (nested) group of attributes.
 
-        :param tuple atyp: attribute group - tuple of (attr name, attribute dict)
+        :param tuple adef: attribute definition - tuple of (attr name, attribute dict)
         :param int offset: payload offset in bits
         :param list index: repeating group index array
         :return: (offset, index[])
@@ -155,7 +155,7 @@ class RTCMMessage:
 
         """
 
-        anam, gdict = atyp  # attribute name, attribute dictionary
+        anam, gdict = adef  # attribute signifying group size, group dictionary
         # derive or retrieve number of items in group
         if isinstance(anam, int):  # fixed number of repeats
             gsiz = anam
