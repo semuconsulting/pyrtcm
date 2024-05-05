@@ -277,7 +277,6 @@ class RTCMReader:
         :rtype: RTCMMessage
         :raises: RTCMParseError (if data stream contains invalid data or unknown message type)
         """
-        # pylint: disable=unused-argument
 
         if validate & rtt.VALCKSUM:
             if calc_crc24q(message):

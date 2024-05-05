@@ -8,8 +8,6 @@ Created on 14 Feb 2022
 :license: BSD 3-Clause
 """
 
-# pylint: disable=invalid-name
-
 import pyrtcm.exceptions as rte
 import pyrtcm.rtcmtypes_get as rtg
 from pyrtcm.rtcmhelpers import (
@@ -50,7 +48,6 @@ class RTCMMessage:
         :param int labelmsm: MSM NSAT and NCELL attribute label (0 = none, 1 = RINEX, 2 = freq)
         :raises: RTCMMessageError
         """
-        # pylint: disable=unused-argument
 
         # object is mutable during initialisation only
         super().__setattr__("_immutable", False)
@@ -82,75 +79,75 @@ class RTCMMessage:
             if pdict is None:  # unknown (or not yet implemented) message identity
                 self._do_unknown()
                 return
-            for key in pdict:  # process each attribute in dict
-                (offset, index) = self._set_attribute(offset, pdict, key, index)
+            for anam in pdict:  # process each attribute in dict
+                (offset, index) = self._set_attribute(anam, pdict, offset, index)
 
         except Exception as err:
             raise rte.RTCMTypeError(
                 (
-                    f"Error processing attribute '{key}' "
+                    f"Error processing attribute '{anam}' "
                     f"in message type {self.identity} {err}"
                 )
             ) from err
 
-    def _set_attribute(self, offset: int, pdict: dict, key: str, index: list) -> tuple:
+    def _set_attribute(self, anam: str, pdict: dict, offset: int, index: list) -> tuple:
         """
         Recursive routine to set individual, conditional or grouped payload attributes.
 
-        :param int offset: payload offset in bits
+        :param str anam: attribute name
         :param dict pdict: dict representing payload definition
-        :param str key: attribute keyword
+        :param int offset: payload offset in bits
         :param list index: repeating group index array
         :return: (offset, index[])
         :rtype: tuple
 
         """
 
-        att = pdict[key]  # get attribute type
-        if isinstance(att, tuple):  # attribute group
-            siz, _ = att
-            if isinstance(siz, tuple):  # conditional group of attributes
-                (offset, index) = self._set_attribute_optional(att, offset, index)
+        atyp = pdict[anam]  # get attribute type
+        if isinstance(atyp, tuple):  # attribute group
+            asiz, _ = atyp
+            if isinstance(asiz, tuple):  # conditional group of attributes
+                (offset, index) = self._set_attribute_optional(atyp, offset, index)
             else:  # repeating group of attributes
-                (offset, index) = self._set_attribute_group(att, offset, index)
+                (offset, index) = self._set_attribute_group(atyp, offset, index)
         else:  # single attribute
-            offset = self._set_attribute_single(att, offset, key, index)
+            offset = self._set_attribute_single(anam, offset, index)
 
         return (offset, index)
 
-    def _set_attribute_optional(self, attg: tuple, offset: int, index: list) -> tuple:
+    def _set_attribute_optional(self, atyp: tuple, offset: int, index: list) -> tuple:
         """
         Process conditional group of attributes - group is present if attribute value
         = specific value, otherwise absent.
 
-        :param tuple attg: attribute group - tuple of ((attribute name, condition), group dict)
+        :param tuple atyp: attribute type - tuple of ((attribute name, condition), group dict)
         :param int offset: payload offset in bits
         :param list index: repeating group index array
         :return: (offset, index[])
         :rtype: tuple
         """
 
-        (numr, con), gdict = attg  # (attribute, condition), group dictionary
+        (anam, con), gdict = atyp  # (attribute, condition), group dictionary
         # "+n" suffix signifies that one or more nested group indices
         # must be appended to name e.g. "DF379_01", "IDF023_03"
-        # if "+" in numr:
-        #     numr, nestlevel = numr.split("+")
+        # if "+" in anam:
+        #     anam, nestlevel = anam.split("+")
         #     for i in range(int(nestlevel)):
-        #         numr += f"_{index[i]:02d}"
+        #        anam += f"_{index[i]:02d}"
 
-        # recursively process each group attribute,
-        # incrementing the payload offset as we go
-        if getattr(self, numr) == con:
-            for key1 in gdict:
-                (offset, index) = self._set_attribute(offset, gdict, key1, index)
+        if getattr(self, anam) == con:  # if condition is met...
+            # recursively process each group attribute,
+            # incrementing the payload offset as we go
+            for anamg in gdict:
+                (offset, index) = self._set_attribute(anamg, gdict, offset, index)
 
         return (offset, index)
 
-    def _set_attribute_group(self, att: tuple, offset: int, index: list) -> tuple:
+    def _set_attribute_group(self, atyp: tuple, offset: int, index: list) -> tuple:
         """
         Process (nested) group of attributes.
 
-        :param tuple att: attribute group - tuple of (num repeats, attribute dict)
+        :param tuple atyp: attribute group - tuple of (attr name, attribute dict)
         :param int offset: payload offset in bits
         :param list index: repeating group index array
         :return: (offset, index[])
@@ -158,28 +155,28 @@ class RTCMMessage:
 
         """
 
-        numr, attd = att  # number of repeats, attribute dictionary
+        anam, gdict = atyp  # attribute name, attribute dictionary
         # derive or retrieve number of items in group
-        if isinstance(numr, int):  # fixed number of repeats
-            rng = numr
+        if isinstance(anam, int):  # fixed number of repeats
+            gsiz = anam
         else:  # number of repeats is defined in named attribute
             # "+n" suffix signifies that one or more nested group indices
             # must be appended to name e.g. "DF379_01", "IDF023_03"
-            if "+" in numr:
-                numr, nestlevel = numr.split("+")
+            if "+" in anam:
+                anam, nestlevel = anam.split("+")
                 for i in range(int(nestlevel)):
-                    numr += f"_{index[i]:02d}"
-            rng = getattr(self, numr)
-            if numr == "IDF035":  # 4076_201 range is n-1
-                rng += 1
+                    anam += f"_{index[i]:02d}"
+            gsiz = getattr(self, anam)
+            if anam == "IDF035":  # 4076_201 range is N-1
+                gsiz += 1
 
         index.append(0)  # add a (nested) group index level
         # recursively process each group attribute,
         # incrementing the payload offset and index as we go
-        for i in range(rng):
+        for i in range(gsiz):
             index[-1] = i + 1
-            for key1 in attd:
-                (offset, index) = self._set_attribute(offset, attd, key1, index)
+            for anamg in gdict:
+                (offset, index) = self._set_attribute(anamg, gdict, offset, index)
 
         index.pop()  # remove this (nested) group index
 
@@ -187,59 +184,58 @@ class RTCMMessage:
 
     def _set_attribute_single(
         self,
-        att: object,
+        anam: str,
         offset: int,
-        key: str,
         index: list,
     ) -> int:
         """
         Set individual attribute value, applying scaling where appropriate.
 
-        :param str att: attribute type string e.g. 'INT008'
+        :param str anam: attribute name
         :param int offset: payload offset in bits
-        :param str key: attribute keyword
         :param list index: repeating group index array
         :return: offset
         :rtype: int
 
         """
-        # pylint: disable=no-member
+
+        # pylint: disable=invalid-name
 
         # if attribute is part of a (nested) repeating group, suffix name with index
-        keyr = key
+        anami = anam
         for i in index:  # one index for each nested level
             if i > 0:
-                keyr += f"_{i:02d}"
+                anami += f"_{i:02d}"
 
         # get value of required number of bits at current payload offset
-        att, scale, _ = RTCM_DATA_FIELDS[key]
+        atyp, ares, _ = RTCM_DATA_FIELDS[anam]
         if not self._scaling:
-            scale = 0
-        if key == "DF396":  # this MSM attribute has variable length
-            atts = getattr(self, NSAT) * getattr(self, NSIG)
+            ares = 0
+        if anam == "DF396":  # this MSM attribute has variable length
+            asiz = getattr(self, NSAT) * getattr(self, NSIG)
         else:
-            atts = attsiz(att)
-        bitfield = self._getbits(offset, atts)
-        val = bits2val(att, scale, bitfield)
+            asiz = attsiz(atyp)
+        bitfield = self._getbits(offset, asiz)
+        val = bits2val(atyp, ares, bitfield)
 
-        setattr(self, keyr, val)
-        offset += atts
+        setattr(self, anami, val)
+        offset += asiz
 
         # add special attributes to keep track of
         # MSM message group sizes
         # NB: This is predicated on MSM payload dictionaries
         # always having attributes DF394, DF395 and DF396
         # in that order
-        if key in ("DF394", "DF395", "DF396"):
-            n = bin(bitfield).count("1")  # number of bits set
-            if key == "DF394":  # num of satellites in MSM message
-                setattr(self, NSAT, n)
-            elif key == "DF395":  # num of signals in MSM message
-                setattr(self, NSIG, n)
-            elif key == "DF396":  # num of cells in MSM message
-                setattr(self, NCELL, n)
+        if anam in ("DF394", "DF395", "DF396"):
+            nbits = bin(bitfield).count("1")  # number of bits set
+            if anam == "DF394":  # num of satellites in MSM message
+                setattr(self, NSAT, nbits)
+            elif anam == "DF395":  # num of signals in MSM message
+                setattr(self, NSIG, nbits)
+            elif anam == "DF396":  # num of cells in MSM message
+                setattr(self, NCELL, nbits)
         # add special coefficient attributes for message 4076_201
-        if key == "IDF038":
+        if anam == "IDF038":
             i = index[0]
             N = getattr(self, f"IDF037_{i:02d}") + 1
             M = getattr(self, f"IDF038_{i:02d}") + 1

@@ -9,8 +9,6 @@ Created on 14 Feb 2022
 :license: BSD 3-Clause
 """
 
-# pylint: disable=invalid-name
-
 from datetime import datetime, timedelta
 
 from pyrtcm.exceptions import RTCMTypeError
@@ -102,14 +100,14 @@ def calc_crc24q(message: bytes) -> int:
 
     """
 
-    POLY = 0x1864CFB
+    poly = 0x1864CFB
     crc = 0
     for octet in message:
         crc ^= octet << 16
         for _ in range(8):
             crc <<= 1
             if crc & 0x1000000:
-                crc ^= POLY
+                crc ^= poly
     return crc & 0xFFFFFF
 
 
