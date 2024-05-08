@@ -1,5 +1,13 @@
 # pyrtcm Release Notes
 
+### RELEASE 1.0.20
+
+ENHANCEMENTS
+
+1. Add `parse_msm` helper method to parse RTCM3 MSM message type into series of iterable data arrays.
+1. Add `parse_4076_201` helper method to parse RTCM3 4076_201 SSR message types into series of iterable data arrays.
+1. Internal streamlining of conditional group parsing & updated docstrings - no functional changes.
+
 ### RELEASE 1.0.19
 
 ENHANCEMENTS

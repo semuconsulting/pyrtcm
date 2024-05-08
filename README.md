@@ -99,10 +99,10 @@ Example -  Serial input:
 ```python
 from serial import Serial
 from pyrtcm import RTCMReader
-stream = Serial('/dev/tty.usbmodem14101', 9600, timeout=3)
-rtr = RTCMReader(stream)
-(raw_data, parsed_data) = rtr.read()
-print(parsed_data)
+with Serial('/dev/tty.usbmodem14101', 9600, timeout=3) as stream:
+  rtr = RTCMReader(stream)
+  raw_data, parsed_data = rtr.read()
+  print(parsed_data)
 ```
 ```
  <RTCM(1077, DF002=1077, DF003=0, GNSSEpoch=204137001, DF393=1, DF409=0, DF001_7=0, DF411=0, DF412=0, DF417=0, DF418=0, DF394=760738918298550272, NSat=10, DF395=1073807360, NSig=2, DF396=1044459, DF397_01(005)=75, DF397_02(007)=75, DF397_03(009)=81, ..., DF404_19(030,1C)=0.0, DF404_20(030,2L)=0.0)>,
@@ -111,21 +111,21 @@ print(parsed_data)
 Example - File input (using iterator).
 ```python
 from pyrtcm import RTCMReader
-stream = open('rtcmdata.log', 'rb')
-rtr = RTCMReader(stream)
-for (raw_data, parsed_data) in rtr:
-  print(parsed_data)
+with open('rtcmdata.log', 'rb') as stream:
+  rtr = RTCMReader(stream)
+  for raw_data, parsed_data in rtr:
+    print(parsed_data)
 ```
 
 Example - Socket input (using iterator):
 ```python
 import socket
 from pyrtcm import RTCMReader
-stream = socket.socket(socket.AF_INET, socket.SOCK_STREAM):
-stream.connect(("localhost", 50007))
-rtr = RTCMReader(stream)
-for (raw_data, parsed_data) in rtr:
-  print(parsed_data)
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as stream:
+  stream.connect(("localhost", 50007))
+  rtr = RTCMReader(stream)
+  for raw_data, parsed_data in rtr:
+    print(parsed_data)
 ```
 
 ---
@@ -198,6 +198,10 @@ print(msmarray)
 ```shell
 [[0.00014309026300907135, 0.00014193402603268623, 341, 45.0, 0, -0.9231], [0.00014183297753334045, 0.00014339853078126907, 341, 38.0, 0, -0.9194], ... etc.]
 ```
+
+The following dedicated helper methods are available to parse selected RTCM3 message types into a series of iterable data arrays:
+- `parse_msm` - for MSM message types (e.g. 1077, 1125, etc.).
+- `parse_4076_201` - for 4076_201 SSR (harmonic coefficients) message types.
 
 ---
 ## <a name="generating">Generating</a>

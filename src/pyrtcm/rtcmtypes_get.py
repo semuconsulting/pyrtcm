@@ -5,7 +5,50 @@ Created on 14 Feb 2022
 
 Information sourced from RTCM STANDARD 10403.3 © 2016 RTCM
 
+Payload definitions are contained in a series of dictionaries.
+Repeating and conditional elements are defined as a tuple of
+(element size/presence designator, element dictionary). The element
+size/presence designator can take one of the following forms:
+
+*Repeating elements:*
+ - an integer representing the fixed size of the repeating element N.
+ - a string representing the name of a preceding attribute containing
+   the size of the repeating element N e.g.
+
+.. code-block:: python
+
+    "groupsat": (
+        "IDF010",
+        {
+            "IDF011": "GNSS Satellite ID",
+            etc ...
+        },
+    ),
+
+*Conditional elements:*
+ - a tuple containing a string and a value, representing the name of a
+   preceding attribute and the value it must take in order for the
+   optional element to be present e.g.
+
+.. code-block:: python
+
+    "optL1CA": (
+        ("DF422_1", 1),  # if DF422_1 = 1
+        {
+            "DF423": "GLONASS L1 C/A Code-Phase Bias",
+        },
+    ),
+
+A '+1' or '+2' suffix indicates that the attribute name must be suffixed
+with the specified number of nested element indices e.g. '"IDF023+1"' -> '"IDF023_01"'
+
+In some instances, the size of the repeating element is derived from multiple
+attributes. In these cases the element size is denoted by a composite attribute
+name which is calculated within `rtcmmessage.py` e.g. 'NHARMCOEFFC'
+
 :author: semuadmin
+:copyright: SEMU Consulting © 2022
+:license: BSD 3-Clause
 """
 
 # pylint: disable=too-many-lines, line-too-long
@@ -1990,28 +2033,28 @@ RTCM_PAYLOADS_GET = {
         "DF422_2": "GLONASS FDMA signals mask L1 P",
         "DF422_3": "GLONASS FDMA signals mask L2 C/A",
         "DF422_4": "GLONASS FDMA signals mask L2 P",
-        "groupL1CA": (
-            "DF422_1",  # occurrence either 0 or 1
+        "optL1CA": (
+            ("DF422_1", 1),  # if DF422_1 = 1
             {
-                "DF423+B": "GLONASS L1 C/A Code-Phase Bias",
+                "DF423": "GLONASS L1 C/A Code-Phase Bias",
             },
         ),
-        "groupL1P": (
-            "DF422_2",  # occurrence either 0 or 1
+        "optL1P": (
+            ("DF422_2", 1),  # if DF422_2 = 1
             {
-                "DF424+B": "GLONASS L1 P Code-Phase Bias",
+                "DF424": "GLONASS L1 P Code-Phase Bias",
             },
         ),
-        "groupL2CA": (
-            "DF422_3",  # occurrence either 0 or 1
+        "optL2CA": (
+            ("DF422_3", 1),  # if DF422_3 = 1
             {
-                "DF425+B": "GLONASS L2 C/A Code-Phase Bias",
+                "DF425": "GLONASS L2 C/A Code-Phase Bias",
             },
         ),
-        "groupL2P": (
-            "DF422_4",  # occurrence either 0 or 1
+        "optL2P": (
+            ("DF422_4", 1),  # if DF422_4 = 1
             {
-                "DF426+B": "GLONASS L2 P Code-Phase Bias",
+                "DF426": "GLONASS L2 P Code-Phase Bias",
             },
         ),
     },

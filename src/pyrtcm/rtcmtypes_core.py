@@ -6,6 +6,8 @@ Created on 14 Feb 2022
 Information sourced from RTCM STANDARD 10403.3 © 2016 RTCM
 
 :author: semuadmin
+:copyright: SEMU Consulting © 2022
+:license: BSD 3-Clause
 """
 
 # pylint: disable=line-too-long
@@ -51,7 +53,6 @@ NCELL = "NCell"
 NRES = 16  # number of Residuals groups in MT1023 and MT1024
 NHARMCOEFFC = "_NHarmCoeffC"  # number of cosine harmonic coefficients in 4076
 NHARMCOEFFS = "_NHarmCoeffS"  # number of sine harmonic coefficients in 4076
-BOOL = "B"
 
 # Power of 2 scaling constants
 P2_P4 = 16  # 2**4
@@ -939,3 +940,20 @@ ATT_NCELL = [
     "DF408",
     "DF420",
 ]
+
+# map of MSM msg identity to GNSS name, epoch attribute name
+GNSSMAP = {
+    "107": ("GPS", "DF004"),
+    "108": ("GLONASS", "DF034"),
+    "109": ("GALILEO", "DF248"),
+    "110": ("SBAS", "DF004"),
+    "111": ("QZSS", "DF428"),
+    "112": ("BEIDOU", "DF427"),
+    "113": ("NAVIC", "DF546"),
+}
+
+# map of 4076_201 coefficients
+COEFFS = {
+    0: ("IDF039", "Cosine Coefficients"),
+    1: ("IDF040", "Sine Coefficients"),
+}

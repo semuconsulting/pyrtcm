@@ -20,7 +20,7 @@ src/pyrtcm.egg-*
 /tests/__pycache__
 *.pyc
 /examples/rtcmsandpit.py
-/examples/temp*.py
+/examples/temp*.*
 /examples/*.log
 /.pytest_cache/
 pylint_report.txt

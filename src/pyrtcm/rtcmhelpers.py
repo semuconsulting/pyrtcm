@@ -9,13 +9,11 @@ Created on 14 Feb 2022
 :license: BSD 3-Clause
 """
 
-# pylint: disable=invalid-name
-
 from datetime import datetime, timedelta
 
 from pyrtcm.exceptions import RTCMTypeError
 from pyrtcm.rtcmtables import PRNSIGMAP
-from pyrtcm.rtcmtypes_core import RTCM_DATA_FIELDS
+from pyrtcm.rtcmtypes_core import ATT_NCELL, ATT_NSAT, COEFFS, GNSSMAP, RTCM_DATA_FIELDS
 
 
 def att2idx(att: str) -> int:
@@ -102,14 +100,14 @@ def calc_crc24q(message: bytes) -> int:
 
     """
 
-    POLY = 0x1864CFB
+    poly = 0x1864CFB
     crc = 0
     for octet in message:
         crc ^= octet << 16
         for _ in range(8):
             crc <<= 1
             if crc & 0x1000000:
-                crc ^= POLY
+                crc ^= poly
     return crc & 0xFFFFFF
 
 
@@ -356,3 +354,80 @@ def escapeall(val: bytes) -> str:
     """
 
     return "b'{}'".format("".join(f"\\x{b:02x}" for b in val))
+
+
+def parse_msm(msg: object) -> tuple:
+    """
+    Parse individual MSM message into iterable data arrays.
+
+    :param RTCMMessage msg: RTCM MSM Message
+    :return: tuple of (metadata, sat data array, cell data array)
+    :rtype: tuple
+    """
+
+    if not msg.ismsm:
+        return None
+
+    satmap = sat2prn(msg)  # maps indices to satellite PRNs
+    cellmap = cell2prn(msg)  # maps indices to cells (satellite PRN, signal ID)
+    meta = {}
+    gmap = GNSSMAP[msg.identity[0:3]]
+    meta["identity"] = msg.identity
+    meta["gnss"] = gmap[0]
+    meta["station"] = msg.DF003
+    meta["epoch"] = getattr(msg, gmap[1])
+    meta["sats"] = msg.NSat
+    meta["cells"] = msg.NCell
+    msmsats = []
+    for i in range(1, msg.NSat + 1):  # iterate through satellites
+        sats = {}
+        sats["PRN"] = satmap[i]
+        for attr in ATT_NSAT:
+            if hasattr(msg, f"{attr}_{i:02d}"):
+                sats[attr] = getattr(msg, f"{attr}_{i:02d}")
+        msmsats.append(sats)
+    msmcells = []
+    for i in range(1, msg.NCell + 1):  # iterate through cells (satellite/signal)
+        cells = {}
+        cells["PRN"], cells["SIGNAL"] = cellmap[i]
+        for attr in ATT_NCELL:
+            if hasattr(msg, f"{attr}_{i:02d}"):
+                cells[attr] = getattr(msg, f"{attr}_{i:02d}")
+        msmcells.append(cells)
+
+    return (meta, msmsats, msmcells)
+
+
+def parse_4076_201(msg: object):
+    """
+    Parse individual 4076_201 message into iterable data arrays.
+
+    :param RTCMMessage parsed: parsed 4076_201 message
+    :return: dict of {metadata, [cosine coefficients], [sine coefficients]} for each layer
+    :rtype: dict
+    """
+
+    if msg.identity != "4076_201":
+        return None
+
+    hmc = {}
+    # for each ionospheric layer
+    for lyr in range(msg.IDF035 + 1):  # number of ionospheric layers
+        hmc[lyr] = {}
+        hmc[lyr]["Layer Height"] = getattr(msg, f"IDF036_{lyr+1:02d}")
+        # for each coefficient (cosine & sine)
+        for field, coeff in COEFFS.values():
+            hmc[lyr][coeff] = []
+            i = 0
+            eof = False
+            # for each coefficient value
+            while not eof:
+                try:
+                    hmc[lyr][coeff].append(
+                        getattr(msg, f"{field}_{lyr+1:02d}_{i+1:02d}")
+                    )
+                    i += 1
+                except AttributeError:
+                    eof = True
+
+    return hmc

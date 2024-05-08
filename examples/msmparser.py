@@ -38,62 +38,10 @@ Created on 18 Apr 2024
 
 from sys import argv
 
-from pyrtcm import ATT_NCELL  # list of all sat attribute names
-from pyrtcm import ATT_NSAT  # list of all cell attribute names
-from pyrtcm import RTCM_MSGIDS, RTCMMessage, RTCMReader, cell2prn, sat2prn
-
-# map of msg identity to GNSS name, epoch attribute name
-GNSSMAP = {
-    "107": ("GPS", "DF004"),
-    "108": ("GLONASS", "DF034"),
-    "109": ("GALILEO", "DF248"),
-    "110": ("SBAS", "DF004"),
-    "111": ("QZSS", "DF428"),
-    "112": ("BEIDOU", "DF427"),
-    "113": ("NAVIC", "DF546"),
-}
-
-
-def process_msm(msg: RTCMMessage) -> tuple:
-    """
-    Process individual MSM message.
-
-    :return: tuple of (metadata, sat data array, cell data array)
-    :rtype: tuple
-    """
-
-    satmap = sat2prn(msg)  # maps indices to satellite PRNs
-    cellmap = cell2prn(msg)  # maps indices to cells (satellite PRN, signal ID)
-    meta = {}
-    gmap = GNSSMAP[msg.identity[0:3]]
-    meta["identity"] = msg.identity
-    meta["gnss"] = gmap[0]
-    meta["station"] = msg.DF003
-    meta["epoch"] = getattr(msg, gmap[1])
-    meta["sats"] = msg.NSat
-    meta["cells"] = msg.NCell
-    msmsats = []
-    for i in range(1, msg.NSat + 1):  # iterate through satellites
-        sats = {}
-        sats["PRN"] = satmap[i]
-        for attr in ATT_NSAT:
-            if hasattr(msg, f"{attr}_{i:02d}"):
-                sats[attr] = getattr(msg, f"{attr}_{i:02d}")
-        msmsats.append(sats)
-    msmcells = []
-    for i in range(1, msg.NCell + 1):  # iterate through cells (satellite/signal)
-        cells = {}
-        cells["PRN"], cells["SIGNAL"] = cellmap[i]
-        for attr in ATT_NCELL:
-            if hasattr(msg, f"{attr}_{i:02d}"):
-                cells[attr] = getattr(msg, f"{attr}_{i:02d}")
-        msmcells.append(cells)
-
-    return (meta, msmsats, msmcells)
+from pyrtcm import RTCMReader, parse_msm
 
 
 def main(**kwargs):
-
     """
     Main routine.
 
@@ -107,11 +55,9 @@ def main(**kwargs):
         for _, parsed in rtr:
             if parsed is not None:
                 try:
-                    if "MSM" in RTCM_MSGIDS[parsed.identity]:
-                        # print(parsed)
-                        msmarray = process_msm(parsed)
+                    msmarray = parse_msm(parsed)
+                    if msmarray is not None:
                         print(msmarray)
-
                         # to then iterate through a specific data item,
                         # e.g. the satellite DF398 (rough range) value:
                         for sat in msmarray[1]:  # satellite data array
