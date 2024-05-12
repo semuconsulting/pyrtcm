@@ -105,7 +105,7 @@ with Serial('/dev/tty.usbmodem14101', 9600, timeout=3) as stream:
   print(parsed_data)
 ```
 ```
- <RTCM(1077, DF002=1077, DF003=0, GNSSEpoch=204137001, DF393=1, DF409=0, DF001_7=0, DF411=0, DF412=0, DF417=0, DF418=0, DF394=760738918298550272, NSat=10, DF395=1073807360, NSig=2, DF396=1044459, DF397_01(005)=75, DF397_02(007)=75, DF397_03(009)=81, ..., DF404_19(030,1C)=0.0, DF404_20(030,2L)=0.0)>,
+"<RTCM(1077, DF002=1077, DF003=0, DF004=204137001, DF393=1, DF409=0, DF001_7=0, ..., DF404_15=-9556, DF404_16=-2148, DF404_17=-2174)>",     
 ```
 
 Example - File input (using iterator).
@@ -145,19 +145,19 @@ print(msg)
 <RTCM(1005, DF002=1005, DF003=0, DF021=0, DF022=1, DF023=1, DF024=1, DF141=0, DF025=4444030.8028, DF142=1, DF001_1=0, DF026=3085671.2349, DF364=0, DF027=3366658.256)>
 ```
 
-The `RTCMMessage` object exposes different public attributes depending on its message type or 'identity'. Attributes are defined as data fields (`DF002`, `DF003`, etc.) e.g. the `1087` multiple signal message (MSM) contains the following data fields:
+The `RTCMMessage` object exposes different public attributes depending on its message type or 'identity'. Attributes are defined as data fields (`DF002`, `DF003`, etc.) e.g. the `1097` multiple signal message (MSM) contains the following data fields:
 
 ```python
 print(msg)
 print(msg.identity)
-print(msg.DF034)
-print(msg.DF419_03)
+print(msg.DF248)
+print(msg.DF404_07)
 ```
 ```
-<RTCM(1087, DF002=1087, DF003=0, DF416=2, DF034=42119001, DF393=1, DF409=0, DF001_7=0, DF411=0, DF412=0, DF417=0, DF418=0, DF394=4039168114821169152, NSat=7, DF395=1090519040, NSig=2, DF396=16382, NCell=13, PRN_01=003, PRN_02=004, PRN_03=005, PRN_04=013, PRN_05=014, PRN_06=015, PRN_07=023, DF397_01=69, DF397_02=64, DF397_03=73, DF397_04=76, DF397_05=66, DF397_06=70, DF397_07=78, DF419_01=12, DF419_02=13, DF419_03=8, DF419_04=5, DF419_05=0, DF419_06=7, DF419_07=10, DF398_01=0.6337890625, DF398_02=0.3427734375, DF398_03=0.25390625, DF398_04=0.310546875, DF398_05=0.5126953125, DF398_06=0.8271484375, DF398_07=0.8837890625, DF399_01=-665, DF399_02=29, DF399_03=672, DF399_04=-573, DF399_05=-211, DF399_06=312, DF399_07=317, CELL_01=('003', 'G1'), CELL_02=('003', 'G2'), CELL_03=('004', 'G1'), CELL_04=('004', 'G2'), CELL_05=('005', 'G1'), CELL_06=('005', 'G2'), CELL_07=('013', 'G1'), CELL_08=('013', 'G2'), CELL_09=('014', 'G1'), CELL_10=('014', 'G2'), CELL_11=('015', 'G1'), CELL_12=('015', 'G2'), CELL_13=('023', 'G1'), DF405_01=0.00024936161935329437, DF405_02=0.0002511627972126007, DF405_03=-4.678964614868164e-05, DF405_04=-5.141831934452057e-05, DF405_05=1.1144205927848816e-05, DF405_06=2.15042382478714e-05, DF405_07=0.00047079287469387054, DF405_08=0.0004794951528310776, DF405_09=-0.0003879182040691376, DF405_10=-0.00037603825330734253, DF405_11=0.0002771839499473572, DF405_12=0.0002871435135602951, DF405_13=-0.00023611821234226227, DF406_01=0.00024937279522418976, DF406_02=0.00025077443569898605, DF406_03=-4.834495484828949e-05, DF406_04=-5.1246024668216705e-05, DF406_05=1.1149328202009201e-05, DF406_06=2.1803192794322968e-05, DF406_07=0.00047026341781020164, DF406_08=0.0004848274402320385, DF406_09=-0.0003876127302646637, DF406_10=-0.0003757951781153679, DF406_11=0.0002778824418783188, DF406_12=0.0002880701795220375, DF406_13=-0.00023698341101408005, DF407_01=341, DF407_02=341, DF407_03=340, DF407_04=340, DF407_05=341, DF407_06=341, DF407_07=340, DF407_08=341, DF407_09=341, DF407_10=341, DF407_11=341, DF407_12=341, DF407_13=340, DF420_01=0, DF420_02=0, DF420_03=0, DF420_04=0, DF420_05=0, DF420_06=0, DF420_07=0, DF420_08=0, DF420_09=0, DF420_10=0, DF420_11=0, DF420_12=0, DF420_13=0, DF408_01=47.0, DF408_02=40.0, DF408_03=47.0, DF408_04=42.0, DF408_05=47.0, DF408_06=39.0, DF408_07=36.0, DF408_08=33.0, DF408_09=48.0, DF408_10=43.0, DF408_11=48.0, DF408_12=40.0, DF408_13=41.0, DF404_01=-0.8193, DF404_02=-0.8173, DF404_03=0.8539, DF404_04=0.8501000000000001, DF404_05=0.7333000000000001, DF404_06=0.7311000000000001, DF404_07=-0.24930000000000002, DF404_08=-0.2543, DF404_09=-0.21580000000000002, DF404_10=-0.21780000000000002, DF404_11=0.3924, DF404_12=0.3947, DF404_13=0.6146)>    
-'1087'
-42119001
-8
+"<RTCM(1097, DF002=1097, DF003=0, DF248=204137001, DF393=1, DF409=0, DF001_7=0, DF411=0, DF412=0, DF417=0, DF418=0, DF394=216181732825628672, NSat=5, DF395=1073872896, NSig=2, DF396=1023, NCell=10, PRN_01=007, PRN_02=008, PRN_03=021, PRN_04=027, ..., DF404_07=5534, DF404_08=5545, DF404_09=-7726, DF404_10=-7733)>",             
+'1097'
+204137001
+5534
 ```
 
 Attributes within repeating groups are parsed with a two-digit suffix (`DF419_01`, `DF419_02`, etc. See [example below](#iterating) for an illustration of how to iterate through grouped attributes).
@@ -183,20 +183,20 @@ The `payload` attribute always contains the raw payload as bytes.
 
 #### <a name="iterating">Iterating Through Group Attributes</a>
 
-To iterate through a group of one or more repeating attributes in a given `RTCMMessage` object, the following construct can be used (in this illustration, repeating attributes DF405, DF406, DF407, DF408, DF420 and DF404 are extracted from an MSM 1077 message `msg` and collated in the array `msmarray`):
+To iterate through a group of one or more repeating attributes in a given `RTCMMessage` object, the following construct can be used (in this illustration, repeating attributes CELLPRN, CELLSIG, DF405, DF406, DF407, DF408, DF420 and DF404 are extracted from an MSM 1077 message `msg` and collated in the array `msmarray`):
 
 ```python
 msmarray = []
 for i in range(msg.NCell): # msg = MSM 1077, number of cells = NCell
   vals = []
-  for attr in ("DF405", "DF406", "DF407", "DF408", "DF420", "DF404"):
+  for attr in ("CELLPRN", "CELLSIG", "DF405", "DF406", "DF407", "DF408", "DF420", "DF404"):
     val = getattr(msg, f"{attr}_{i+1:02d}")
     vals.append(val)
   msmarray.append(vals)
 print(msmarray)
 ```
 ```shell
-[[0.00014309026300907135, 0.00014193402603268623, 341, 45.0, 0, -0.9231], [0.00014183297753334045, 0.00014339853078126907, 341, 38.0, 0, -0.9194], ... etc.]
+[['005', '1C', 0.00014309026300907135, 0.00014193402603268623, 341, 45.0, 0, -0.9231], ..., ['030', '2L', -0.00030865520238876343, -0.00030898721888661385, 341, 41.0, 0, -0.2174]]
 ```
 
 The following dedicated helper methods are available to parse selected RTCM3 message types into a series of iterable data arrays:

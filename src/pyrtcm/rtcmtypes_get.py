@@ -80,7 +80,7 @@ MSM_SAT_123 = {
     "groupsat0": (
         NSAT,
         {
-            "PRN": "GNSS Satellite PRN",
+            "PRN": "GNSS Satellite PRN",  # derived by pyspartn
         },
     ),
     "groupsat1": (
@@ -95,7 +95,7 @@ MSM_SAT_46 = {
     "groupsat0": (
         NSAT,
         {
-            "PRN": "GNSS Satellite PRN",
+            "PRN": "GNSS Satellite PRN",  # derived by pyspartn
         },
     ),
     "groupsat1": (
@@ -117,7 +117,7 @@ MSM_SAT_57 = {
     "groupsat0": (
         NSAT,
         {
-            "PRN": "GNSS Satellite PRN",
+            "PRN": "GNSS Satellite PRN",  # derived by pyspartn
         },
     ),
     "groupsat1": (
@@ -150,7 +150,7 @@ MSM_SAT_57_GLONASS = {
     "groupsat0": (
         NSAT,
         {
-            "PRN": "GNSS Satellite PRN",
+            "PRN": "GNSS Satellite PRN",  # derived by pyspartn
         },
     ),
     "groupsat1": (
@@ -183,8 +183,8 @@ MSM_SIG_1 = {
     "groupsig0": (
         NCELL,
         {
-            "CELLPRN": "GNSS Satellite PRN ",
-            "CELLSIG": "GNSS Satellite Signal ID",
+            "CELLPRN": "GNSS Satellite PRN ",  # derived by pyspartn
+            "CELLSIG": "GNSS Satellite Signal ID",  # derived by pyspartn
         },
     ),
     "groupsig1": (
@@ -199,8 +199,8 @@ MSM_SIG_2 = {
     "groupsig0": (
         NCELL,
         {
-            "CELLPRN": "GNSS Satellite PRN ",
-            "CELLSIG": "GNSS Satellite Signal ID",
+            "CELLPRN": "GNSS Satellite PRN ",  # derived by pyspartn
+            "CELLSIG": "GNSS Satellite Signal ID",  # derived by pyspartn
         },
     ),
     "groupsig1": (
@@ -228,8 +228,8 @@ MSM_SIG_3 = {
     "groupsig0": (
         NCELL,
         {
-            "CELLPRN": "GNSS Satellite PRN ",
-            "CELLSIG": "GNSS Satellite Signal ID",
+            "CELLPRN": "GNSS Satellite PRN ",  # derived by pyspartn
+            "CELLSIG": "GNSS Satellite Signal ID",  # derived by pyspartn
         },
     ),
     "groupsig1": (
@@ -262,8 +262,8 @@ MSM_SIG_4 = {
     "groupsig0": (
         NCELL,
         {
-            "CELLPRN": "GNSS Satellite PRN ",
-            "CELLSIG": "GNSS Satellite Signal ID",
+            "CELLPRN": "GNSS Satellite PRN ",  # derived by pyspartn
+            "CELLSIG": "GNSS Satellite Signal ID",  # derived by pyspartn
         },
     ),
     "groupsig1": (
@@ -302,8 +302,8 @@ MSM_SIG_5 = {
     "groupsig0": (
         NCELL,
         {
-            "CELLPRN": "GNSS Satellite PRN ",
-            "CELLSIG": "GNSS Satellite Signal ID",
+            "CELLPRN": "GNSS Satellite PRN ",  # derived by pyspartn
+            "CELLSIG": "GNSS Satellite Signal ID",  # derived by pyspartn
         },
     ),
     "groupsig1": (
@@ -348,8 +348,8 @@ MSM_SIG_6 = {
     "groupsig0": (
         NCELL,
         {
-            "CELLPRN": "GNSS Satellite PRN ",
-            "CELLSIG": "GNSS Satellite Signal ID",
+            "CELLPRN": "GNSS Satellite PRN ",  # derived by pyspartn
+            "CELLSIG": "GNSS Satellite Signal ID",  # derived by pyspartn
         },
     ),
     "groupsig1": (
@@ -388,8 +388,8 @@ MSM_SIG_7 = {
     "groupsig0": (
         NCELL,
         {
-            "CELLPRN": "GNSS Satellite PRN ",
-            "CELLSIG": "GNSS Satellite Signal ID",
+            "CELLPRN": "GNSS Satellite PRN ",  # derived by pyspartn
+            "CELLSIG": "GNSS Satellite Signal ID",  # derived by pyspartn
         },
     ),
     "groupsig1": (

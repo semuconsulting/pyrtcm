@@ -4,6 +4,8 @@
 
 ENHANCEMENTS:
 
+1. `PRN`, `CELLPRN` and `CELLSIG` attributes added to satellite (NSAT) and cell (NCELL) groups within parsed RTCM3 MSM payloads via `SPARTNMessage._getsatcellmaps()` function, replacing previous `sat2prn()` and `cell2prn()` helper functionality. `labelmsm` keyword argument signifies either RINEX (1) or Frequency Band (2) signal format for CELLSIG attribute.
+
 ### RELEASE 1.0.20
 
 ENHANCEMENTS
