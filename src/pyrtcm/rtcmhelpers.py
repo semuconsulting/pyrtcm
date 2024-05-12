@@ -279,7 +279,7 @@ def sat2prn(msg: object) -> dict:
         for idx in range(1, 65):
             if msg.DF394 & 2 ** (64 - idx):
                 nsat += 1
-                sats[nsat] = prnmap[idx]
+                sats[nsat] = prnmap.get(idx, "Reserved")
 
         return sats
 
@@ -314,14 +314,14 @@ def cell2prn(msg: object, sigcode: int = 1) -> dict:
         nsat = 0
         for idx in range(1, 65):
             if msg.DF394 & 2 ** (64 - idx):
-                sats.append(prnmap[idx])
+                sats.append(prnmap.get(idx, "Reserved"))
                 nsat += 1
 
         sigs = []
         nsig = 0
         for idx in range(1, 33):
             if msg.DF395 & 2 ** (32 - idx):
-                sgc = sigmap[idx]
+                sgc = sigmap.get(idx, "Reserved")
                 fqc = sgc[1] if sigcode else sgc[0]
                 sigs.append(fqc)
                 nsig += 1

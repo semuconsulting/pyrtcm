@@ -15,20 +15,21 @@ from pyrtcm.rtcmhelpers import (
     att2name,
     attsiz,
     bits2val,
-    cell2prn,
     crc2bytes,
     escapeall,
     len2bytes,
-    sat2prn,
 )
+from pyrtcm.rtcmtables import PRNSIGMAP
 from pyrtcm.rtcmtypes_core import (
     ATT_NCELL,
     ATT_NSAT,
+    CEL,
     NCELL,
     NHARMCOEFFC,
     NHARMCOEFFS,
     NSAT,
     NSIG,
+    PRN,
     RTCM_DATA_FIELDS,
     RTCM_HDR,
     RTCM_MSGIDS,
@@ -59,6 +60,8 @@ class RTCMMessage:
         self._scaling = scaling
         self._labelmsm = labelmsm
         self._unknown = False
+        self._satmap = None
+        self._cellmap = None
         self._do_attributes()
 
         self._immutable = True  # once initialised, object is immutable
@@ -215,8 +218,13 @@ class RTCMMessage:
             asiz = getattr(self, NSAT) * getattr(self, NSIG)
         else:
             asiz = attsiz(atyp)
-        bitfield = self._getbits(offset, asiz)
-        val = bits2val(atyp, ares, bitfield)
+        if atyp == PRN:
+            val = self._satmap[index[0]]
+        elif atyp == CEL:
+            val = self._cellmap[index[0]]
+        else:
+            bitfield = self._getbits(offset, asiz)
+            val = bits2val(atyp, ares, bitfield)
 
         setattr(self, anami, val)
         offset += asiz
@@ -234,6 +242,9 @@ class RTCMMessage:
                 setattr(self, NSIG, nbits)
             elif anam == "DF396":  # num of cells in MSM message
                 setattr(self, NCELL, nbits)
+                # populate NSAT and NCELL mapping dictionaries
+                self._getsatcellmaps()
+
         # add special coefficient attributes for message 4076_201
         if anam == "IDF038":
             i = index[0]
@@ -247,6 +258,44 @@ class RTCMMessage:
             setattr(self, NHARMCOEFFS, ns)
 
         return offset
+
+    def _getsatcellmaps(self):
+        """
+        Map group indices to satellite PRN & signal ID values via
+        bitmasks DF394, DF395 and DF396.
+        """
+
+        prnmap, sigmap = PRNSIGMAP[str(self.identity)[0:3]]
+        sigcode = 0 if self._labelmsm == 2 else 1
+
+        sats = {}
+        nsat = 0
+        for idx in range(1, 65):
+            if getattr(self, "DF394") & 2 ** (64 - idx):
+                nsat += 1
+                sats[nsat] = prnmap.get(idx, "Reserved")
+
+        sigs = []
+        nsig = 0
+        for idx in range(1, 33):
+            if getattr(self, "DF395") & 2 ** (32 - idx):
+                sgc = sigmap.get(idx, "Reserved")
+                fqc = sgc[1] if sigcode else sgc[0]
+                sigs.append(fqc)
+                nsig += 1
+
+        ncells = int(nsat * nsig)
+        cells = {}
+        ncell = idx = 0
+        for sat in range(nsat):
+            for sig in range(nsig):
+                idx += 1
+                if getattr(self, "DF396") & 2 ** (ncells - idx):
+                    ncell += 1
+                    cells[ncell] = (sats[sat + 1], sigs[sig])
+
+        self._satmap = sats
+        self._cellmap = cells
 
     def _getbits(self, position: int, length: int) -> int:
         """
@@ -295,14 +344,6 @@ class RTCMMessage:
         :rtype: str
         """
 
-        # if MSM message and labelmsm flag is set,
-        # label NSAT and NCELL group attributes with
-        # corresponding satellite PRN and signal ID (RINEX code or freq band)
-        if not self._unknown:
-            if self._labelmsm and self.ismsm:
-                sats = sat2prn(self)
-                cells = cell2prn(self, 0 if self._labelmsm == 2 else 1)
-
         stg = f"<RTCM({self.identity}, "
         for i, att in enumerate(self.__dict__):
             if att[0] != "_":  # only show public attributes
@@ -315,10 +356,10 @@ class RTCMMessage:
                 if self._labelmsm and self.ismsm:
                     aname = att2name(att)
                     if aname in ATT_NSAT:
-                        prn = sats[att2idx(att)]
+                        prn = self._satmap[att2idx(att)]
                         lbl = f"({prn})"
                     if aname in ATT_NCELL:
-                        prn, sig = cells[att2idx(att)]
+                        prn, sig = self._cellmap[att2idx(att)]
                         lbl = f"({prn},{sig})"
 
                 stg += att + lbl + "=" + str(val)

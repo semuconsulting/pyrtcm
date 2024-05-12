@@ -154,6 +154,8 @@ INTS24 = "SNT024"  # 24 bit sign-magnitude integer
 INTS27 = "SNT027"  # 27 bit sign-magnitude integer
 INTS32 = "SNT032"  # 32 bit sign-magnitude integer
 UTF8 = "UTF008"  # Unicode UTF-8 Code Unit
+PRN = "PRN000"  # Derived satellite PRN
+CEL = "CEL000"  # Derived cell (prn/signal)
 
 
 # ****************************************************
@@ -167,6 +169,8 @@ UTF8 = "UTF008"  # Unicode UTF-8 Code Unit
 #
 # ****************************************************
 RTCM_DATA_FIELDS = {
+    "PRN": (PRN, 0, "Derived satellite PRN"),
+    "CELL": (CEL, 0, "Derived satellite PRN & signal ID"),
     "DF001": (BIT1, 0, "Reserved Field"),
     "DF001_1": (BIT1, 0, "Reserved 1 bit"),
     "DF001_2": (BIT2, 0, "Reserved 2 bits"),
