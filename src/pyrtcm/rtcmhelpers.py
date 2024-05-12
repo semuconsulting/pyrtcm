@@ -11,9 +11,7 @@ Created on 14 Feb 2022
 
 from datetime import datetime, timedelta
 
-from pyrtcm.exceptions import RTCMTypeError
-from pyrtcm.rtcmtables import PRNSIGMAP
-from pyrtcm.rtcmtypes_core import ATT_NCELL, ATT_NSAT, COEFFS, GNSSMAP, RTCM_DATA_FIELDS
+from pyrtcm.rtcmtypes_core import COEFFS, GNSSMAP, RTCM_DATA_FIELDS
 
 
 def att2idx(att: str) -> int:
@@ -258,92 +256,6 @@ def hextable(raw: bytes, cols: int = 8) -> str:
     return hextbl
 
 
-def sat2prn(msg: object) -> dict:
-    """
-    Map MSM sat to satellite PRN for a given RTCM3 MSM message.
-
-    Returns a dict mapping the satellite PRN corresponding to each
-    item in the MSM NSAT repeating group e.g. DF397_01, DF397_02, etc.
-
-    :param RTCMMessage msg: RTCM3 MSM message e.g. 1077
-    :return: dict of {cell: prn} values
-    :rtype: dict
-    :raises: RTCMTypeError if not MSM message type
-    """
-
-    try:
-        prnmap, _ = PRNSIGMAP[str(msg.identity)[0:3]]
-
-        sats = {}
-        nsat = 0
-        for idx in range(1, 65):
-            if msg.DF394 & 2 ** (64 - idx):
-                nsat += 1
-                sats[nsat] = prnmap.get(idx, "Reserved")
-
-        return sats
-
-    except (TypeError, KeyError, AttributeError) as err:
-        raise RTCMTypeError(
-            "Invalid RTCM3 message type - must be MSM message."
-        ) from err
-
-
-def cell2prn(msg: object, sigcode: int = 1) -> dict:
-    """
-    Map MSM cell to satellite PRN and signal ID for a given RTCM3 MSM message.
-
-    Returns a dict mapping the satellite PRN and signal ID corresponding to each
-    item in the MSM NCELL repeating group e.g. DF405_01, DF406_02, etc.
-
-    DF394 bitmask indicates which satellites are present.
-    DF395 bitmask indicates which signals are present.
-    DF396 bitmask maps satellite to signal.
-
-    :param RTCMMessage msg: RTCM3 MSM message e.g. 1077
-    :param int sigcode: 0 = use frequency band, 1 = use signal RINEX code
-    :return: dict of {cell: (prn, sig)} values
-    :rtype: dict
-    :raises: RTCMTypeError if not MSM message type
-    """
-
-    try:
-        prnmap, sigmap = PRNSIGMAP[str(msg.identity)[0:3]]
-
-        sats = []
-        nsat = 0
-        for idx in range(1, 65):
-            if msg.DF394 & 2 ** (64 - idx):
-                sats.append(prnmap.get(idx, "Reserved"))
-                nsat += 1
-
-        sigs = []
-        nsig = 0
-        for idx in range(1, 33):
-            if msg.DF395 & 2 ** (32 - idx):
-                sgc = sigmap.get(idx, "Reserved")
-                fqc = sgc[1] if sigcode else sgc[0]
-                sigs.append(fqc)
-                nsig += 1
-
-        ncells = int(nsat * nsig)
-        cells = {}
-        ncell = idx = 0
-        for sat in range(nsat):
-            for sig in range(nsig):
-                idx += 1
-                if msg.DF396 & 2 ** (ncells - idx):
-                    ncell += 1
-                    cells[ncell] = (sats[sat], sigs[sig])
-
-        return cells
-
-    except (TypeError, KeyError, AttributeError) as err:
-        raise RTCMTypeError(
-            "Invalid RTCM3 message type - must be MSM message."
-        ) from err
-
-
 def escapeall(val: bytes) -> str:
     """
     Escape all byte characters e.g. b'\\\\x73' rather than b`s`
@@ -368,8 +280,6 @@ def parse_msm(msg: object) -> tuple:
     if not msg.ismsm:
         return None
 
-    satmap = sat2prn(msg)  # maps indices to satellite PRNs
-    cellmap = cell2prn(msg)  # maps indices to cells (satellite PRN, signal ID)
     meta = {}
     gmap = GNSSMAP[msg.identity[0:3]]
     meta["identity"] = msg.identity
@@ -381,16 +291,27 @@ def parse_msm(msg: object) -> tuple:
     msmsats = []
     for i in range(1, msg.NSat + 1):  # iterate through satellites
         sats = {}
-        sats["PRN"] = satmap[i]
-        for attr in ATT_NSAT:
+        for attr in ["PRN", "DF397", "DF398", "DF399", "DF419", "ExtSatInfo"]:
             if hasattr(msg, f"{attr}_{i:02d}"):
                 sats[attr] = getattr(msg, f"{attr}_{i:02d}")
         msmsats.append(sats)
     msmcells = []
     for i in range(1, msg.NCell + 1):  # iterate through cells (satellite/signal)
         cells = {}
-        cells["PRN"], cells["SIGNAL"] = cellmap[i]
-        for attr in ATT_NCELL:
+        for attr in [
+            "CELLPRN",
+            "CELLSIG",
+            "DF400",
+            "DF401",
+            "DF402",
+            "DF403",
+            "DF404",
+            "DF405",
+            "DF406",
+            "DF407",
+            "DF408",
+            "DF420",
+        ]:
             if hasattr(msg, f"{attr}_{i:02d}"):
                 cells[attr] = getattr(msg, f"{attr}_{i:02d}")
         msmcells.append(cells)

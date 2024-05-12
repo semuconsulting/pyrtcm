@@ -10,20 +10,11 @@ Created on 14 Feb 2022
 
 import pyrtcm.exceptions as rte
 import pyrtcm.rtcmtypes_get as rtg
-from pyrtcm.rtcmhelpers import (
-    att2idx,
-    att2name,
-    attsiz,
-    bits2val,
-    crc2bytes,
-    escapeall,
-    len2bytes,
-)
+from pyrtcm.rtcmhelpers import attsiz, bits2val, crc2bytes, escapeall, len2bytes
 from pyrtcm.rtcmtables import PRNSIGMAP
 from pyrtcm.rtcmtypes_core import (
-    ATT_NCELL,
-    ATT_NSAT,
-    CEL,
+    CELPRN,
+    CELSIG,
     NCELL,
     NHARMCOEFFC,
     NHARMCOEFFS,
@@ -46,7 +37,7 @@ class RTCMMessage:
 
         :param bytes payload: message payload (mandatory)
         :param bool scaling: whether to apply attribute scaling True/False (True)
-        :param int labelmsm: MSM NSAT and NCELL attribute label (0 = none, 1 = RINEX, 2 = freq)
+        :param int labelmsm: MSM NSAT and NCELL attribute label (1 = RINEX, 2 = freq)
         :raises: RTCMMessageError
         """
 
@@ -220,8 +211,10 @@ class RTCMMessage:
             asiz = attsiz(atyp)
         if atyp == PRN:
             val = self._satmap[index[0]]
-        elif atyp == CEL:
-            val = self._cellmap[index[0]]
+        elif atyp == CELPRN:
+            val = self._cellmap[index[0]][0]
+        elif atyp == CELSIG:
+            val = self._cellmap[index[0]][1]
         else:
             bitfield = self._getbits(offset, asiz)
             val = bits2val(atyp, ares, bitfield)
@@ -351,18 +344,7 @@ class RTCMMessage:
                 # escape all byte chars
                 if isinstance(val, bytes):
                     val = escapeall(val)
-                # label MSM NSAT and NCELL group attributes
-                lbl = ""
-                if self._labelmsm and self.ismsm:
-                    aname = att2name(att)
-                    if aname in ATT_NSAT:
-                        prn = self._satmap[att2idx(att)]
-                        lbl = f"({prn})"
-                    if aname in ATT_NCELL:
-                        prn, sig = self._cellmap[att2idx(att)]
-                        lbl = f"({prn},{sig})"
-
-                stg += att + lbl + "=" + str(val)
+                stg += att + "=" + str(val)
                 if i < len(self.__dict__) - 1:
                     stg += ", "
         if self._unknown:
