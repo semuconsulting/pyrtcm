@@ -154,7 +154,9 @@ INTS24 = "SNT024"  # 24 bit sign-magnitude integer
 INTS27 = "SNT027"  # 27 bit sign-magnitude integer
 INTS32 = "SNT032"  # 32 bit sign-magnitude integer
 UTF8 = "UTF008"  # Unicode UTF-8 Code Unit
-
+PRN = "PRN000"  # Derived satellite PRN
+CELPRN = "CPR000"  # Derived cell PRN
+CELSIG = "CSG000"  # Derived cell Signal ID
 
 # ****************************************************
 # THESE ARE THE RTCM PROTOCOL DATA FIELDS
@@ -167,6 +169,9 @@ UTF8 = "UTF008"  # Unicode UTF-8 Code Unit
 #
 # ****************************************************
 RTCM_DATA_FIELDS = {
+    "PRN": (PRN, 0, "Derived satellite PRN"),
+    "CELLPRN": (CELPRN, 0, "Derived satellite PRN"),
+    "CELLSIG": (CELSIG, 0, "Derived satellite Signal ID"),
     "DF001": (BIT1, 0, "Reserved Field"),
     "DF001_1": (BIT1, 0, "Reserved 1 bit"),
     "DF001_2": (BIT2, 0, "Reserved 2 bits"),
@@ -925,21 +930,6 @@ RTCM_MSGIDS = {
     # "4094": "Trimble Navigation Ltd.",
     # "4095": "Ashtech",
 }
-
-# list of MSM attributes to label if `labelmsm` is True
-ATT_NSAT = ["DF397", "DF398", "DF399", "DF419", "ExtSatInfo"]
-ATT_NCELL = [
-    "DF400",
-    "DF401",
-    "DF402",
-    "DF403",
-    "DF404",
-    "DF405",
-    "DF406",
-    "DF407",
-    "DF408",
-    "DF420",
-]
 
 # map of MSM msg identity to GNSS name, epoch attribute name
 GNSSMAP = {

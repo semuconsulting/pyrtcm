@@ -77,6 +77,12 @@ MSM_HDR2 = {
 }
 
 MSM_SAT_123 = {
+    "groupsat0": (
+        NSAT,
+        {
+            "PRN": "GNSS Satellite PRN",
+        },
+    ),
     "groupsat1": (
         NSAT,
         {
@@ -86,6 +92,12 @@ MSM_SAT_123 = {
 }
 
 MSM_SAT_46 = {
+    "groupsat0": (
+        NSAT,
+        {
+            "PRN": "GNSS Satellite PRN",
+        },
+    ),
     "groupsat1": (
         NSAT,
         {
@@ -102,6 +114,12 @@ MSM_SAT_46 = {
 
 
 MSM_SAT_57 = {
+    "groupsat0": (
+        NSAT,
+        {
+            "PRN": "GNSS Satellite PRN",
+        },
+    ),
     "groupsat1": (
         NSAT,
         {
@@ -129,6 +147,12 @@ MSM_SAT_57 = {
 }
 
 MSM_SAT_57_GLONASS = {
+    "groupsat0": (
+        NSAT,
+        {
+            "PRN": "GNSS Satellite PRN",
+        },
+    ),
     "groupsat1": (
         NSAT,
         {
@@ -156,6 +180,13 @@ MSM_SAT_57_GLONASS = {
 }
 
 MSM_SIG_1 = {
+    "groupsig0": (
+        NCELL,
+        {
+            "CELLPRN": "GNSS Satellite PRN ",
+            "CELLSIG": "GNSS Satellite Signal ID",
+        },
+    ),
     "groupsig1": (
         NCELL,
         {
@@ -165,6 +196,13 @@ MSM_SIG_1 = {
 }
 
 MSM_SIG_2 = {
+    "groupsig0": (
+        NCELL,
+        {
+            "CELLPRN": "GNSS Satellite PRN ",
+            "CELLSIG": "GNSS Satellite Signal ID",
+        },
+    ),
     "groupsig1": (
         NCELL,
         {
@@ -187,6 +225,13 @@ MSM_SIG_2 = {
 }
 
 MSM_SIG_3 = {
+    "groupsig0": (
+        NCELL,
+        {
+            "CELLPRN": "GNSS Satellite PRN ",
+            "CELLSIG": "GNSS Satellite Signal ID",
+        },
+    ),
     "groupsig1": (
         NCELL,
         {
@@ -214,6 +259,13 @@ MSM_SIG_3 = {
 }
 
 MSM_SIG_4 = {
+    "groupsig0": (
+        NCELL,
+        {
+            "CELLPRN": "GNSS Satellite PRN ",
+            "CELLSIG": "GNSS Satellite Signal ID",
+        },
+    ),
     "groupsig1": (
         NCELL,
         {
@@ -247,6 +299,13 @@ MSM_SIG_4 = {
 }
 
 MSM_SIG_5 = {
+    "groupsig0": (
+        NCELL,
+        {
+            "CELLPRN": "GNSS Satellite PRN ",
+            "CELLSIG": "GNSS Satellite Signal ID",
+        },
+    ),
     "groupsig1": (
         NCELL,
         {
@@ -286,6 +345,13 @@ MSM_SIG_5 = {
 }
 
 MSM_SIG_6 = {
+    "groupsig0": (
+        NCELL,
+        {
+            "CELLPRN": "GNSS Satellite PRN ",
+            "CELLSIG": "GNSS Satellite Signal ID",
+        },
+    ),
     "groupsig1": (
         NCELL,
         {
@@ -319,6 +385,13 @@ MSM_SIG_6 = {
 }
 
 MSM_SIG_7 = {
+    "groupsig0": (
+        NCELL,
+        {
+            "CELLPRN": "GNSS Satellite PRN ",
+            "CELLSIG": "GNSS Satellite Signal ID",
+        },
+    ),
     "groupsig1": (
         NCELL,
         {
