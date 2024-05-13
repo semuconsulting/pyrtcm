@@ -46,6 +46,7 @@ VALCKSUM = 1
 ERR_RAISE = 2
 ERR_LOG = 1
 ERR_IGNORE = 0
+NA = "N/A"
 
 NSAT = "NSat"
 NSIG = "NSig"

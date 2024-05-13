@@ -15,6 +15,7 @@ from pyrtcm.rtcmtables import PRNSIGMAP
 from pyrtcm.rtcmtypes_core import (
     CELPRN,
     CELSIG,
+    NA,
     NCELL,
     NHARMCOEFFC,
     NHARMCOEFFS,
@@ -264,15 +265,15 @@ class RTCMMessage:
         sats = {}
         nsat = 0
         for idx in range(1, 65):
-            if getattr(self, "DF394") & 2 ** (64 - idx):
+            if getattr(self, "DF394") >> (64 - idx) & 1:
                 nsat += 1
-                sats[nsat] = prnmap.get(idx, "Reserved")
+                sats[nsat] = prnmap.get(idx, NA)
 
         sigs = []
         nsig = 0
         for idx in range(1, 33):
-            if getattr(self, "DF395") & 2 ** (32 - idx):
-                sgc = sigmap.get(idx, "Reserved")
+            if getattr(self, "DF395") >> (32 - idx) & 1:
+                sgc = sigmap.get(idx, NA)
                 fqc = sgc[1] if sigcode else sgc[0]
                 sigs.append(fqc)
                 nsig += 1
@@ -283,7 +284,7 @@ class RTCMMessage:
         for sat in range(nsat):
             for sig in range(nsig):
                 idx += 1
-                if getattr(self, "DF396") & 2 ** (ncells - idx):
+                if getattr(self, "DF396") >> (ncells - idx) & 1:
                     ncell += 1
                     cells[ncell] = (sats[sat + 1], sigs[sig])
 
@@ -300,6 +301,8 @@ class RTCMMessage:
         :rtype: int
         """
 
+        if length == 0:
+            return 0
         if position + length > self._payblen:
             raise rte.RTCMMessageError(
                 f"Attribute size {length} exceeds remaining "
@@ -308,7 +311,7 @@ class RTCMMessage:
 
         return int.from_bytes(self._payload, "big") >> (
             self._payblen - position - length
-        ) & (2**length - 1)
+        ) & ((2 << length - 1) - 1)
 
     def _get_dict(self) -> dict:
         """
