@@ -7,9 +7,7 @@ python3 msmparser.py infile="../tests/pygpsdata-RTCM3.log"
 
 
 Each RTCM3 MSM message contains data for multiple satellites and cells
-(combination of satellite and signal). The mapping between each
-data item and its corresponding satellite PRN or signal ID can be performed
-by pyrtcm helper functions `sat2prn` and `cell2prn`.
+(combination of satellite and signal).
 
 pyrtcm parses MSM messages into a flat data structure, with repeating
 element names suffixed by a 2-digit index (e.g. `DF405_02`) and

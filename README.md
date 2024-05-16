@@ -105,7 +105,7 @@ with Serial('/dev/tty.usbmodem14101', 9600, timeout=3) as stream:
   print(parsed_data)
 ```
 ```
- <RTCM(1077, DF002=1077, DF003=0, GNSSEpoch=204137001, DF393=1, DF409=0, DF001_7=0, DF411=0, DF412=0, DF417=0, DF418=0, DF394=760738918298550272, NSat=10, DF395=1073807360, NSig=2, DF396=1044459, DF397_01(005)=75, DF397_02(007)=75, DF397_03(009)=81, ..., DF404_19(030,1C)=0.0, DF404_20(030,2L)=0.0)>,
+"<RTCM(1077, DF002=1077, DF003=0, DF004=204137001, DF393=1, DF409=0, DF001_7=0, ..., DF404_15=-9556, DF404_16=-2148, DF404_17=-2174)>",     
 ```
 
 Example - File input (using iterator).
@@ -145,22 +145,22 @@ print(msg)
 <RTCM(1005, DF002=1005, DF003=0, DF021=0, DF022=1, DF023=1, DF024=1, DF141=0, DF025=4444030.8028, DF142=1, DF001_1=0, DF026=3085671.2349, DF364=0, DF027=3366658.256)>
 ```
 
-The `RTCMMessage` object exposes different public attributes depending on its message type or 'identity'. Attributes are defined as data fields (`DF002`, `DF003`, etc.) e.g. the `1087` multiple signal message (MSM) contains the following data fields:
+The `RTCMMessage` object exposes different public attributes depending on its message type or 'identity'. Attributes are defined as data fields (`DF002`, `DF003`, etc.) e.g. the `1097` multiple signal message (MSM) contains the following data fields:
 
 ```python
 print(msg)
 print(msg.identity)
-print(msg.DF034)
-print(msg.DF419_03)
+print(msg.DF248)
+print(msg.DF404_07)
 ```
 ```
-<RTCM(1087, DF002=1087, DF003=0, DF416=2, DF034=42119001, DF393=1, DF409=0, DF001_7=0, DF411=0, DF412=0, DF417=0, DF418=0, DF394=4039168114821169152, NSat=7, DF395=1090519040, NSig=2, DF396=16382, NCell=13, DF397_01(003)=69, DF397_02(004)=64, DF397_03(005)=73, DF397_04(013)=76, DF397_05(014)=66, DF397_06(015)=70, DF397_07(023)=78, DF419_01(003)=12, DF419_02(004)=13, DF419_03(005)=8, DF419_04(013)=5, DF419_05(014)=0, DF419_06(015)=7, DF419_07(023)=10, DF398_01(003)=0.6337890625, DF398_02(004)=0.3427734375, DF398_03(005)=0.25390625, DF398_04(013)=0.310546875, DF398_05(014)=0.5126953125, DF398_06(015)=0.8271484375, DF398_07(023)=0.8837890625, DF399_01(003)=-665, DF399_02(004)=29, DF399_03(005)=672, DF399_04(013)=-573, DF399_05(014)=-211, DF399_06(015)=312, DF399_07(023)=317, DF405_01(003,1C)=0.00024936161935329437, ... , DF404_12(015,2C)=0.3947, DF404_13(023,1C)=0.6146)>
-'1087'
-42119001
-8
+"<RTCM(1097, DF002=1097, DF003=0, DF248=204137001, DF393=1, DF409=0, DF001_7=0, DF411=0, DF412=0, DF417=0, DF418=0, DF394=216181732825628672, NSat=5, DF395=1073872896, NSig=2, DF396=1023, NCell=10, PRN_01=007, PRN_02=008, PRN_03=021, PRN_04=027, ..., DF404_07=5534, DF404_08=5545, DF404_09=-7726, DF404_10=-7733)>",             
+'1097'
+204137001
+5534
 ```
 
-Attributes within repeating groups are parsed with a two-digit suffix (`DF419_01`, `DF419_02`, etc. See [example below](#iterating) for an illustration of how to iterate through grouped attributes). Attributes within MSM NSAT and NCELL repeating groups can optionally be labelled with their corresponding satellite PRN and signal ID when the `__str__()` (`print()`) method is invoked, by setting the keyword argument `labelmsm` to True - e.g. `DF404_13(023,1C)` signifies that the 13th item in the DF404 ("fine Phase Range Rate") group refers to satellite PRN 023, signal ID 1C.
+Attributes within repeating groups are parsed with a two-digit suffix (`DF419_01`, `DF419_02`, etc. See [example below](#iterating) for an illustration of how to iterate through grouped attributes).
 
 Helper methods are available to interpret the individual datafields:
 
@@ -183,20 +183,20 @@ The `payload` attribute always contains the raw payload as bytes.
 
 #### <a name="iterating">Iterating Through Group Attributes</a>
 
-To iterate through a group of one or more repeating attributes in a given `RTCMMessage` object, the following construct can be used (in this illustration, repeating attributes DF405, DF406, DF407, DF408, DF420 and DF404 are extracted from an MSM 1077 message `msg` and collated in the array `msmarray`):
+To iterate through a group of one or more repeating attributes in a given `RTCMMessage` object, the following construct can be used (in this illustration, repeating attributes CELLPRN, CELLSIG, DF405, DF406, DF407, DF408, DF420 and DF404 are extracted from an MSM 1077 message `msg` and collated in the array `msmarray`):
 
 ```python
 msmarray = []
 for i in range(msg.NCell): # msg = MSM 1077, number of cells = NCell
   vals = []
-  for attr in ("DF405", "DF406", "DF407", "DF408", "DF420", "DF404"):
+  for attr in ("CELLPRN", "CELLSIG", "DF405", "DF406", "DF407", "DF408", "DF420", "DF404"):
     val = getattr(msg, f"{attr}_{i+1:02d}")
     vals.append(val)
   msmarray.append(vals)
 print(msmarray)
 ```
 ```shell
-[[0.00014309026300907135, 0.00014193402603268623, 341, 45.0, 0, -0.9231], [0.00014183297753334045, 0.00014339853078126907, 341, 38.0, 0, -0.9194], ... etc.]
+[['005', '1C', 0.00014309026300907135, 0.00014193402603268623, 341, 45.0, 0, -0.9231], ..., ['030', '2L', -0.00030865520238876343, -0.00030898721888661385, 341, 41.0, 0, -0.2174]]
 ```
 
 The following dedicated helper methods are available to parse selected RTCM3 message types into a series of iterable data arrays:
