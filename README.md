@@ -102,7 +102,8 @@ from pyrtcm import RTCMReader
 with Serial('/dev/tty.usbmodem14101', 9600, timeout=3) as stream:
   rtr = RTCMReader(stream)
   raw_data, parsed_data = rtr.read()
-  print(parsed_data)
+  if parsed_data is not None:
+    print(parsed_data)
 ```
 ```
 "<RTCM(1077, DF002=1077, DF003=0, DF004=204137001, DF393=1, DF409=0, DF001_7=0, ..., DF404_15=-9556, DF404_16=-2148, DF404_17=-2174)>",     
