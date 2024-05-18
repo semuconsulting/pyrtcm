@@ -20,14 +20,19 @@ from pyrtcm import (
     RTCMMessage,
     RTCMParseError,
     RTCMMessageError,
+    ERR_IGNORE,
+    ERR_LOG,
+    ERR_RAISE,
 )
 import pyrtcm.rtcmtypes_core as rtt
+
+DIRNAME = os.path.dirname(__file__)
 
 
 class StreamTest(unittest.TestCase):
     def setUp(self):
         self.maxDiff = None
-        dirname = os.path.dirname(__file__)
+
         self._raw1005ex = b"\xD3\x00\x13\x3E\xD7\xD3\x02\x02\x98\x0E\xDE\xEF\x34\xB4\xBD\x62\xAC\x09\x41\x98\x6F\x33\x36\x0B\x98"
         self._raw1005 = (
             b"\xd3\x00\x13>\xd0\x00\x03\x8aX\xd9I<\x87/4\x10\x9d\x07\xd6\xafH Z\xd7\xf7"
@@ -411,6 +416,34 @@ class StreamTest(unittest.TestCase):
             stream.close()
             output = self.restoreio()
             self.assertEqual(output, EXPECTED_ERROR)
+
+    def testBADHDR_FAIL(self):  # invalid header in data with quitonerror = 2
+        EXPECTED_ERROR = "Unknown protocol header b'\\xb5w'"
+        with self.assertRaises(RTCMParseError) as context:
+            i = 0
+            with open(os.path.join(DIRNAME, "pygpsdata-BADHDR.log"), "rb") as stream:
+                ubr = RTCMReader(stream, quitonerror=ERR_RAISE)
+                for _, _ in ubr:
+                    i += 1
+        self.assertTrue(EXPECTED_ERROR in str(context.exception))
+
+    def testBADHDR_LOG(self):  # invalid header in data with quitonerror = 1
+        i = 0
+        self.catchio()
+        with open(os.path.join(DIRNAME, "pygpsdata-BADHDR.log"), "rb") as stream:
+
+            ubr = RTCMReader(stream, quitonerror=ERR_LOG)
+            for raw, parsed in ubr:
+                i += 1
+        output = self.restoreio().split("\n")
+        self.assertEqual(output, ["Unknown protocol header b'\\xb5w'."])
+
+    def testBADHDR_IGNORE(self):  # invalid header in data with quitonerror = 0
+        i = 0
+        with open(os.path.join(DIRNAME, "pygpsdata-BADHDR.log"), "rb") as stream:
+            ubr = RTCMReader(stream, quitonerror=ERR_IGNORE)
+            for raw, parsed in ubr:
+                i += 1
 
 
 if __name__ == "__main__":

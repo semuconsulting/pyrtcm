@@ -103,8 +103,8 @@ class RTCMReader:
 
         parsing = True
 
-        try:
-            while parsing:  # loop until end of valid message or EOF
+        while parsing:  # loop until end of valid message or EOF
+            try:
                 raw_data = None
                 parsed_data = None
                 byte1 = self._read_bytes(1)  # read the first byte
@@ -118,29 +118,29 @@ class RTCMReader:
                     (raw_data, parsed_data) = self._parse_ubx(bytehdr)
                     continue
                 # if it's an NMEA message ('$G' or '$P'), ignore it
-                if bytehdr in rtt.NMEA_HDR:
+                elif bytehdr in rtt.NMEA_HDR:
                     (raw_data, parsed_data) = self._parse_nmea(bytehdr)
                     continue
                 # if it's a RTCM3 message
                 # (byte1 = 0xd3; byte2 = 0b000000**)
-                if byte1 == b"\xd3" and (byte2[0] & ~0x03) == 0:
+                elif byte1 == b"\xd3" and (byte2[0] & ~0x03) == 0:
                     (raw_data, parsed_data) = self._parse_rtcm3(bytehdr)
                     parsing = False
                 # unrecognised protocol header
                 else:
-                    continue
+                    raise rte.RTCMParseError(f"Unknown protocol header {bytehdr}.")
 
-        except EOFError:
-            return (None, None)
-        except (
-            rte.RTCMMessageError,
-            rte.RTCMParseError,
-            rte.RTCMStreamError,
-            rte.RTCMTypeError,
-        ) as err:
-            if self._quitonerror:
-                self._do_error(str(err))
-            parsed_data = str(err)
+            except EOFError:
+                return (None, None)
+            except (
+                rte.RTCMMessageError,
+                rte.RTCMParseError,
+                rte.RTCMStreamError,
+                rte.RTCMTypeError,
+            ) as err:
+                if self._quitonerror:
+                    self._do_error(err)
+                continue
 
         return (raw_data, parsed_data)
 
@@ -213,34 +213,44 @@ class RTCMReader:
         """
 
         data = self._stream.read(size)
-        if len(data) < size:  # EOF
+        if len(data) == 0:  # EOF
             raise EOFError()
+        if 0 < len(data) < size:  # truncated stream
+            raise rte.RTCMStreamError(
+                "Serial stream terminated unexpectedly. "
+                f"{size} bytes requested, {len(data)} bytes returned."
+            )
         return data
 
     def _read_line(self) -> bytes:
         """
-        Read until end of line (CRLF).
+        Read bytes until LF (0x0a) terminator.
 
         :return: bytes
         :rtype: bytes
         :raises: EOFError if stream ends prematurely
         """
 
-        data = self._stream.readline()
-        if data[-2:] != b"\x0d\x0a":
-            raise EOFError()
+        data = self._stream.readline()  # NMEA protocol is CRLF-terminated
+        if len(data) == 0:
+            raise EOFError()  # EOF
+        if data[-1:] != b"\x0a":  # truncated stream
+            raise rte.RTCMStreamError(
+                "Serial stream terminated unexpectedly. "
+                f"Line requested, {len(data)} bytes returned."
+            )
         return data
 
-    def _do_error(self, err: str):
+    def _do_error(self, err: Exception):
         """
         Handle error.
 
-        :param str err: error message
-        :raises: RTCMParseError if quitonerror = 2
+        :param Exception err: error message
+        :raises: Exception if quitonerror = 2
         """
 
         if self._quitonerror == rtt.ERR_RAISE:
-            raise rte.RTCMParseError(err)
+            raise err from err
         if self._quitonerror == rtt.ERR_LOG:
             # pass to error handler if there is one
             if self._errorhandler is None:
