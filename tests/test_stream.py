@@ -13,6 +13,7 @@ Created on 3 Oct 2020
 import os
 import sys
 import unittest
+from logging import ERROR
 
 from io import StringIO
 from pyrtcm import (
@@ -362,9 +363,8 @@ class StreamTest(unittest.TestCase):
         self,
     ):  # test mixed stream of NMEA, UBX & RTCM messages with invalid RTCM CRC
         EXPECTED_ERROR = "RTCM3 message invalid - failed CRC: (.*)"
-        dirname = os.path.dirname(__file__)
         with open(
-            os.path.join(dirname, "pygpsdata-MIXED-RTCM3BADCRC.log"), "rb"
+            os.path.join(DIRNAME, "pygpsdata-MIXED-RTCM3BADCRC.log"), "rb"
         ) as stream:
             i = 0
             raw = 0
@@ -379,43 +379,47 @@ class StreamTest(unittest.TestCase):
         self,
     ):  # test mixed stream of NMEA, UBX & RTCM messages with invalid RTCM CRC
         EXPECTED_ERROR = "I ignored the following error: RTCM3 message invalid - failed CRC: b'Z\\xd7\\xf7'"
-        dirname = os.path.dirname(__file__)
-        with open(
-            os.path.join(dirname, "pygpsdata-MIXED-RTCM3BADCRC.log"), "rb"
-        ) as stream:
-            self.catchio()
-            rtr = RTCMReader(
-                stream,
-                quitonerror=rtt.ERR_LOG,
-                errorhandler=lambda e: print(f"I ignored the following error: {e}"),
+        with self.assertLogs(level=ERROR) as log:
+            with open(
+                os.path.join(DIRNAME, "pygpsdata-MIXED-RTCM3BADCRC.log"), "rb"
+            ) as stream:
+                rtr = RTCMReader(
+                    stream,
+                    quitonerror=rtt.ERR_LOG,
+                    errorhandler=lambda e: print(f"I ignored the following error: {e}"),
+                )
+                for raw, parsed in rtr:
+                    if raw is not None:
+                        pass
+            self.assertEqual(
+                [
+                    "ERROR:pyrtcm.rtcmreader:RTCM3 message invalid - failed CRC: b'Z\\xd7\\xf7'"
+                ],
+                log.output,
             )
-            for raw, parsed in rtr:
-                if raw is not None:
-                    pass
-            stream.close()
-            output = self.restoreio()
-            self.assertEqual(output, EXPECTED_ERROR)
 
     def testbadCRC3(
         self,
     ):  # test mixed stream of NMEA, UBX & RTCM messages with invalid RTCM CRC
         EXPECTED_ERROR = "RTCM3 message invalid - failed CRC: b'Z\\xd7\\xf7'"
-        dirname = os.path.dirname(__file__)
-        with open(
-            os.path.join(dirname, "pygpsdata-MIXED-RTCM3BADCRC.log"), "rb"
-        ) as stream:
-            self.catchio()
-            rtr = RTCMReader(
-                stream,
-                quitonerror=rtt.ERR_LOG,
-                errorhandler=None,
+        with self.assertLogs(level=ERROR) as log:
+            with open(
+                os.path.join(DIRNAME, "pygpsdata-MIXED-RTCM3BADCRC.log"), "rb"
+            ) as stream:
+                rtr = RTCMReader(
+                    stream,
+                    quitonerror=rtt.ERR_LOG,
+                    errorhandler=None,
+                )
+                for raw, parsed in rtr:
+                    if raw is not None:
+                        pass
+            self.assertEqual(
+                [
+                    "ERROR:pyrtcm.rtcmreader:RTCM3 message invalid - failed CRC: b'Z\\xd7\\xf7'"
+                ],
+                log.output,
             )
-            for raw, parsed in rtr:
-                if raw is not None:
-                    pass
-            stream.close()
-            output = self.restoreio()
-            self.assertEqual(output, EXPECTED_ERROR)
 
     def testBADHDR_FAIL(self):  # invalid header in data with quitonerror = 2
         EXPECTED_ERROR = "Unknown protocol header b'\\xb5w'"
@@ -429,14 +433,15 @@ class StreamTest(unittest.TestCase):
 
     def testBADHDR_LOG(self):  # invalid header in data with quitonerror = 1
         i = 0
-        self.catchio()
-        with open(os.path.join(DIRNAME, "pygpsdata-BADHDR.log"), "rb") as stream:
-
-            ubr = RTCMReader(stream, quitonerror=ERR_LOG)
-            for raw, parsed in ubr:
-                i += 1
-        output = self.restoreio().split("\n")
-        self.assertEqual(output, ["Unknown protocol header b'\\xb5w'."])
+        with self.assertLogs(level=ERROR) as log:
+            with open(os.path.join(DIRNAME, "pygpsdata-BADHDR.log"), "rb") as stream:
+                ubr = RTCMReader(stream, quitonerror=ERR_LOG)
+                for raw, parsed in ubr:
+                    i += 1
+            self.assertEqual(
+                ["ERROR:pyrtcm.rtcmreader:Unknown protocol header b'\\xb5w'."],
+                log.output,
+            )
 
     def testBADHDR_IGNORE(self):  # invalid header in data with quitonerror = 0
         i = 0

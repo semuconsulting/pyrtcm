@@ -24,6 +24,7 @@ Created on 14 Feb 2022
 :license: BSD 3-Clause
 """
 
+from logging import getLogger
 from socket import socket
 
 import pyrtcm.exceptions as rte
@@ -52,7 +53,8 @@ class RTCMReader:
 
         :param datastream stream: input data stream
         :param int validate: 0 = ignore invalid checksum, 1 = validate checksum (1)
-        :param int quitonerror: 0 = ignore,  1 = log and continue, 2 = (re)raise (1)
+        :param int quitonerror: ERR_IGNORE (0) = ignore errors,  ERR_LOG (1) = log continue,
+            ERR_RAISE (2) = (re)raise (1)
         :param bool scaling: apply attribute scaling True/False (True)
         :param int labelmsm: MSM NSAT and NCELL attribute label (1 = RINEX, 2 = freq)
         :param int bufsize: socket recv buffer size (4096)
@@ -69,6 +71,7 @@ class RTCMReader:
         self._validate = validate
         self._scaling = scaling
         self._labelmsm = labelmsm
+        self._logger = getLogger(__name__)
 
     def __iter__(self):
         """Iterator."""
@@ -118,12 +121,12 @@ class RTCMReader:
                     (raw_data, parsed_data) = self._parse_ubx(bytehdr)
                     continue
                 # if it's an NMEA message ('$G' or '$P'), ignore it
-                elif bytehdr in rtt.NMEA_HDR:
+                if bytehdr in rtt.NMEA_HDR:
                     (raw_data, parsed_data) = self._parse_nmea(bytehdr)
                     continue
                 # if it's a RTCM3 message
                 # (byte1 = 0xd3; byte2 = 0b000000**)
-                elif byte1 == b"\xd3" and (byte2[0] & ~0x03) == 0:
+                if byte1 == b"\xd3" and (byte2[0] & ~0x03) == 0:
                     (raw_data, parsed_data) = self._parse_rtcm3(bytehdr)
                     parsing = False
                 # unrecognised protocol header
@@ -199,6 +202,7 @@ class RTCMReader:
             validate=self._validate,
             scaling=self._scaling,
             labelmsm=self._labelmsm,
+            quitonerror=self._quitonerror,
         )
         return (raw_data, parsed_data)
 
@@ -254,7 +258,7 @@ class RTCMReader:
         if self._quitonerror == rtt.ERR_LOG:
             # pass to error handler if there is one
             if self._errorhandler is None:
-                print(err)
+                self._logger.error(err)
             else:
                 self._errorhandler(err)
 
@@ -275,6 +279,7 @@ class RTCMReader:
         validate: int = rtt.VALCKSUM,
         scaling: bool = True,
         labelmsm: int = 1,
+        quitonerror: int = rtt.ERR_LOG,
     ) -> "RTCMMessage":
         """
         Parse RTCM message to RTCMMessage object.
@@ -283,15 +288,26 @@ class RTCMReader:
         :param int validate: 0 = don't validate CRC, 1 = validate CRC (1)
         :param bool scaling: apply attribute scaling True/False (True)
         :param int labelmsm: MSM NSAT and NCELL attribute label (1 = RINEX, 2 = freq)
+        :param int quitonerror: ERR_IGNORE (0) = ignore errors,  ERR_LOG (1) = log continue,
+            ERR_RAISE (2) = (re)raise (1)
         :return: RTCMMessage object
         :rtype: RTCMMessage
         :raises: RTCMParseError (if data stream contains invalid data or unknown message type)
         """
 
-        if validate & rtt.VALCKSUM:
-            if calc_crc24q(message):
-                raise rte.RTCMParseError(
-                    f"RTCM3 message invalid - failed CRC: {message[-3:]}"
-                )
-        payload = message[3:-3]
-        return RTCMMessage(payload=payload, scaling=scaling, labelmsm=labelmsm)
+        logger = getLogger(__name__)
+
+        try:
+            if validate & rtt.VALCKSUM:
+                if calc_crc24q(message):
+                    raise rte.RTCMParseError(
+                        f"RTCM3 message invalid - failed CRC: {message[-3:]}"
+                    )
+            payload = message[3:-3]
+            return RTCMMessage(payload=payload, scaling=scaling, labelmsm=labelmsm)
+        except rte.RTCMParseError as err:
+            if quitonerror == rtt.ERR_RAISE:
+                raise err from err
+            if quitonerror == rtt.ERR_LOG:
+                logger.error(err)
+            return None
