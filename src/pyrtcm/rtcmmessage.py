@@ -311,7 +311,7 @@ class RTCMMessage:
 
         return int.from_bytes(self._payload, "big") >> (
             self._payblen - position - length
-        ) & ((2 << length - 1) - 1)
+        ) & ((1 << length) - 1)
 
     def _get_dict(self) -> dict:
         """
