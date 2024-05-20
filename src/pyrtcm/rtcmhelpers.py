@@ -26,7 +26,13 @@ def att2idx(att: str) -> int:
     """
 
     try:
-        return int(att[att.rindex("_") - len(att) + 1 :])
+        att = att.split("_")
+        ln = len(att)
+        if ln == 2:  # one group level
+            return int(att[1])
+        if ln > 2:  # nested group level(s)
+            return tuple(int(att[i]) for i in range(1, ln))
+        return 0  # not grouped
     except ValueError:
         return 0
 
@@ -42,10 +48,7 @@ def att2name(att: str) -> str:
     :rtype: str
     """
 
-    try:
-        return att[: att.rindex("_")]
-    except ValueError:
-        return att
+    return att.split("_")[0]
 
 
 def bits2val(att: str, scale: float, bitfield: int) -> object:
