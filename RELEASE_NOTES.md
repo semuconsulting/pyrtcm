@@ -1,5 +1,11 @@
 # pyrtcm Release Notes
 
+### RELEASE 1.1.1
+
+ENHANCEMENTS:
+
+1. Internal enhancements to logging and exception handling.
+
 ### RELEASE 1.1.0
 
 ENHANCEMENTS:
