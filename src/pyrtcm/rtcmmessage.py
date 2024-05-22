@@ -247,7 +247,6 @@ class RTCMMessage:
             nc = int(((N + 1) * (N + 2) / 2) - ((N - M) * (N - M + 1) / 2))
             ns = int(nc - (N + 1))
             # ncs = (N + 1) * (N + 1) - (N - M) * (N - M + 1)
-            # print(f"DEBUG nc {nc} ns {ns} ncs {ncs} nc+ns {nc+ns}")
             setattr(self, NHARMCOEFFC, nc)
             setattr(self, NHARMCOEFFS, ns)
 
@@ -311,7 +310,7 @@ class RTCMMessage:
 
         return int.from_bytes(self._payload, "big") >> (
             self._payblen - position - length
-        ) & ((2 << length - 1) - 1)
+        ) & ((1 << length) - 1)
 
     def _get_dict(self) -> dict:
         """
