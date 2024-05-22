@@ -8,8 +8,7 @@ Created on 14 Feb 2022
 :license: BSD 3-Clause
 """
 
-import pyrtcm.exceptions as rte
-import pyrtcm.rtcmtypes_get as rtg
+from pyrtcm.exceptions import RTCMMessageError, RTCMTypeError
 from pyrtcm.rtcmhelpers import attsiz, bits2val, crc2bytes, escapeall, len2bytes
 from pyrtcm.rtcmtables import PRNSIGMAP
 from pyrtcm.rtcmtypes_core import (
@@ -26,6 +25,9 @@ from pyrtcm.rtcmtypes_core import (
     RTCM_HDR,
     RTCM_MSGIDS,
 )
+from pyrtcm.rtcmtypes_get import RTCM_PAYLOADS_GET
+from pyrtcm.rtcmtypes_get_igs import RTCM_PAYLOADS_GET_IGS
+from pyrtcm.rtcmtypes_get_msm import RTCM_PAYLOADS_GET_MSM
 
 BOOL = "B"
 
@@ -47,7 +49,7 @@ class RTCMMessage:
 
         self._payload = payload
         if self._payload is None:
-            raise rte.RTCMMessageError("Payload must be specified")
+            raise RTCMMessageError("Payload must be specified")
         self._payblen = len(self._payload) * 8  # length of payload in bits
         self._scaling = scaling
         self._labelmsm = labelmsm
@@ -78,7 +80,7 @@ class RTCMMessage:
                 offset, index = self._set_attribute(anam, pdict, offset, index)
 
         except Exception as err:  # pragma: no cover
-            raise rte.RTCMTypeError(
+            raise RTCMTypeError(
                 (
                     f"Error processing attribute '{anam}' "
                     f"in message type {self.identity} {err}"
@@ -303,7 +305,7 @@ class RTCMMessage:
         if length == 0:
             return 0
         if position + length > self._payblen:  # pragma: no cover
-            raise rte.RTCMMessageError(
+            raise RTCMMessageError(
                 f"Attribute size {length} exceeds remaining "
                 + f"payload length {self._payblen - position}"
             )
@@ -321,7 +323,11 @@ class RTCMMessage:
         :rtype: dict or None
         """
 
-        return rtg.RTCM_PAYLOADS_GET.get(self.identity, None)
+        if "1070" <= self.identity <= "1229":  # MSM types
+            return RTCM_PAYLOADS_GET_MSM.get(self.identity, None)
+        if self.identity[:4] == "4076":  # IGS types
+            return RTCM_PAYLOADS_GET_IGS.get(self.identity, None)
+        return RTCM_PAYLOADS_GET.get(self.identity, None)
 
     def _do_unknown(self):
         """
@@ -377,7 +383,7 @@ class RTCMMessage:
         """
 
         if self._immutable:
-            raise rte.RTCMMessageError(
+            raise RTCMMessageError(
                 f"Object is immutable. Updates to {name} not permitted after initialisation."
             )
 

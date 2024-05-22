@@ -27,10 +27,15 @@ Created on 14 Feb 2022
 from logging import getLogger
 from socket import socket
 
-import pyrtcm.exceptions as rte
-import pyrtcm.rtcmtypes_core as rtt
+from pyrtcm.exceptions import (
+    RTCMMessageError,
+    RTCMParseError,
+    RTCMStreamError,
+    RTCMTypeError,
+)
 from pyrtcm.rtcmhelpers import calc_crc24q
 from pyrtcm.rtcmmessage import RTCMMessage
+from pyrtcm.rtcmtypes_core import ERR_LOG, ERR_RAISE, NMEA_HDR, UBX_HDR, VALCKSUM
 from pyrtcm.socket_stream import SocketStream
 
 
@@ -42,8 +47,8 @@ class RTCMReader:
     def __init__(
         self,
         datastream,
-        validate: int = rtt.VALCKSUM,
-        quitonerror: int = rtt.ERR_LOG,
+        validate: int = VALCKSUM,
+        quitonerror: int = ERR_LOG,
         scaling: bool = True,
         labelmsm: int = 1,
         bufsize: int = 4096,
@@ -117,11 +122,11 @@ class RTCMReader:
                 byte2 = self._read_bytes(1)
                 bytehdr = byte1 + byte2
                 # if it's a UBX message (b'\xb5\x62'), ignore it
-                if bytehdr == rtt.UBX_HDR:
+                if bytehdr == UBX_HDR:
                     (raw_data, parsed_data) = self._parse_ubx(bytehdr)
                     continue
                 # if it's an NMEA message ('$G' or '$P'), ignore it
-                if bytehdr in rtt.NMEA_HDR:
+                if bytehdr in NMEA_HDR:
                     (raw_data, parsed_data) = self._parse_nmea(bytehdr)
                     continue
                 # if it's a RTCM3 message
@@ -131,15 +136,15 @@ class RTCMReader:
                     parsing = False
                 # unrecognised protocol header
                 else:
-                    raise rte.RTCMParseError(f"Unknown protocol header {bytehdr}.")
+                    raise RTCMParseError(f"Unknown protocol header {bytehdr}.")
 
             except EOFError:
                 return (None, None)
             except (
-                rte.RTCMMessageError,
-                rte.RTCMParseError,
-                rte.RTCMStreamError,
-                rte.RTCMTypeError,
+                RTCMMessageError,
+                RTCMParseError,
+                RTCMStreamError,
+                RTCMTypeError,
             ) as err:
                 if self._quitonerror:
                     self._do_error(err)
@@ -219,7 +224,7 @@ class RTCMReader:
         if len(data) == 0:  # EOF
             raise EOFError()
         if 0 < len(data) < size:  # truncated stream
-            raise rte.RTCMStreamError(
+            raise RTCMStreamError(
                 "Serial stream terminated unexpectedly. "
                 f"{size} bytes requested, {len(data)} bytes returned."
             )
@@ -238,7 +243,7 @@ class RTCMReader:
         if len(data) == 0:
             raise EOFError()  # EOF
         if data[-1:] != b"\x0a":  # truncated stream
-            raise rte.RTCMStreamError(
+            raise RTCMStreamError(
                 "Serial stream terminated unexpectedly. "
                 f"Line requested, {len(data)} bytes returned."
             )
@@ -252,9 +257,9 @@ class RTCMReader:
         :raises: Exception if quitonerror = 2
         """
 
-        if self._quitonerror == rtt.ERR_RAISE:
+        if self._quitonerror == ERR_RAISE:
             raise err from err
-        if self._quitonerror == rtt.ERR_LOG:
+        if self._quitonerror == ERR_LOG:
             # pass to error handler if there is one
             if self._errorhandler is None:
                 self._logger.error(err)
@@ -275,10 +280,10 @@ class RTCMReader:
     @staticmethod
     def parse(
         message: bytes,
-        validate: int = rtt.VALCKSUM,
+        validate: int = VALCKSUM,
         scaling: bool = True,
         labelmsm: int = 1,
-    ) -> "RTCMMessage":
+    ) -> RTCMMessage:
         """
         Parse RTCM message to RTCMMessage object.
 
@@ -291,9 +296,9 @@ class RTCMReader:
         :raises: RTCMParseError (if data stream contains invalid data or unknown message type)
         """
 
-        if validate & rtt.VALCKSUM:
+        if validate & VALCKSUM:
             if calc_crc24q(message):
-                raise rte.RTCMParseError(
+                raise RTCMParseError(
                     f"RTCM3 message invalid - failed CRC: {message[-3:]}"
                 )
         payload = message[3:-3]

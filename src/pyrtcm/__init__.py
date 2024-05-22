@@ -19,6 +19,8 @@ from pyrtcm.rtcmmessage import RTCMMessage
 from pyrtcm.rtcmreader import RTCMReader
 from pyrtcm.rtcmtypes_core import *
 from pyrtcm.rtcmtypes_get import *
+from pyrtcm.rtcmtypes_get_igs import *
+from pyrtcm.rtcmtypes_get_msm import *
 from pyrtcm.socket_stream import SocketStream
 
 version = __version__  # pylint: disable=invalid-name
