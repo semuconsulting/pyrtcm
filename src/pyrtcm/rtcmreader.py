@@ -49,7 +49,6 @@ class RTCMReader:
         datastream,
         validate: int = VALCKSUM,
         quitonerror: int = ERR_LOG,
-        scaling: bool = True,
         labelmsm: int = 1,
         bufsize: int = 4096,
         errorhandler: object = None,
@@ -60,7 +59,6 @@ class RTCMReader:
         :param int validate: 0 = ignore invalid checksum, 1 = validate checksum (1)
         :param int quitonerror: ERR_IGNORE (0) = ignore errors,  ERR_LOG (1) = log continue,
             ERR_RAISE (2) = (re)raise (1)
-        :param bool scaling: apply attribute scaling True/False (True)
         :param int labelmsm: MSM NSAT and NCELL attribute label (1 = RINEX, 2 = freq)
         :param int bufsize: socket recv buffer size (4096)
         :param object errorhandler: error handling object or function (None)
@@ -74,7 +72,6 @@ class RTCMReader:
         self._quitonerror = quitonerror
         self._errorhandler = errorhandler
         self._validate = validate
-        self._scaling = scaling
         self._labelmsm = labelmsm
         self._logger = getLogger(__name__)
 
@@ -205,7 +202,6 @@ class RTCMReader:
         parsed_data = self.parse(
             raw_data,
             validate=self._validate,
-            scaling=self._scaling,
             labelmsm=self._labelmsm,
         )
         return (raw_data, parsed_data)
@@ -281,7 +277,6 @@ class RTCMReader:
     def parse(
         message: bytes,
         validate: int = VALCKSUM,
-        scaling: bool = True,
         labelmsm: int = 1,
     ) -> RTCMMessage:
         """
@@ -289,7 +284,6 @@ class RTCMReader:
 
         :param bytes message: RTCM raw message bytes
         :param int validate: 0 = don't validate CRC, 1 = validate CRC (1)
-        :param bool scaling: apply attribute scaling True/False (True)
         :param int labelmsm: MSM NSAT and NCELL attribute label (1 = RINEX, 2 = freq)
         :return: RTCMMessage object
         :rtype: RTCMMessage
@@ -302,4 +296,4 @@ class RTCMReader:
                     f"RTCM3 message invalid - failed CRC: {message[-3:]}"
                 )
         payload = message[3:-3]
-        return RTCMMessage(payload=payload, scaling=scaling, labelmsm=labelmsm)
+        return RTCMMessage(payload=payload, labelmsm=labelmsm)

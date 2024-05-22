@@ -35,11 +35,10 @@ BOOL = "B"
 class RTCMMessage:
     """RTCM Message Class."""
 
-    def __init__(self, payload: bytes = None, scaling: bool = True, labelmsm: int = 1):
+    def __init__(self, payload: bytes = None, labelmsm: int = 1):
         """Constructor.
 
         :param bytes payload: message payload (mandatory)
-        :param bool scaling: whether to apply attribute scaling True/False (True)
         :param int labelmsm: MSM NSAT and NCELL attribute label (1 = RINEX, 2 = freq)
         :raises: RTCMMessageError
         """
@@ -51,7 +50,6 @@ class RTCMMessage:
         if self._payload is None:
             raise RTCMMessageError("Payload must be specified")
         self._payblen = len(self._payload) * 8  # length of payload in bits
-        self._scaling = scaling
         self._labelmsm = labelmsm
         self._unknown = False
         self._satmap = None
@@ -206,8 +204,6 @@ class RTCMMessage:
 
         # get value of required number of bits at current payload offset
         atyp, asiz, ares, _ = RTCM_DATA_FIELDS[anam]
-        if not self._scaling:
-            ares = 0
         if anam == "DF396":  # this MSM attribute has variable length
             asiz = getattr(self, NSAT) * getattr(self, NSIG)
         if atyp == PRN:
