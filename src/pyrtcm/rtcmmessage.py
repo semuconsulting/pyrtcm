@@ -9,7 +9,7 @@ Created on 14 Feb 2022
 """
 
 from pyrtcm.exceptions import RTCMMessageError, RTCMTypeError
-from pyrtcm.rtcmhelpers import attsiz, bits2val, crc2bytes, escapeall, len2bytes
+from pyrtcm.rtcmhelpers import bits2val, crc2bytes, escapeall, len2bytes
 from pyrtcm.rtcmtables import PRNSIGMAP
 from pyrtcm.rtcmtypes_core import (
     CELPRN,
@@ -205,13 +205,11 @@ class RTCMMessage:
                 anami += f"_{i:02d}"
 
         # get value of required number of bits at current payload offset
-        atyp, ares, _ = RTCM_DATA_FIELDS[anam]
+        atyp, asiz, ares, _ = RTCM_DATA_FIELDS[anam]
         if not self._scaling:
             ares = 0
         if anam == "DF396":  # this MSM attribute has variable length
             asiz = getattr(self, NSAT) * getattr(self, NSIG)
-        else:
-            asiz = attsiz(atyp)
         if atyp == PRN:
             val = self._satmap[index[0]]
         elif atyp == CELPRN:
@@ -220,7 +218,7 @@ class RTCMMessage:
             val = self._cellmap[index[0]][1]
         else:
             bitfield = self._getbits(offset, asiz)
-            val = bits2val(atyp, ares, bitfield)
+            val = bits2val(atyp, asiz, ares, bitfield)
 
         setattr(self, anami, val)
         offset += asiz

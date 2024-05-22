@@ -166,17 +166,13 @@ Attributes within repeating groups are parsed with a two-digit suffix (`DF419_01
 Helper methods are available to interpret the individual datafields:
 
 ```python
-from pyrtcm import RTCM_DATA_FIELDS, datasiz, datascale, datadesc
+from pyrtcm import RTCM_DATA_FIELDS, datadesc
 dfname = "DF012"
 print(RTCM_DATA_FIELDS[dfname])
-print(datasiz(dfname))
-print(datascale(dfname))
 print(datadesc(dfname))
 ```
 ```
 (INT20, 0.0001, "GPS L1 PhaseRange - L1 Pseudorange")
-20
-0.0001
 'GPS L1 PhaseRange - L1 Pseudorange'
 ```
 

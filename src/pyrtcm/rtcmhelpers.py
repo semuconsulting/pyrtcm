@@ -51,19 +51,18 @@ def att2name(att: str) -> str:
     return att.split("_")[0]
 
 
-def bits2val(att: str, scale: float, bitfield: int) -> object:
+def bits2val(typ: str, siz: int, scale: float, bitfield: int) -> object:
     """
     Convert bitfield to value for given attribute type.
 
-    :param str att: attribute type e.g. "UNT008"
+    :param str typ: attribute type e.g. "UNT"
+    :param int siz: attribute size in bitys e.g. 8
     :param float scale: scaling factor (where defined)
     :param int bitfield: attribute as integer
     :return: value
     :rtype: object (int, float, char, bool)
     """
 
-    typ = atttyp(att)
-    siz = attsiz(att)
     val = msb = 0
 
     if typ in ("SNT", "INT"):
@@ -138,59 +137,6 @@ def len2bytes(payload: bytes) -> bytes:
     return len(payload).to_bytes(2, "big")
 
 
-def atttyp(att: str) -> str:
-    """
-    Get attribute type as string.
-
-    :param str att: attribute type e.g. 'UNT002'
-    :return: type of attribute as string e.g. 'UNT'
-    :rtype: str
-
-    """
-
-    return att[0:3]
-
-
-def attsiz(att: str) -> int:
-    """
-    Get attribute size in bits.
-
-    :param str att: attribute type e.g. 'U002'
-    :return: size of attribute in bits
-    :rtype: int
-
-    """
-
-    return int(att[-3:])
-
-
-def datasiz(datafield: str) -> int:
-    """
-    Get data field size in bits.
-
-    :param str datafield: datafield e.g. 'DF234'
-    :return: size of data field in bits
-    :rtype: int
-
-    """
-
-    (att, _, _) = RTCM_DATA_FIELDS[datafield[0:5]]
-    return attsiz(att)
-
-
-def datascale(datafield: str) -> float:
-    """
-    Get scaling factor of data field.
-
-    :param str datafield: datafield e.g. 'DF234'
-    :return: datafield scale factor or 0 if N/A
-    :rtype: float
-    """
-
-    (_, res, _) = RTCM_DATA_FIELDS[datafield[0:5]]
-    return res
-
-
 def datadesc(datafield: str) -> str:
     """
     Get description of data field.
@@ -200,7 +146,7 @@ def datadesc(datafield: str) -> str:
     :rtype: str
     """
 
-    (_, _, desc) = RTCM_DATA_FIELDS[datafield[0:5]]
+    (_, _, _, desc) = RTCM_DATA_FIELDS[datafield[0:5]]
     return desc
 
 
