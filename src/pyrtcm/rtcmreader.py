@@ -202,7 +202,6 @@ class RTCMReader:
             validate=self._validate,
             scaling=self._scaling,
             labelmsm=self._labelmsm,
-            quitonerror=self._quitonerror,
         )
         return (raw_data, parsed_data)
 
@@ -279,7 +278,6 @@ class RTCMReader:
         validate: int = rtt.VALCKSUM,
         scaling: bool = True,
         labelmsm: int = 1,
-        quitonerror: int = rtt.ERR_LOG,
     ) -> "RTCMMessage":
         """
         Parse RTCM message to RTCMMessage object.
@@ -288,26 +286,15 @@ class RTCMReader:
         :param int validate: 0 = don't validate CRC, 1 = validate CRC (1)
         :param bool scaling: apply attribute scaling True/False (True)
         :param int labelmsm: MSM NSAT and NCELL attribute label (1 = RINEX, 2 = freq)
-        :param int quitonerror: ERR_IGNORE (0) = ignore errors,  ERR_LOG (1) = log continue,
-            ERR_RAISE (2) = (re)raise (1)
         :return: RTCMMessage object
         :rtype: RTCMMessage
         :raises: RTCMParseError (if data stream contains invalid data or unknown message type)
         """
 
-        logger = getLogger(__name__)
-
-        try:
-            if validate & rtt.VALCKSUM:
-                if calc_crc24q(message):
-                    raise rte.RTCMParseError(
-                        f"RTCM3 message invalid - failed CRC: {message[-3:]}"
-                    )
-            payload = message[3:-3]
-            return RTCMMessage(payload=payload, scaling=scaling, labelmsm=labelmsm)
-        except rte.RTCMParseError as err:
-            if quitonerror == rtt.ERR_RAISE:
-                raise err from err
-            if quitonerror == rtt.ERR_LOG:
-                logger.error(err)
-            return None
+        if validate & rtt.VALCKSUM:
+            if calc_crc24q(message):
+                raise rte.RTCMParseError(
+                    f"RTCM3 message invalid - failed CRC: {message[-3:]}"
+                )
+        payload = message[3:-3]
+        return RTCMMessage(payload=payload, scaling=scaling, labelmsm=labelmsm)

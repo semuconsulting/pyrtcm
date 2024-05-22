@@ -460,6 +460,10 @@ class StaticTest(unittest.TestCase):
         res = parse_msm(msg1077)
         # print(res)
         self.assertEqual(res, EXPECTED_RESULT)
+        msg1005 = RTCMReader.parse(
+            b"\xd3\x00\x13>\xd0\x00\x03\x8aX\xd9I<\x87/4\x10\x9d\x07\xd6\xafH Z\xd7\xf7"
+        )
+        self.assertEqual(parse_msm(msg1005), None)
 
     def testparse4076_201(self):
         EXPECTED_RESULT = {
@@ -646,6 +650,10 @@ class StaticTest(unittest.TestCase):
         res = parse_4076_201(msg)
         # print(res)
         self.assertEqual(res, EXPECTED_RESULT)
+        msg1005 = RTCMReader.parse(
+            b"\xd3\x00\x13>\xd0\x00\x03\x8aX\xd9I<\x87/4\x10\x9d\x07\xd6\xafH Z\xd7\xf7"
+        )
+        self.assertEqual(parse_4076_201(msg1005), None)
 
 
 if __name__ == "__main__":

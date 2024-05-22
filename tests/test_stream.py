@@ -11,6 +11,7 @@ Created on 3 Oct 2020
 # pylint: disable=line-too-long, invalid-name, missing-docstring, no-member
 
 import os
+from io import BufferedReader
 import sys
 import unittest
 from logging import ERROR
@@ -120,6 +121,9 @@ class StreamTest(unittest.TestCase):
                 self.assertEqual(str(parsed), EXPECTED_RESULT[i])
                 i += 1
             self.assertEqual(i, 3)
+            self.assertIsInstance(
+                rtr.datastream, BufferedReader
+            )  # test datastream getter
 
     def testMIXEDRTCM_NOSCALE(
         self,
@@ -379,24 +383,22 @@ class StreamTest(unittest.TestCase):
         self,
     ):  # test mixed stream of NMEA, UBX & RTCM messages with invalid RTCM CRC
         EXPECTED_ERROR = "I ignored the following error: RTCM3 message invalid - failed CRC: b'Z\\xd7\\xf7'"
-        with self.assertLogs(level=ERROR) as log:
-            with open(
-                os.path.join(DIRNAME, "pygpsdata-MIXED-RTCM3BADCRC.log"), "rb"
-            ) as stream:
-                rtr = RTCMReader(
-                    stream,
-                    quitonerror=rtt.ERR_LOG,
-                    errorhandler=lambda e: print(f"I ignored the following error: {e}"),
-                )
-                for raw, parsed in rtr:
-                    if raw is not None:
-                        pass
-            self.assertEqual(
-                [
-                    "ERROR:pyrtcm.rtcmreader:RTCM3 message invalid - failed CRC: b'Z\\xd7\\xf7'"
-                ],
-                log.output,
+        dirname = os.path.dirname(__file__)
+        with open(
+            os.path.join(dirname, "pygpsdata-MIXED-RTCM3BADCRC.log"), "rb"
+        ) as stream:
+            self.catchio()
+            rtr = RTCMReader(
+                stream,
+                quitonerror=rtt.ERR_LOG,
+                errorhandler=lambda e: print(f"I ignored the following error: {e}"),
             )
+            for raw, parsed in rtr:
+                if raw is not None:
+                    pass
+            stream.close()
+            output = self.restoreio()
+            self.assertEqual(output, EXPECTED_ERROR)
 
     def testbadCRC3(
         self,

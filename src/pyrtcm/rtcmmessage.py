@@ -67,7 +67,7 @@ class RTCMMessage:
 
         offset = 0  # payload offset in bits
         index = []  # array of (nested) group indices
-
+        anam = ""
         try:
             # get payload definition dict for this message identity
             pdict = self._get_dict()
@@ -75,9 +75,9 @@ class RTCMMessage:
                 self._do_unknown()
                 return
             for anam in pdict:  # process each attribute in dict
-                (offset, index) = self._set_attribute(anam, pdict, offset, index)
+                offset, index = self._set_attribute(anam, pdict, offset, index)
 
-        except Exception as err:
+        except Exception as err:  # pragma: no cover
             raise rte.RTCMTypeError(
                 (
                     f"Error processing attribute '{anam}' "
@@ -102,13 +102,13 @@ class RTCMMessage:
         if isinstance(adef, tuple):  # attribute group
             gtyp, _ = adef
             if isinstance(gtyp, tuple):  # conditional group of attributes
-                (offset, index) = self._set_attribute_optional(adef, offset, index)
+                offset, index = self._set_attribute_optional(adef, offset, index)
             else:  # repeating group of attributes
-                (offset, index) = self._set_attribute_group(adef, offset, index)
+                offset, index = self._set_attribute_group(adef, offset, index)
         else:  # single attribute
             offset = self._set_attribute_single(anam, offset, index)
 
-        return (offset, index)
+        return offset, index
 
     def _set_attribute_optional(self, adef: tuple, offset: int, index: list) -> tuple:
         """
@@ -134,9 +134,9 @@ class RTCMMessage:
             # recursively process each group attribute,
             # incrementing the payload offset as we go
             for anamg in gdict:
-                (offset, index) = self._set_attribute(anamg, gdict, offset, index)
+                offset, index = self._set_attribute(anamg, gdict, offset, index)
 
-        return (offset, index)
+        return offset, index
 
     def _set_attribute_group(self, adef: tuple, offset: int, index: list) -> tuple:
         """
@@ -171,11 +171,11 @@ class RTCMMessage:
         for i in range(gsiz):
             index[-1] = i + 1
             for anamg in gdict:
-                (offset, index) = self._set_attribute(anamg, gdict, offset, index)
+                offset, index = self._set_attribute(anamg, gdict, offset, index)
 
         index.pop()  # remove this (nested) group index
 
-        return (offset, index)
+        return offset, index
 
     def _set_attribute_single(
         self,
@@ -302,7 +302,7 @@ class RTCMMessage:
 
         if length == 0:
             return 0
-        if position + length > self._payblen:
+        if position + length > self._payblen:  # pragma: no cover
             raise rte.RTCMMessageError(
                 f"Attribute size {length} exceeds remaining "
                 + f"payload length {self._payblen - position}"
@@ -344,7 +344,7 @@ class RTCMMessage:
             if att[0] != "_":  # only show public attributes
                 val = self.__dict__[att]
                 # escape all byte chars
-                if isinstance(val, bytes):
+                if isinstance(val, bytes):  # pragma: no cover
                     val = escapeall(val)
                 stg += att + "=" + str(val)
                 if i < len(self.__dict__) - 1:
