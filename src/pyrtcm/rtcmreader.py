@@ -24,12 +24,18 @@ Created on 14 Feb 2022
 :license: BSD 3-Clause
 """
 
+from logging import getLogger
 from socket import socket
 
-import pyrtcm.exceptions as rte
-import pyrtcm.rtcmtypes_core as rtt
+from pyrtcm.exceptions import (
+    RTCMMessageError,
+    RTCMParseError,
+    RTCMStreamError,
+    RTCMTypeError,
+)
 from pyrtcm.rtcmhelpers import calc_crc24q
 from pyrtcm.rtcmmessage import RTCMMessage
+from pyrtcm.rtcmtypes_core import ERR_LOG, ERR_RAISE, NMEA_HDR, UBX_HDR, VALCKSUM
 from pyrtcm.socket_stream import SocketStream
 
 
@@ -41,9 +47,8 @@ class RTCMReader:
     def __init__(
         self,
         datastream,
-        validate: int = rtt.VALCKSUM,
-        quitonerror: int = rtt.ERR_LOG,
-        scaling: bool = True,
+        validate: int = VALCKSUM,
+        quitonerror: int = ERR_LOG,
         labelmsm: int = 1,
         bufsize: int = 4096,
         errorhandler: object = None,
@@ -52,8 +57,8 @@ class RTCMReader:
 
         :param datastream stream: input data stream
         :param int validate: 0 = ignore invalid checksum, 1 = validate checksum (1)
-        :param int quitonerror: 0 = ignore,  1 = log and continue, 2 = (re)raise (1)
-        :param bool scaling: apply attribute scaling True/False (True)
+        :param int quitonerror: ERR_IGNORE (0) = ignore errors,  ERR_LOG (1) = log continue,
+            ERR_RAISE (2) = (re)raise (1)
         :param int labelmsm: MSM NSAT and NCELL attribute label (1 = RINEX, 2 = freq)
         :param int bufsize: socket recv buffer size (4096)
         :param object errorhandler: error handling object or function (None)
@@ -67,8 +72,8 @@ class RTCMReader:
         self._quitonerror = quitonerror
         self._errorhandler = errorhandler
         self._validate = validate
-        self._scaling = scaling
         self._labelmsm = labelmsm
+        self._logger = getLogger(__name__)
 
     def __iter__(self):
         """Iterator."""
@@ -103,8 +108,8 @@ class RTCMReader:
 
         parsing = True
 
-        try:
-            while parsing:  # loop until end of valid message or EOF
+        while parsing:  # loop until end of valid message or EOF
+            try:
                 raw_data = None
                 parsed_data = None
                 byte1 = self._read_bytes(1)  # read the first byte
@@ -114,11 +119,11 @@ class RTCMReader:
                 byte2 = self._read_bytes(1)
                 bytehdr = byte1 + byte2
                 # if it's a UBX message (b'\xb5\x62'), ignore it
-                if bytehdr == rtt.UBX_HDR:
+                if bytehdr == UBX_HDR:
                     (raw_data, parsed_data) = self._parse_ubx(bytehdr)
                     continue
                 # if it's an NMEA message ('$G' or '$P'), ignore it
-                if bytehdr in rtt.NMEA_HDR:
+                if bytehdr in NMEA_HDR:
                     (raw_data, parsed_data) = self._parse_nmea(bytehdr)
                     continue
                 # if it's a RTCM3 message
@@ -128,19 +133,19 @@ class RTCMReader:
                     parsing = False
                 # unrecognised protocol header
                 else:
-                    continue
+                    raise RTCMParseError(f"Unknown protocol header {bytehdr}.")
 
-        except EOFError:
-            return (None, None)
-        except (
-            rte.RTCMMessageError,
-            rte.RTCMParseError,
-            rte.RTCMStreamError,
-            rte.RTCMTypeError,
-        ) as err:
-            if self._quitonerror:
-                self._do_error(str(err))
-            parsed_data = str(err)
+            except EOFError:
+                return (None, None)
+            except (
+                RTCMMessageError,
+                RTCMParseError,
+                RTCMStreamError,
+                RTCMTypeError,
+            ) as err:
+                if self._quitonerror:
+                    self._do_error(err)
+                continue
 
         return (raw_data, parsed_data)
 
@@ -197,7 +202,6 @@ class RTCMReader:
         parsed_data = self.parse(
             raw_data,
             validate=self._validate,
-            scaling=self._scaling,
             labelmsm=self._labelmsm,
         )
         return (raw_data, parsed_data)
@@ -213,38 +217,48 @@ class RTCMReader:
         """
 
         data = self._stream.read(size)
-        if len(data) < size:  # EOF
+        if len(data) == 0:  # EOF
             raise EOFError()
+        if 0 < len(data) < size:  # truncated stream
+            raise RTCMStreamError(
+                "Serial stream terminated unexpectedly. "
+                f"{size} bytes requested, {len(data)} bytes returned."
+            )
         return data
 
     def _read_line(self) -> bytes:
         """
-        Read until end of line (CRLF).
+        Read bytes until LF (0x0a) terminator.
 
         :return: bytes
         :rtype: bytes
         :raises: EOFError if stream ends prematurely
         """
 
-        data = self._stream.readline()
-        if data[-2:] != b"\x0d\x0a":
-            raise EOFError()
+        data = self._stream.readline()  # NMEA protocol is CRLF-terminated
+        if len(data) == 0:
+            raise EOFError()  # EOF
+        if data[-1:] != b"\x0a":  # truncated stream
+            raise RTCMStreamError(
+                "Serial stream terminated unexpectedly. "
+                f"Line requested, {len(data)} bytes returned."
+            )
         return data
 
-    def _do_error(self, err: str):
+    def _do_error(self, err: Exception):
         """
         Handle error.
 
-        :param str err: error message
-        :raises: RTCMParseError if quitonerror = 2
+        :param Exception err: error message
+        :raises: Exception if quitonerror = 2
         """
 
-        if self._quitonerror == rtt.ERR_RAISE:
-            raise rte.RTCMParseError(err)
-        if self._quitonerror == rtt.ERR_LOG:
+        if self._quitonerror == ERR_RAISE:
+            raise err from err
+        if self._quitonerror == ERR_LOG:
             # pass to error handler if there is one
             if self._errorhandler is None:
-                print(err)
+                self._logger.error(err)
             else:
                 self._errorhandler(err)
 
@@ -262,26 +276,24 @@ class RTCMReader:
     @staticmethod
     def parse(
         message: bytes,
-        validate: int = rtt.VALCKSUM,
-        scaling: bool = True,
+        validate: int = VALCKSUM,
         labelmsm: int = 1,
-    ) -> "RTCMMessage":
+    ) -> RTCMMessage:
         """
         Parse RTCM message to RTCMMessage object.
 
         :param bytes message: RTCM raw message bytes
         :param int validate: 0 = don't validate CRC, 1 = validate CRC (1)
-        :param bool scaling: apply attribute scaling True/False (True)
         :param int labelmsm: MSM NSAT and NCELL attribute label (1 = RINEX, 2 = freq)
         :return: RTCMMessage object
         :rtype: RTCMMessage
         :raises: RTCMParseError (if data stream contains invalid data or unknown message type)
         """
 
-        if validate & rtt.VALCKSUM:
+        if validate & VALCKSUM:
             if calc_crc24q(message):
-                raise rte.RTCMParseError(
+                raise RTCMParseError(
                     f"RTCM3 message invalid - failed CRC: {message[-3:]}"
                 )
         payload = message[3:-3]
-        return RTCMMessage(payload=payload, scaling=scaling, labelmsm=labelmsm)
+        return RTCMMessage(payload=payload, labelmsm=labelmsm)

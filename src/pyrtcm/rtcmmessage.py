@@ -8,9 +8,8 @@ Created on 14 Feb 2022
 :license: BSD 3-Clause
 """
 
-import pyrtcm.exceptions as rte
-import pyrtcm.rtcmtypes_get as rtg
-from pyrtcm.rtcmhelpers import attsiz, bits2val, crc2bytes, escapeall, len2bytes
+from pyrtcm.exceptions import RTCMMessageError, RTCMTypeError
+from pyrtcm.rtcmhelpers import crc2bytes, escapeall, len2bytes
 from pyrtcm.rtcmtables import PRNSIGMAP
 from pyrtcm.rtcmtypes_core import (
     CELPRN,
@@ -26,6 +25,9 @@ from pyrtcm.rtcmtypes_core import (
     RTCM_HDR,
     RTCM_MSGIDS,
 )
+from pyrtcm.rtcmtypes_get import RTCM_PAYLOADS_GET
+from pyrtcm.rtcmtypes_get_igs import RTCM_PAYLOADS_GET_IGS
+from pyrtcm.rtcmtypes_get_msm import RTCM_PAYLOADS_GET_MSM
 
 BOOL = "B"
 
@@ -33,11 +35,10 @@ BOOL = "B"
 class RTCMMessage:
     """RTCM Message Class."""
 
-    def __init__(self, payload: bytes = None, scaling: bool = True, labelmsm: int = 1):
+    def __init__(self, payload: bytes = None, labelmsm: int = 1):
         """Constructor.
 
         :param bytes payload: message payload (mandatory)
-        :param bool scaling: whether to apply attribute scaling True/False (True)
         :param int labelmsm: MSM NSAT and NCELL attribute label (1 = RINEX, 2 = freq)
         :raises: RTCMMessageError
         """
@@ -47,9 +48,9 @@ class RTCMMessage:
 
         self._payload = payload
         if self._payload is None:
-            raise rte.RTCMMessageError("Payload must be specified")
+            raise RTCMMessageError("Payload must be specified")
+        self._payloadi = int.from_bytes(self._payload, "big")  # payload as int
         self._payblen = len(self._payload) * 8  # length of payload in bits
-        self._scaling = scaling
         self._labelmsm = labelmsm
         self._unknown = False
         self._satmap = None
@@ -67,7 +68,7 @@ class RTCMMessage:
 
         offset = 0  # payload offset in bits
         index = []  # array of (nested) group indices
-
+        anam = ""
         try:
             # get payload definition dict for this message identity
             pdict = self._get_dict()
@@ -75,10 +76,10 @@ class RTCMMessage:
                 self._do_unknown()
                 return
             for anam in pdict:  # process each attribute in dict
-                (offset, index) = self._set_attribute(anam, pdict, offset, index)
+                offset, index = self._set_attribute(anam, pdict, offset, index)
 
-        except Exception as err:
-            raise rte.RTCMTypeError(
+        except Exception as err:  # pragma: no cover
+            raise RTCMTypeError(
                 (
                     f"Error processing attribute '{anam}' "
                     f"in message type {self.identity} {err}"
@@ -102,13 +103,13 @@ class RTCMMessage:
         if isinstance(adef, tuple):  # attribute group
             gtyp, _ = adef
             if isinstance(gtyp, tuple):  # conditional group of attributes
-                (offset, index) = self._set_attribute_optional(adef, offset, index)
+                offset, index = self._set_attribute_optional(adef, offset, index)
             else:  # repeating group of attributes
-                (offset, index) = self._set_attribute_group(adef, offset, index)
+                offset, index = self._set_attribute_group(adef, offset, index)
         else:  # single attribute
             offset = self._set_attribute_single(anam, offset, index)
 
-        return (offset, index)
+        return offset, index
 
     def _set_attribute_optional(self, adef: tuple, offset: int, index: list) -> tuple:
         """
@@ -134,9 +135,9 @@ class RTCMMessage:
             # recursively process each group attribute,
             # incrementing the payload offset as we go
             for anamg in gdict:
-                (offset, index) = self._set_attribute(anamg, gdict, offset, index)
+                offset, index = self._set_attribute(anamg, gdict, offset, index)
 
-        return (offset, index)
+        return offset, index
 
     def _set_attribute_group(self, adef: tuple, offset: int, index: list) -> tuple:
         """
@@ -171,11 +172,11 @@ class RTCMMessage:
         for i in range(gsiz):
             index[-1] = i + 1
             for anamg in gdict:
-                (offset, index) = self._set_attribute(anamg, gdict, offset, index)
+                offset, index = self._set_attribute(anamg, gdict, offset, index)
 
         index.pop()  # remove this (nested) group index
 
-        return (offset, index)
+        return offset, index
 
     def _set_attribute_single(
         self,
@@ -194,7 +195,7 @@ class RTCMMessage:
 
         """
 
-        # pylint: disable=invalid-name
+        # pylint: disable=invalid-name, line-too-long
 
         # if attribute is part of a (nested) repeating group, suffix name with index
         anami = anam
@@ -203,13 +204,9 @@ class RTCMMessage:
                 anami += f"_{i:02d}"
 
         # get value of required number of bits at current payload offset
-        atyp, ares, _ = RTCM_DATA_FIELDS[anam]
-        if not self._scaling:
-            ares = 0
+        atyp, asiz, ares, _ = RTCM_DATA_FIELDS[anam]
         if anam == "DF396":  # this MSM attribute has variable length
             asiz = getattr(self, NSAT) * getattr(self, NSIG)
-        else:
-            asiz = attsiz(atyp)
         if atyp == PRN:
             val = self._satmap[index[0]]
         elif atyp == CELPRN:
@@ -217,8 +214,22 @@ class RTCMMessage:
         elif atyp == CELSIG:
             val = self._cellmap[index[0]][1]
         else:
-            bitfield = self._getbits(offset, asiz)
-            val = bits2val(atyp, ares, bitfield)
+            # done inline for performance reasons...
+            bits = self._payloadi >> (self._payblen - offset - asiz) & ((1 << asiz) - 1)
+            msb = 1 << asiz - 1 if atyp in ("SNT", "INT") else 0
+            if atyp == "SNT":  # int, MSB indicates sign
+                val = bits & msb - 1
+                if bits & msb:
+                    val *= -1
+            else:  # all other types
+                val = bits
+            if atyp == "INT" and bits & msb:  # 2's compliment -ve int
+                val -= 1 << asiz
+            if atyp in ("CHA", "UTF"):  # ASCII or UTF-8 character
+                val = chr(val)
+            else:
+                if ares not in (0, 1):  # apply any scaling factor
+                    val *= ares
 
         setattr(self, anami, val)
         offset += asiz
@@ -229,7 +240,7 @@ class RTCMMessage:
         # always having attributes DF394, DF395 and DF396
         # in that order
         if anam in ("DF394", "DF395", "DF396"):
-            nbits = bin(bitfield).count("1")  # number of bits set
+            nbits = bin(bits).count("1")  # number of bits set
             if anam == "DF394":  # num of satellites in MSM message
                 setattr(self, NSAT, nbits)
             elif anam == "DF395":  # num of signals in MSM message
@@ -247,7 +258,6 @@ class RTCMMessage:
             nc = int(((N + 1) * (N + 2) / 2) - ((N - M) * (N - M + 1) / 2))
             ns = int(nc - (N + 1))
             # ncs = (N + 1) * (N + 1) - (N - M) * (N - M + 1)
-            # print(f"DEBUG nc {nc} ns {ns} ncs {ncs} nc+ns {nc+ns}")
             setattr(self, NHARMCOEFFC, nc)
             setattr(self, NHARMCOEFFS, ns)
 
@@ -291,28 +301,6 @@ class RTCMMessage:
         self._satmap = sats
         self._cellmap = cells
 
-    def _getbits(self, position: int, length: int) -> int:
-        """
-        Get unsigned integer value of masked bits in bytes.
-
-        :param int position: position in bitfield, from leftmost bit
-        :param int length: length of masked bits
-        :return: value
-        :rtype: int
-        """
-
-        if length == 0:
-            return 0
-        if position + length > self._payblen:
-            raise rte.RTCMMessageError(
-                f"Attribute size {length} exceeds remaining "
-                + f"payload length {self._payblen - position}"
-            )
-
-        return int.from_bytes(self._payload, "big") >> (
-            self._payblen - position - length
-        ) & ((1 << length) - 1)
-
     def _get_dict(self) -> dict:
         """
         Get payload dictionary corresponding to message identity
@@ -322,7 +310,11 @@ class RTCMMessage:
         :rtype: dict or None
         """
 
-        return rtg.RTCM_PAYLOADS_GET.get(self.identity, None)
+        if "1070" <= self.identity <= "1229":  # MSM types
+            return RTCM_PAYLOADS_GET_MSM.get(self.identity, None)
+        if self.identity[:4] == "4076":  # IGS types
+            return RTCM_PAYLOADS_GET_IGS.get(self.identity, None)
+        return RTCM_PAYLOADS_GET.get(self.identity, None)
 
     def _do_unknown(self):
         """
@@ -345,7 +337,7 @@ class RTCMMessage:
             if att[0] != "_":  # only show public attributes
                 val = self.__dict__[att]
                 # escape all byte chars
-                if isinstance(val, bytes):
+                if isinstance(val, bytes):  # pragma: no cover
                     val = escapeall(val)
                 stg += att + "=" + str(val)
                 if i < len(self.__dict__) - 1:
@@ -378,7 +370,7 @@ class RTCMMessage:
         """
 
         if self._immutable:
-            raise rte.RTCMMessageError(
+            raise RTCMMessageError(
                 f"Object is immutable. Updates to {name} not permitted after initialisation."
             )
 

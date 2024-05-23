@@ -43,6 +43,20 @@ class DummySocket(socket):
         self._stream = pool * round(4096 / len(pool))
         self._buffer = self._stream
 
+    def __enter__(self):
+        """
+        Context manager enter routine.
+        """
+
+        return self
+
+    def __exit__(self, exc_type, exc_value, exc_traceback):
+        """
+        Context manager exit routine.
+        """
+
+        self.close()
+
     def recv(self, num: int) -> bytes:
         if self._timeout:
             raise TimeoutError
@@ -80,41 +94,41 @@ class SocketTest(unittest.TestCase):
             "<RTCM(1065, DF002=1065, DF386=12345, DF391=3, DF388=0, DF413=1, DF414=1, DF415=1, DF387=2, DF384_01=23, DF379_01=2, DF381_01_01=4, DF383_01_01=0.07, DF381_01_02=2, DF383_01_02=0.09, DF384_02=26, DF379_02=1, DF381_02_01=3, DF383_02_01=0.05)>",
         )
         raw = None
-        stream = DummySocket()
-        rtr = RTCMReader(stream, bufsize=512)
-        buff = rtr._stream.buffer  # test buffer getter method
-        i = 0
-        for raw, parsed in rtr:
-            if raw is not None:
-                # print(f'"{parsed},"')
-                self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
-                i += 1
-                if i >= 12:
-                    break
+        with DummySocket() as stream:
+            rtr = RTCMReader(stream, bufsize=512)
+            buff = rtr._stream.buffer  # test buffer getter method
+            i = 0
+            for raw, parsed in rtr:
+                if raw is not None:
+                    # print(f'"{parsed},"')
+                    self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
+                    i += 1
+                    if i >= 12:
+                        break
         self.assertEqual(i, 12)
 
     def testSocketIter(self):  # test for extended stream
         raw = None
-        stream = DummySocket()
-        rtr = RTCMReader(stream)
-        i = 0
-        for raw, parsed in rtr:
-            if raw is None:
-                raise EOFError
-            i += 1
-            if i >= 123:
-                break
+        with DummySocket() as stream:
+            rtr = RTCMReader(stream)
+            i = 0
+            for raw, parsed in rtr:
+                if raw is None:
+                    raise EOFError
+                i += 1
+                if i >= 123:
+                    break
         self.assertEqual(i, 123)
 
     def testSocketError(self):  # test for simulated socket timeout
         raw = None
-        stream = DummySocket(timeout=True)
-        rtr = RTCMReader(stream)
-        i = 0
-        for raw, parsed in rtr:
-            i += 1
-            if i >= 12:
-                break
+        with DummySocket(timeout=True) as stream:
+            rtr = RTCMReader(stream)
+            i = 0
+            for raw, parsed in rtr:
+                i += 1
+                if i >= 12:
+                    break
         self.assertEqual(i, 0)
 
 

@@ -87,7 +87,7 @@ def benchmark(**kwargs) -> float:
     :raises: UBXStreamError
     """
 
-    cyc = int(kwargs.get("cycles", 10000))
+    cyc = int(kwargs.get("cycles", 1000))
     txnc = len(RTCMMESSAGES)
     txnt = txnc * cyc
 

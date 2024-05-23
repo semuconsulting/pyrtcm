@@ -26,7 +26,13 @@ def att2idx(att: str) -> int:
     """
 
     try:
-        return int(att[att.rindex("_") - len(att) + 1 :])
+        att = att.split("_")
+        ln = len(att)
+        if ln == 2:  # one group level
+            return int(att[1])
+        if ln > 2:  # nested group level(s)
+            return tuple(int(att[i]) for i in range(1, ln))
+        return 0  # not grouped
     except ValueError:
         return 0
 
@@ -42,45 +48,7 @@ def att2name(att: str) -> str:
     :rtype: str
     """
 
-    try:
-        return att[: att.rindex("_")]
-    except ValueError:
-        return att
-
-
-def bits2val(att: str, scale: float, bitfield: int) -> object:
-    """
-    Convert bitfield to value for given attribute type.
-
-    :param str att: attribute type e.g. "UNT008"
-    :param float scale: scaling factor (where defined)
-    :param int bitfield: attribute as integer
-    :return: value
-    :rtype: object (int, float, char, bool)
-    """
-
-    typ = atttyp(att)
-    siz = attsiz(att)
-    val = msb = 0
-
-    if typ in ("SNT", "INT"):
-        msb = 2 ** (siz - 1)
-    if typ == "SNT":  # int, MSB indicates sign
-        val = bitfield & msb - 1
-        if bitfield & msb:
-            val *= -1
-    else:  # all other types
-        val = bitfield
-    if typ == "INT" and (bitfield & msb):  # 2's compliment -ve int
-        val = val - (1 << siz)
-    if typ in ("CHA", "UTF"):  # ASCII or UTF-8 character
-        val = chr(val)
-    # apply any scaling factor
-    else:
-        if scale not in (0, 1):
-            val *= scale
-
-    return val
+    return att.split("_")[0]
 
 
 def calc_crc24q(message: bytes) -> int:
@@ -135,59 +103,6 @@ def len2bytes(payload: bytes) -> bytes:
     return len(payload).to_bytes(2, "big")
 
 
-def atttyp(att: str) -> str:
-    """
-    Get attribute type as string.
-
-    :param str att: attribute type e.g. 'UNT002'
-    :return: type of attribute as string e.g. 'UNT'
-    :rtype: str
-
-    """
-
-    return att[0:3]
-
-
-def attsiz(att: str) -> int:
-    """
-    Get attribute size in bits.
-
-    :param str att: attribute type e.g. 'U002'
-    :return: size of attribute in bits
-    :rtype: int
-
-    """
-
-    return int(att[-3:])
-
-
-def datasiz(datafield: str) -> int:
-    """
-    Get data field size in bits.
-
-    :param str datafield: datafield e.g. 'DF234'
-    :return: size of data field in bits
-    :rtype: int
-
-    """
-
-    (att, _, _) = RTCM_DATA_FIELDS[datafield[0:5]]
-    return attsiz(att)
-
-
-def datascale(datafield: str) -> float:
-    """
-    Get scaling factor of data field.
-
-    :param str datafield: datafield e.g. 'DF234'
-    :return: datafield scale factor or 0 if N/A
-    :rtype: float
-    """
-
-    (_, res, _) = RTCM_DATA_FIELDS[datafield[0:5]]
-    return res
-
-
 def datadesc(datafield: str) -> str:
     """
     Get description of data field.
@@ -197,7 +112,7 @@ def datadesc(datafield: str) -> str:
     :rtype: str
     """
 
-    (_, _, desc) = RTCM_DATA_FIELDS[datafield[0:5]]
+    (_, _, _, desc) = RTCM_DATA_FIELDS[datafield[0:5]]
     return desc
 
 

@@ -11,8 +11,10 @@ Created on 3 Oct 2020
 # pylint: disable=line-too-long, invalid-name, missing-docstring, no-member
 
 import os
+from io import BufferedReader
 import sys
 import unittest
+from logging import ERROR
 
 from io import StringIO
 from pyrtcm import (
@@ -20,14 +22,19 @@ from pyrtcm import (
     RTCMMessage,
     RTCMParseError,
     RTCMMessageError,
+    ERR_IGNORE,
+    ERR_LOG,
+    ERR_RAISE,
 )
 import pyrtcm.rtcmtypes_core as rtt
+
+DIRNAME = os.path.dirname(__file__)
 
 
 class StreamTest(unittest.TestCase):
     def setUp(self):
         self.maxDiff = None
-        dirname = os.path.dirname(__file__)
+
         self._raw1005ex = b"\xD3\x00\x13\x3E\xD7\xD3\x02\x02\x98\x0E\xDE\xEF\x34\xB4\xBD\x62\xAC\x09\x41\x98\x6F\x33\x36\x0B\x98"
         self._raw1005 = (
             b"\xd3\x00\x13>\xd0\x00\x03\x8aX\xd9I<\x87/4\x10\x9d\x07\xd6\xafH Z\xd7\xf7"
@@ -114,33 +121,9 @@ class StreamTest(unittest.TestCase):
                 self.assertEqual(str(parsed), EXPECTED_RESULT[i])
                 i += 1
             self.assertEqual(i, 3)
-
-    def testMIXEDRTCM_NOSCALE(
-        self,
-    ):  # test mixed stream of NMEA, UBX & RTCM messages with no scaling applied
-        EXPECTED_RESULTS = (
-            "<RTCM(1005, DF002=1005, DF003=0, DF021=0, DF022=1, DF023=1, DF024=1, DF141=0, DF025=44440308028, DF142=1, DF001_1=0, DF026=30856712349, DF364=0, DF027=33666582560)>",
-            "<RTCM(4072, DF002=4072, Not_Yet_Implemented)>",
-            "<RTCM(1077, DF002=1077, DF003=0, DF004=204137001, DF393=1, DF409=0, DF001_7=0, DF411=0, DF412=0, DF417=0, DF418=0, DF394=760738918298550272, NSat=10, DF395=1073807360, NSig=2, DF396=1044459, NCell=17, PRN_01=005, PRN_02=007, PRN_03=009, PRN_04=013, PRN_05=014, PRN_06=015, PRN_07=017, PRN_08=019, PRN_09=020, PRN_10=030, DF397_01=75, DF397_02=75, DF397_03=81, DF397_04=72, DF397_05=67, DF397_06=80, DF397_07=75, DF397_08=82, DF397_09=75, DF397_10=71, ExtSatInfo_01=0, ExtSatInfo_02=0, ExtSatInfo_03=0, ExtSatInfo_04=0, ExtSatInfo_05=0, ExtSatInfo_06=0, ExtSatInfo_07=0, ExtSatInfo_08=0, ExtSatInfo_09=0, ExtSatInfo_10=0, DF398_01=6, DF398_02=547, DF398_03=781, DF398_04=142, DF398_05=563, DF398_06=116, DF398_07=823, DF398_08=105, DF398_09=534, DF398_10=354, DF399_01=-178, DF399_02=-304, DF399_03=-643, DF399_04=477, DF399_05=-52, DF399_06=645, DF399_07=529, DF399_08=643, DF399_09=-428, DF399_10=-181, CELLPRN_01=005, CELLSIG_01=1C, CELLPRN_02=005, CELLSIG_02=2L, CELLPRN_03=007, CELLSIG_03=1C, CELLPRN_04=007, CELLSIG_04=2L, CELLPRN_05=009, CELLSIG_05=1C, CELLPRN_06=009, CELLSIG_06=2L, CELLPRN_07=013, CELLSIG_07=1C, CELLPRN_08=014, CELLSIG_08=1C, CELLPRN_09=014, CELLSIG_09=2L, CELLPRN_10=015, CELLSIG_10=1C, CELLPRN_11=015, CELLSIG_11=2L, CELLPRN_12=017, CELLSIG_12=1C, CELLPRN_13=017, CELLSIG_13=2L, CELLPRN_14=019, CELLSIG_14=1C, CELLPRN_15=020, CELLSIG_15=1C, CELLPRN_16=030, CELLSIG_16=1C, CELLPRN_17=030, CELLSIG_17=2L, DF405_01=76821, DF405_02=76146, DF405_03=208482, DF405_04=207990, DF405_05=-259757, DF405_06=-251705, DF405_07=186759, DF405_08=117947, DF405_09=115540, DF405_10=-101213, DF405_11=-98350, DF405_12=-54158, DF405_13=-52852, DF405_14=257029, DF405_15=234424, DF405_16=-166735, DF405_17=-165708, DF406_01=304801, DF406_02=307946, DF406_03=838384, DF406_04=832000, DF406_05=-1040227, DF406_06=-1005568, DF406_07=745973, DF406_08=467269, DF406_09=463801, DF406_10=-400680, DF406_11=-394066, DF406_12=-214602, DF406_13=-208840, DF406_14=886532, DF406_15=935439, DF406_16=-668448, DF406_17=-663545, DF407_01=341, DF407_02=341, DF407_03=341, DF407_04=341, DF407_05=341, DF407_06=341, DF407_07=341, DF407_08=341, DF407_09=341, DF407_10=341, DF407_11=341, DF407_12=341, DF407_13=341, DF407_14=295, DF407_15=341, DF407_16=341, DF407_17=341, DF420_01=0, DF420_02=0, DF420_03=0, DF420_04=0, DF420_05=0, DF420_06=0, DF420_07=0, DF420_08=0, DF420_09=0, DF420_10=0, DF420_11=0, DF420_12=0, DF420_13=0, DF420_14=0, DF420_15=0, DF420_16=0, DF420_17=0, DF408_01=720, DF408_02=608, DF408_03=688, DF408_04=624, DF408_05=624, DF408_06=592, DF408_07=720, DF408_08=736, DF408_09=736, DF408_10=624, DF408_11=544, DF408_12=720, DF408_13=608, DF408_14=496, DF408_15=720, DF408_16=736, DF408_17=656, DF404_01=-9231, DF404_02=-9194, DF404_03=-8321, DF404_04=-8326, DF404_05=-4107, DF404_06=-4072, DF404_07=2451, DF404_08=-693, DF404_09=-684, DF404_10=9390, DF404_11=9417, DF404_12=2384, DF404_13=2416, DF404_14=6636, DF404_15=-9556, DF404_16=-2148, DF404_17=-2174)>",
-            "<RTCM(1087, DF002=1087, DF003=0, DF416=2, DF034=42119001, DF393=1, DF409=0, DF001_7=0, DF411=0, DF412=0, DF417=0, DF418=0, DF394=4039168114821169152, NSat=7, DF395=1090519040, NSig=2, DF396=16382, NCell=13, PRN_01=003, PRN_02=004, PRN_03=005, PRN_04=013, PRN_05=014, PRN_06=015, PRN_07=023, DF397_01=69, DF397_02=64, DF397_03=73, DF397_04=76, DF397_05=66, DF397_06=70, DF397_07=78, DF419_01=12, DF419_02=13, DF419_03=8, DF419_04=5, DF419_05=0, DF419_06=7, DF419_07=10, DF398_01=649, DF398_02=351, DF398_03=260, DF398_04=318, DF398_05=525, DF398_06=847, DF398_07=905, DF399_01=-665, DF399_02=29, DF399_03=672, DF399_04=-573, DF399_05=-211, DF399_06=312, DF399_07=317, CELLPRN_01=003, CELLSIG_01=1C, CELLPRN_02=003, CELLSIG_02=2C, CELLPRN_03=004, CELLSIG_03=1C, CELLPRN_04=004, CELLSIG_04=2C, CELLPRN_05=005, CELLSIG_05=1C, CELLPRN_06=005, CELLSIG_06=2C, CELLPRN_07=013, CELLSIG_07=1C, CELLPRN_08=013, CELLSIG_08=2C, CELLPRN_09=014, CELLSIG_09=1C, CELLPRN_10=014, CELLSIG_10=2C, CELLPRN_11=015, CELLSIG_11=1C, CELLPRN_12=015, CELLSIG_12=2C, CELLPRN_13=023, CELLSIG_13=1C, DF405_01=133875, DF405_02=134842, DF405_03=-25120, DF405_04=-27605, DF405_05=5983, DF405_06=11545, DF405_07=252755, DF405_08=257427, DF405_09=-208262, DF405_10=-201884, DF405_11=148812, DF405_12=154159, DF405_13=-126765, DF406_01=535524, DF406_02=538534, DF406_03=-103820, DF406_04=-110050, DF406_05=23943, DF406_06=46822, DF406_07=1009883, DF406_08=1041159, DF406_09=-832392, DF406_10=-807014, DF406_11=596748, DF406_12=618626, DF406_13=-508918, DF407_01=341, DF407_02=341, DF407_03=340, DF407_04=340, DF407_05=341, DF407_06=341, DF407_07=340, DF407_08=341, DF407_09=341, DF407_10=341, DF407_11=341, DF407_12=341, DF407_13=340, DF420_01=0, DF420_02=0, DF420_03=0, DF420_04=0, DF420_05=0, DF420_06=0, DF420_07=0, DF420_08=0, DF420_09=0, DF420_10=0, DF420_11=0, DF420_12=0, DF420_13=0, DF408_01=752, DF408_02=640, DF408_03=752, DF408_04=672, DF408_05=752, DF408_06=624, DF408_07=576, DF408_08=528, DF408_09=768, DF408_10=688, DF408_11=768, DF408_12=640, DF408_13=656, DF404_01=-8193, DF404_02=-8173, DF404_03=8539, DF404_04=8501, DF404_05=7333, DF404_06=7311, DF404_07=-2493, DF404_08=-2543, DF404_09=-2158, DF404_10=-2178, DF404_11=3924, DF404_12=3947, DF404_13=6146)>",
-            "<RTCM(1097, DF002=1097, DF003=0, DF248=204137001, DF393=1, DF409=0, DF001_7=0, DF411=0, DF412=0, DF417=0, DF418=0, DF394=216181732825628672, NSat=5, DF395=1073872896, NSig=2, DF396=1023, NCell=10, PRN_01=007, PRN_02=008, PRN_03=021, PRN_04=027, PRN_05=030, DF397_01=79, DF397_02=84, DF397_03=89, DF397_04=78, DF397_05=83, ExtSatInfo_01=0, ExtSatInfo_02=0, ExtSatInfo_03=0, ExtSatInfo_04=0, ExtSatInfo_05=0, DF398_01=160, DF398_02=257, DF398_03=363, DF398_04=380, DF398_05=266, DF399_01=-198, DF399_02=-516, DF399_03=423, DF399_04=63, DF399_05=-384, CELLPRN_01=007, CELLSIG_01=1C, CELLPRN_02=007, CELLSIG_02=7Q, CELLPRN_03=008, CELLSIG_03=1C, CELLPRN_04=008, CELLSIG_04=7Q, CELLPRN_05=021, CELLSIG_05=1C, CELLPRN_06=021, CELLSIG_06=7Q, CELLPRN_07=027, CELLSIG_07=1C, CELLPRN_08=027, CELLSIG_08=7Q, CELLPRN_09=030, CELLSIG_09=1C, CELLPRN_10=030, CELLSIG_10=7Q, DF405_01=-24373, DF405_02=-15168, DF405_03=-185743, DF405_04=-175463, DF405_05=258219, DF405_06=269106, DF405_07=-73530, DF405_08=-67668, DF405_09=-9900, DF405_10=-1633, DF406_01=-95448, DF406_02=-60891, DF406_03=-757091, DF406_04=-700882, DF406_05=1035170, DF406_06=1075556, DF406_07=-295430, DF406_08=-271348, DF406_09=-38736, DF406_10=-7071, DF407_01=341, DF407_02=341, DF407_03=341, DF407_04=341, DF407_05=341, DF407_06=341, DF407_07=341, DF407_08=341, DF407_09=341, DF407_10=341, DF420_01=0, DF420_02=0, DF420_03=0, DF420_04=0, DF420_05=0, DF420_06=0, DF420_07=0, DF420_08=0, DF420_09=0, DF420_10=0, DF408_01=736, DF408_02=784, DF408_03=656, DF408_04=688, DF408_05=688, DF408_06=688, DF408_07=720, DF408_08=784, DF408_09=688, DF408_10=752, DF404_01=-5806, DF404_02=-5831, DF404_03=-7947, DF404_04=-7943, DF404_05=7243, DF404_06=7174, DF404_07=5534, DF404_08=5545, DF404_09=-7726, DF404_10=-7733)>",
-            "<RTCM(1127, DF002=1127, DF003=0, DF427=204123001, DF393=0, DF409=0, DF001_7=0, DF411=0, DF412=0, DF417=0, DF418=0, DF394=198178247981137920, NSat=10, DF395=1074003968, NSig=2, DF396=387754, NCell=11, PRN_01=007, PRN_02=009, PRN_03=010, PRN_04=020, PRN_05=023, PRN_06=028, PRN_07=032, PRN_08=037, PRN_09=040, PRN_10=043, DF397_01=129, DF397_02=132, DF397_03=126, DF397_04=75, DF397_05=81, DF397_06=84, DF397_07=78, DF397_08=74, DF397_09=130, DF397_10=86, ExtSatInfo_01=0, ExtSatInfo_02=0, ExtSatInfo_03=0, ExtSatInfo_04=0, ExtSatInfo_05=0, ExtSatInfo_06=0, ExtSatInfo_07=0, ExtSatInfo_08=0, ExtSatInfo_09=0, ExtSatInfo_10=0, DF398_01=120, DF398_02=493, DF398_03=317, DF398_04=743, DF398_05=420, DF398_06=584, DF398_07=573, DF398_08=330, DF398_09=592, DF398_10=690, DF399_01=-130, DF399_02=-58, DF399_03=-81, DF399_04=32, DF399_05=-398, DF399_06=436, DF399_07=-523, DF399_08=-65, DF399_09=-182, DF399_10=79, CELLPRN_01=007, CELLSIG_01=7I, CELLPRN_02=009, CELLSIG_02=7I, CELLPRN_03=010, CELLSIG_03=2I, CELLPRN_04=010, CELLSIG_04=7I, CELLPRN_05=020, CELLSIG_05=2I, CELLPRN_06=023, CELLSIG_06=2I, CELLPRN_07=028, CELLSIG_07=2I, CELLPRN_08=032, CELLSIG_08=2I, CELLPRN_09=037, CELLSIG_09=2I, CELLPRN_10=040, CELLSIG_10=2I, CELLPRN_11=043, CELLSIG_11=2I, DF405_01=-208596, DF405_02=122033, DF405_03=216714, DF405_04=212638, DF405_05=-89572, DF405_06=-25529, DF405_07=197283, DF405_08=142968, DF405_09=-134357, DF405_10=-63371, DF405_11=-157715, DF406_01=-833669, DF406_02=486390, DF406_03=865861, DF406_04=851310, DF406_05=-358508, DF406_06=-104126, DF406_07=793957, DF406_08=569965, DF406_09=-539350, DF406_10=-254868, DF406_11=-633415, DF407_01=341, DF407_02=341, DF407_03=341, DF407_04=341, DF407_05=341, DF407_06=341, DF407_07=341, DF407_08=341, DF407_09=341, DF407_10=341, DF407_11=341, DF420_01=0, DF420_02=0, DF420_03=0, DF420_04=0, DF420_05=0, DF420_06=0, DF420_07=0, DF420_08=0, DF420_09=0, DF420_10=0, DF420_11=0, DF408_01=720, DF408_02=656, DF408_03=672, DF408_04=720, DF408_05=768, DF408_06=736, DF408_07=672, DF408_08=752, DF408_09=768, DF408_10=704, DF408_11=688, DF404_01=-5674, DF404_02=-6120, DF404_03=-1384, DF404_04=-1332, DF404_05=5992, DF404_06=-7312, DF404_07=1732, DF404_08=-4308, DF404_09=-5975, DF404_10=-6733, DF404_11=6122)>",
-            "<RTCM(1230, DF002=1230, DF003=0, DF421=1, DF001_3=0, DF422_1=0, DF422_2=0, DF422_3=0, DF422_4=0)>",
-            "<RTCM(1007, DF002=1007, DF003=1234, DF029=3, DF030_01=A, DF030_02=B, DF030_03=C, DF031=234)>",
-            "<RTCM(1117, DF002=1117, DF003=0, DF428=385820000, DF393=1, DF409=0, DF001_7=0, DF411=1, DF412=0, DF417=0, DF418=0, DF394=7061644215716937728, NSat=3, DF395=1073774849, NSig=4, DF396=4095, NCell=12, PRN_01=194, PRN_02=195, PRN_03=199, DF397_01=140, DF397_02=112, DF397_03=133, ExtSatInfo_01=0, ExtSatInfo_02=0, ExtSatInfo_03=0, DF398_01=176, DF398_02=128, DF398_03=893, DF399_01=481, DF399_02=-28, DF399_03=1, CELLPRN_01=194, CELLSIG_01=1C, CELLPRN_02=194, CELLSIG_02=2X, CELLPRN_03=194, CELLSIG_03=5X, CELLPRN_04=194, CELLSIG_04=1X, CELLPRN_05=195, CELLSIG_05=1C, CELLPRN_06=195, CELLSIG_06=2X, CELLPRN_07=195, CELLSIG_07=5X, CELLPRN_08=195, CELLSIG_08=1X, CELLPRN_09=199, CELLSIG_09=1C, CELLPRN_10=199, CELLSIG_10=2X, CELLPRN_11=199, CELLSIG_11=5X, CELLPRN_12=199, CELLSIG_12=1X, DF405_01=121518, DF405_02=141210, DF405_03=131740, DF405_04=123624, DF405_05=-20668, DF405_06=-4471, DF405_07=-12126, DF405_08=-17656, DF405_09=-52645, DF405_10=-38454, DF405_11=-46050, DF405_12=-51391, DF406_01=-471984, DF406_02=1075651, DF406_03=-8483, DF406_04=476711, DF406_05=837780, DF406_06=-367061, DF406_07=-358394, DF406_08=-404031, DF406_09=610251, DF406_10=-420698, DF406_11=441746, DF406_12=381254, DF407_01=516, DF407_02=462, DF407_03=684, DF407_04=365, DF407_05=648, DF407_06=649, DF407_07=649, DF407_08=649, DF407_09=568, DF407_10=704, DF407_11=704, DF407_12=704, DF420_01=0, DF420_02=0, DF420_03=0, DF420_04=0, DF420_05=0, DF420_06=0, DF420_07=0, DF420_08=0, DF420_09=0, DF420_10=0, DF420_11=0, DF420_12=0, DF408_01=485, DF408_02=574, DF408_03=552, DF408_04=552, DF408_05=778, DF408_06=808, DF408_07=842, DF408_08=819, DF408_09=613, DF408_10=699, DF408_11=733, DF408_12=645, DF404_01=-1064, DF404_02=-16384, DF404_03=-16384, DF404_04=-16384, DF404_05=-5875, DF404_06=-16384, DF404_07=-16384, DF404_08=-16384, DF404_09=-4130, DF404_10=-16384, DF404_11=-16384, DF404_12=-16384)>",
-        )
-
-        dirname = os.path.dirname(__file__)
-        with open(os.path.join(dirname, "pygpsdata-RTCM3.log"), "rb") as stream:
-            i = 0
-            raw = 0
-            rtr = RTCMReader(stream, scaling=False)
-            for raw, parsed in rtr:
-                if raw is not None:
-                    # print(f'"{parsed}",')
-                    self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
-                    i += 1
-        self.assertEqual(i, 9)
+            self.assertIsInstance(
+                rtr.datastream, BufferedReader
+            )  # test datastream getter
 
     def testMIXEDRTCM_SCALE(
         self,
@@ -160,7 +143,7 @@ class StreamTest(unittest.TestCase):
         with open(os.path.join(dirname, "pygpsdata-RTCM3.log"), "rb") as stream:
             i = 0
             raw = 0
-            rtr = RTCMReader(stream, scaling=True)
+            rtr = RTCMReader(stream)
             for raw, parsed in rtr:
                 if raw is not None:
                     # print(f'"{parsed}",')
@@ -187,9 +170,7 @@ class StreamTest(unittest.TestCase):
         with open(os.path.join(dirname, "pygpsdata-RTCM3.log"), "rb") as stream:
             i = 0
             raw = 0
-            rtr = RTCMReader(
-                stream, scaling=True, labelmsm=True, quitonerror=rtt.ERR_RAISE
-            )
+            rtr = RTCMReader(stream, labelmsm=True, quitonerror=rtt.ERR_RAISE)
             for raw, parsed in rtr:
                 if raw is not None:
                     # print(f'"{parsed}",')
@@ -216,9 +197,7 @@ class StreamTest(unittest.TestCase):
         with open(os.path.join(dirname, "pygpsdata-RTCM3.log"), "rb") as stream:
             i = 0
             raw = 0
-            rtr = RTCMReader(
-                stream, scaling=True, labelmsm=2, quitonerror=rtt.ERR_RAISE
-            )
+            rtr = RTCMReader(stream, labelmsm=2, quitonerror=rtt.ERR_RAISE)
             for raw, parsed in rtr:
                 if raw is not None:
                     # print(f'"{parsed}",')
@@ -272,7 +251,7 @@ class StreamTest(unittest.TestCase):
         ) as stream:
             i = 0
             raw = 0
-            rtr = RTCMReader(stream, scaling=True, labelmsm=True)
+            rtr = RTCMReader(stream, labelmsm=True)
             for raw, parsed in rtr:
                 if raw is not None:
                     # print(f'"{parsed}",')
@@ -300,7 +279,7 @@ class StreamTest(unittest.TestCase):
         with open(os.path.join(dirname, "pygpsdata-NTRIP-4076.log"), "rb") as stream:
             i = 0
             raw = 0
-            rtr = RTCMReader(stream, scaling=True, labelmsm=True)
+            rtr = RTCMReader(stream, labelmsm=True)
             for raw, parsed in rtr:
                 if raw is not None:
                     # print(f'"{parsed}",')
@@ -350,16 +329,15 @@ class StreamTest(unittest.TestCase):
 
     def testnestedgroups(self):  # test message with nested repeating group (1059, 1065)
         EXPECTED_RESULT = "<RTCM(1065, DF002=1065, DF386=12345, DF391=3, DF388=0, DF413=1, DF414=1, DF415=1, DF387=2, DF384_01=23, DF379_01=2, DF381_01_01=4, DF383_01_01=0.07, DF381_01_02=2, DF383_01_02=0.09, DF384_02=26, DF379_02=1, DF381_02_01=3, DF383_02_01=0.05)>"
-        msg = RTCMReader.parse(self._raw1065, scaling=True)
+        msg = RTCMReader.parse(self._raw1065)
         self.assertEqual(str(msg), EXPECTED_RESULT)
 
     def testbadCRC(
         self,
     ):  # test mixed stream of NMEA, UBX & RTCM messages with invalid RTCM CRC
         EXPECTED_ERROR = "RTCM3 message invalid - failed CRC: (.*)"
-        dirname = os.path.dirname(__file__)
         with open(
-            os.path.join(dirname, "pygpsdata-MIXED-RTCM3BADCRC.log"), "rb"
+            os.path.join(DIRNAME, "pygpsdata-MIXED-RTCM3BADCRC.log"), "rb"
         ) as stream:
             i = 0
             raw = 0
@@ -395,22 +373,53 @@ class StreamTest(unittest.TestCase):
         self,
     ):  # test mixed stream of NMEA, UBX & RTCM messages with invalid RTCM CRC
         EXPECTED_ERROR = "RTCM3 message invalid - failed CRC: b'Z\\xd7\\xf7'"
-        dirname = os.path.dirname(__file__)
-        with open(
-            os.path.join(dirname, "pygpsdata-MIXED-RTCM3BADCRC.log"), "rb"
-        ) as stream:
-            self.catchio()
-            rtr = RTCMReader(
-                stream,
-                quitonerror=rtt.ERR_LOG,
-                errorhandler=None,
+        with self.assertLogs(level=ERROR) as log:
+            with open(
+                os.path.join(DIRNAME, "pygpsdata-MIXED-RTCM3BADCRC.log"), "rb"
+            ) as stream:
+                rtr = RTCMReader(
+                    stream,
+                    quitonerror=rtt.ERR_LOG,
+                    errorhandler=None,
+                )
+                for raw, parsed in rtr:
+                    if raw is not None:
+                        pass
+            self.assertEqual(
+                [
+                    "ERROR:pyrtcm.rtcmreader:RTCM3 message invalid - failed CRC: b'Z\\xd7\\xf7'"
+                ],
+                log.output,
             )
-            for raw, parsed in rtr:
-                if raw is not None:
-                    pass
-            stream.close()
-            output = self.restoreio()
-            self.assertEqual(output, EXPECTED_ERROR)
+
+    def testBADHDR_FAIL(self):  # invalid header in data with quitonerror = 2
+        EXPECTED_ERROR = "Unknown protocol header b'\\xb5w'"
+        with self.assertRaises(RTCMParseError) as context:
+            i = 0
+            with open(os.path.join(DIRNAME, "pygpsdata-BADHDR.log"), "rb") as stream:
+                ubr = RTCMReader(stream, quitonerror=ERR_RAISE)
+                for _, _ in ubr:
+                    i += 1
+        self.assertTrue(EXPECTED_ERROR in str(context.exception))
+
+    def testBADHDR_LOG(self):  # invalid header in data with quitonerror = 1
+        i = 0
+        with self.assertLogs(level=ERROR) as log:
+            with open(os.path.join(DIRNAME, "pygpsdata-BADHDR.log"), "rb") as stream:
+                ubr = RTCMReader(stream, quitonerror=ERR_LOG)
+                for raw, parsed in ubr:
+                    i += 1
+            self.assertEqual(
+                ["ERROR:pyrtcm.rtcmreader:Unknown protocol header b'\\xb5w'."],
+                log.output,
+            )
+
+    def testBADHDR_IGNORE(self):  # invalid header in data with quitonerror = 0
+        i = 0
+        with open(os.path.join(DIRNAME, "pygpsdata-BADHDR.log"), "rb") as stream:
+            ubr = RTCMReader(stream, quitonerror=ERR_IGNORE)
+            for raw, parsed in ubr:
+                i += 1
 
 
 if __name__ == "__main__":

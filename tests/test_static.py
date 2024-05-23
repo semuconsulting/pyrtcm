@@ -19,14 +19,9 @@ from pyrtcm.rtcmhelpers import (
     hextable,
     calc_crc24q,
     get_bit,
-    bits2val,
     crc2bytes,
     len2bytes,
-    datasiz,
-    datascale,
     datadesc,
-    attsiz,
-    atttyp,
     tow2utc,
     att2idx,
     att2name,
@@ -43,6 +38,13 @@ class StaticTest(unittest.TestCase):
 
     def tearDown(self):
         pass
+
+    def testdatafields(self):  # check datafield types are correct
+        for nam, siz, res, _ in RTCM_DATA_FIELDS.values():
+            self.assertTrue(isinstance(nam, str))
+            self.assertTrue(isinstance(siz, int))
+            self.assertTrue(siz >= 0)
+            self.assertTrue(isinstance(res, (int, float)))
 
     def testhextable(self):  # test hextable*( method)
         EXPECTED_RESULT = "000: 2447 4e47 4c4c 2c35 3332 372e 3034 3331  | b'$GNGLL,5327.0431' |\n016: 392c 532c 3030 3231 342e 3431 3339 362c  | b'9,S,00214.41396,' |\n032: 452c 3232 3332 3332 2e30 302c 412c 412a  | b'E,223232.00,A,A*' |\n048: 3638 0d0a                                | b'68\\r\\n' |\n"
@@ -72,28 +74,6 @@ class StaticTest(unittest.TestCase):
         res = get_bit(bits, 12)
         self.assertEqual(res, 0)
 
-    def testbits2val(self):  # test bits2val for all data types
-        # b = b"\xaa\xbb\xcc"
-        # bitfield = getbits(b, 0, len(b) * 8)  # get_bitarray(b)
-        # res = bits2val("UNT008", 1, bitfield)  # UINT
-        # res2 = int.from_bytes(b, "big")
-        # self.assertEqual(res, 11189196)
-        # self.assertEqual(res, res2)
-        res = bits2val(rtt.INTS5, 0.1, 0b00101)  # +ve INTS with scaling 0.1
-        self.assertEqual(res, 0.5)
-        res = bits2val(rtt.INTS5, 0.01, 0b10101)  # -ve INTS with scaling 0.01
-        self.assertEqual(res, -0.05)
-        res = bits2val(rtt.CHAR8, 1, 0b01000001)  # CHAR8
-        self.assertEqual(res, "A")
-        res = bits2val(rtt.INT8, 1, 0b01111111)  # +ve 2's comp INT
-        self.assertEqual(res, 127)
-        res = bits2val(rtt.INT8, 1, 0b10000001)  # -ve 2's comp INT
-        self.assertEqual(res, -127)
-        res = bits2val(rtt.INT8, 1, 0b00101101)  # +ve 2's comp INT
-        self.assertEqual(res, 45)
-        res = bits2val(rtt.INT8, 1, 0b11010011)  # -ve 2's comp INT
-        self.assertEqual(res, -45)
-
     def testcrc2bytes(self):  # test crc2bytes
         raw = (
             b"\xd3\x00\x13>\xd0\x00\x03\x8aX\xd9I<\x87/4\x10\x9d\x07\xd6\xafH Z\xd7\xf7"
@@ -114,27 +94,6 @@ class StaticTest(unittest.TestCase):
         self.assertEqual(l, 19)
         self.assertEqual(res, b"\x00\x13")
 
-    def testdatasiz(self):  # test datasiz
-        dtw = ["DF024", "DF002", "DF054", "DF037"]
-        EXPECTED_RESULT = [1, 12, 8, 3]
-        for i, dt in enumerate(dtw):
-            ds = datasiz(dt)
-            self.assertEqual(ds, EXPECTED_RESULT[i])
-
-    def testdatascale(self):  # test datascale
-        dtw = ["DF034", "DF156", "DF185"]
-        EXPECTED_RESULT = [
-            1,
-            0.001,
-            0.000000011,
-        ]
-        for i, dt in enumerate(dtw):
-            ds = datascale(dt)
-            self.assertEqual(ds, EXPECTED_RESULT[i])
-        # double check all the defined res are numbers
-        for _, res, _ in RTCM_DATA_FIELDS.values():
-            self.assertIsInstance(res, (int, float))
-
     def testdatadesc(self):  # test datadesc
         dtw = ["DF054", "DF037", "DF001_01"]
         EXPECTED_RESULT = [
@@ -146,27 +105,13 @@ class StaticTest(unittest.TestCase):
             ds = datadesc(dt)
             self.assertEqual(ds, EXPECTED_RESULT[i])
 
-    def testattsiz(self):  # test attsiz
-        ats = [rtt.BIT8, rtt.INT23, rtt.UINT16, rtt.INTS32]
-        EXPECTED_RESULT = [8, 23, 16, 32]
-        for i, at in enumerate(ats):
-            s = attsiz(at)
-            self.assertEqual(s, EXPECTED_RESULT[i])
-
-    def testatttyp(self):  # test atttyp
-        ats = [rtt.BIT8, rtt.INT23, rtt.UINT16, rtt.INTS32]
-        EXPECTED_RESULT = ["BIT", "INT", "UNT", "SNT"]
-        for i, at in enumerate(ats):
-            t = atttyp(at)
-            self.assertEqual(t, EXPECTED_RESULT[i])
-
     def testtow2utc(self):  # test tow2utc
         res = str(tow2utc(387092000))
         self.assertEqual(res, "11:31:14")
 
     def testatt2idx(self):  # test att2idx
-        EXPECTED_RESULT = [4, 16, 101, 0]
-        atts = ["DF389_04", "DF406_16", "DF406_101", "DF396"]
+        EXPECTED_RESULT = [4, 16, 101, 0, (3, 6), 0]
+        atts = ["svid_04", "gnssId_16", "cno_101", "gmsLon", "gnod_03_06", "dodgy_xx"]
         for i, att in enumerate(atts):
             res = att2idx(att)
             # print(res)
@@ -460,6 +405,10 @@ class StaticTest(unittest.TestCase):
         res = parse_msm(msg1077)
         # print(res)
         self.assertEqual(res, EXPECTED_RESULT)
+        msg1005 = RTCMReader.parse(
+            b"\xd3\x00\x13>\xd0\x00\x03\x8aX\xd9I<\x87/4\x10\x9d\x07\xd6\xafH Z\xd7\xf7"
+        )
+        self.assertEqual(parse_msm(msg1005), None)
 
     def testparse4076_201(self):
         EXPECTED_RESULT = {
@@ -646,6 +595,10 @@ class StaticTest(unittest.TestCase):
         res = parse_4076_201(msg)
         # print(res)
         self.assertEqual(res, EXPECTED_RESULT)
+        msg1005 = RTCMReader.parse(
+            b"\xd3\x00\x13>\xd0\x00\x03\x8aX\xd9I<\x87/4\x10\x9d\x07\xd6\xafH Z\xd7\xf7"
+        )
+        self.assertEqual(parse_4076_201(msg1005), None)
 
 
 if __name__ == "__main__":

@@ -60,6 +60,22 @@ pyrtcm.rtcmtypes\_get module
    :undoc-members:
    :show-inheritance:
 
+pyrtcm.rtcmtypes\_get\_igs module
+---------------------------------
+
+.. automodule:: pyrtcm.rtcmtypes_get_igs
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pyrtcm.rtcmtypes\_get\_msm module
+---------------------------------
+
+.. automodule:: pyrtcm.rtcmtypes_get_msm
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 pyrtcm.socket\_stream module
 ----------------------------
 
