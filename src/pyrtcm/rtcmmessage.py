@@ -9,7 +9,7 @@ Created on 14 Feb 2022
 """
 
 from pyrtcm.exceptions import RTCMMessageError, RTCMTypeError
-from pyrtcm.rtcmhelpers import bits2val, crc2bytes, escapeall, len2bytes
+from pyrtcm.rtcmhelpers import crc2bytes, escapeall, len2bytes
 from pyrtcm.rtcmtables import PRNSIGMAP
 from pyrtcm.rtcmtypes_core import (
     CELPRN,
@@ -49,6 +49,7 @@ class RTCMMessage:
         self._payload = payload
         if self._payload is None:
             raise RTCMMessageError("Payload must be specified")
+        self._payloadi = int.from_bytes(self._payload, "big")  # payload as int
         self._payblen = len(self._payload) * 8  # length of payload in bits
         self._labelmsm = labelmsm
         self._unknown = False
@@ -194,7 +195,7 @@ class RTCMMessage:
 
         """
 
-        # pylint: disable=invalid-name
+        # pylint: disable=invalid-name, line-too-long
 
         # if attribute is part of a (nested) repeating group, suffix name with index
         anami = anam
@@ -213,8 +214,22 @@ class RTCMMessage:
         elif atyp == CELSIG:
             val = self._cellmap[index[0]][1]
         else:
-            bitfield = self._getbits(offset, asiz)
-            val = bits2val(atyp, asiz, ares, bitfield)
+            # done inline for performance reasons...
+            bits = self._payloadi >> (self._payblen - offset - asiz) & ((1 << asiz) - 1)
+            msb = 1 << asiz - 1 if atyp in ("SNT", "INT") else 0
+            if atyp == "SNT":  # int, MSB indicates sign
+                val = bits & msb - 1
+                if bits & msb:
+                    val *= -1
+            else:  # all other types
+                val = bits
+            if atyp == "INT" and bits & msb:  # 2's compliment -ve int
+                val -= 1 << asiz
+            if atyp in ("CHA", "UTF"):  # ASCII or UTF-8 character
+                val = chr(val)
+            else:
+                if ares not in (0, 1):  # apply any scaling factor
+                    val *= ares
 
         setattr(self, anami, val)
         offset += asiz
@@ -225,7 +240,7 @@ class RTCMMessage:
         # always having attributes DF394, DF395 and DF396
         # in that order
         if anam in ("DF394", "DF395", "DF396"):
-            nbits = bin(bitfield).count("1")  # number of bits set
+            nbits = bin(bits).count("1")  # number of bits set
             if anam == "DF394":  # num of satellites in MSM message
                 setattr(self, NSAT, nbits)
             elif anam == "DF395":  # num of signals in MSM message
@@ -285,28 +300,6 @@ class RTCMMessage:
 
         self._satmap = sats
         self._cellmap = cells
-
-    def _getbits(self, position: int, length: int) -> int:
-        """
-        Get unsigned integer value of masked bits in bytes.
-
-        :param int position: position in bitfield, from leftmost bit
-        :param int length: length of masked bits
-        :return: value
-        :rtype: int
-        """
-
-        if length == 0:
-            return 0
-        if position + length > self._payblen:  # pragma: no cover
-            raise RTCMMessageError(
-                f"Attribute size {length} exceeds remaining "
-                + f"payload length {self._payblen - position}"
-            )
-
-        return int.from_bytes(self._payload, "big") >> (
-            self._payblen - position - length
-        ) & ((1 << length) - 1)
 
     def _get_dict(self) -> dict:
         """

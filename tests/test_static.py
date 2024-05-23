@@ -19,7 +19,6 @@ from pyrtcm.rtcmhelpers import (
     hextable,
     calc_crc24q,
     get_bit,
-    bits2val,
     crc2bytes,
     len2bytes,
     datadesc,
@@ -74,28 +73,6 @@ class StaticTest(unittest.TestCase):
         self.assertEqual(res, 1)
         res = get_bit(bits, 12)
         self.assertEqual(res, 0)
-
-    def testbits2val(self):  # test bits2val for all data types
-        # b = b"\xaa\xbb\xcc"
-        # bitfield = getbits(b, 0, len(b) * 8)  # get_bitarray(b)
-        # res = bits2val("UNT008", 1, bitfield)  # UINT
-        # res2 = int.from_bytes(b, "big")
-        # self.assertEqual(res, 11189196)
-        # self.assertEqual(res, res2)
-        res = bits2val(rtt.INTS, 5, 0.1, 0b00101)  # +ve INTS with scaling 0.1
-        self.assertEqual(res, 0.5)
-        res = bits2val(rtt.INTS, 5, 0.01, 0b10101)  # -ve INTS with scaling 0.01
-        self.assertEqual(res, -0.05)
-        res = bits2val(rtt.CHA, 8, 1, 0b01000001)  # CHAR
-        self.assertEqual(res, "A")
-        res = bits2val(rtt.INT, 8, 1, 0b01111111)  # +ve 2's comp INT
-        self.assertEqual(res, 127)
-        res = bits2val(rtt.INT, 8, 1, 0b10000001)  # -ve 2's comp INT
-        self.assertEqual(res, -127)
-        res = bits2val(rtt.INT, 8, 1, 0b00101101)  # +ve 2's comp INT
-        self.assertEqual(res, 45)
-        res = bits2val(rtt.INT, 8, 1, 0b11010011)  # -ve 2's comp INT
-        self.assertEqual(res, -45)
 
     def testcrc2bytes(self):  # test crc2bytes
         raw = (

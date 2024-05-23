@@ -51,40 +51,6 @@ def att2name(att: str) -> str:
     return att.split("_")[0]
 
 
-def bits2val(typ: str, siz: int, scale: float, bitfield: int) -> object:
-    """
-    Convert bitfield to value for given attribute type.
-
-    :param str typ: attribute type e.g. "UNT"
-    :param int siz: attribute size in bitys e.g. 8
-    :param float scale: scaling factor (where defined)
-    :param int bitfield: attribute as integer
-    :return: value
-    :rtype: object (int, float, char, bool)
-    """
-
-    val = msb = 0
-
-    if typ in ("SNT", "INT"):
-        msb = 2 ** (siz - 1)
-    if typ == "SNT":  # int, MSB indicates sign
-        val = bitfield & msb - 1
-        if bitfield & msb:
-            val *= -1
-    else:  # all other types
-        val = bitfield
-    if typ == "INT" and (bitfield & msb):  # 2's compliment -ve int
-        val = val - (1 << siz)
-    if typ in ("CHA", "UTF"):  # ASCII or UTF-8 character
-        val = chr(val)
-    # apply any scaling factor
-    else:
-        if scale not in (0, 1):
-            val *= scale
-
-    return val
-
-
 def calc_crc24q(message: bytes) -> int:
     """
     Perform CRC24Q cyclic redundancy check.
