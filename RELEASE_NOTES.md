@@ -4,7 +4,11 @@
 
 ENHANCEMENTS:
 
+
+1. Internal performance enhancements - UBXReader.parse() now 30% faster.
 1. Internal enhancements to logging and exception handling.
+1. Enhance test coverage
+
 
 ### RELEASE 1.1.0
 
