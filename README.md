@@ -76,7 +76,7 @@ deactivate
 For [Conda](https://docs.conda.io/en/latest/) users, `pyrtcm` is also available from [conda-forge](https://github.com/conda-forge/pyrtcm-feedstock):
 
 [![Anaconda-Server Badge](https://anaconda.org/conda-forge/pyrtcm/badges/version.svg)](https://anaconda.org/conda-forge/pyrtcm)
-[![Anaconda-Server Badge](https://anaconda.org/conda-forge/pyrtcm/badges/downloads.svg)](https://anaconda.org/conda-forge/pyrtcm)
+[![Anaconda-Server Badge](https://img.shields.io/conda/dn/conda-forge/pyrtcm)](https://anaconda.org/conda-forge/pyrtcm)
 
 ```shell
 conda install -c conda-forge pyrtcm
