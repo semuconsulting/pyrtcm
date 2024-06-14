@@ -125,7 +125,7 @@ RTCM_DATA_FIELDS = {
     "DF011": (UINT, 24, 0.02, "GPS L1 Pseudorange"),
     "DF012": (INT, 20, 0.0005, "GPS L1 PhaseRange - L1 Pseudorange"),
     "DF013": (UINT, 7, 0, "GPS L1 Lock Time Indicator"),
-    "DF014": (UINT, 8, 0, "GPS INT,eger L1 Pseudorange Modulus Ambiguity"),
+    "DF014": (UINT, 8, 0, "GPS Integer L1 Pseudorange Modulus Ambiguity"),
     "DF015": (UINT, 8, 0.25, "GPS L1 CNR"),
     "DF016": (BIT, 2, 0, "GPS L2 Code Indicator"),
     "DF017": (INT, 14, 0.02, "GPS L2-L1 Pseudorange Difference"),
