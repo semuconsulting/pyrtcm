@@ -1,5 +1,12 @@
 # pyrtcm Release Notes
 
+### RELEASE 1.1.2
+
+CHANGES:
+
+1. Sphinx documentation and docstrings enhanced to include global constants and decodes.
+1. `socket_stream.SocketStream` class renamed to `socket_wrapper.SocketWrapper` class for clarity.
+
 ### RELEASE 1.1.1
 
 ENHANCEMENTS:
