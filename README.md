@@ -37,7 +37,7 @@ This is an independent project and we have no affiliation whatsoever with the Ra
 
 Parses RTCM3 messages into their constituent data fields - `DF002`, `DF003`, etc. Refer to the `RTCM_MSGIDS` dictionary in [`rtcmtypes_core.py`](https://github.com/semuconsulting/pyrtcm/blob/main/src/pyrtcm/rtcmtypes_core.py#L695) for a list of message types currently implemented. Additional message types can be readily added - see [Extensibility](#extensibility).
 
-Sphinx API Documentation in HTML format is available at [Read the Docs](https://pyrtcm.readthedocs.io/)
+Sphinx API Documentation in HTML format is available at [https://www.semuconsulting.com/pyrtcm/](https://www.semuconsulting.com/pyrtcm/)
 
 Contributions welcome - please refer to [CONTRIBUTING.MD](https://github.com/semuconsulting/pyrtcm/blob/master/CONTRIBUTING.md).
 
