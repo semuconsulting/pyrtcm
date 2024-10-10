@@ -37,7 +37,7 @@ dependencies = []
 
 [project.urls]
 homepage = "https://github.com/semuconsulting/pyrtcm"
-documentation = "https://www.semuconsulting.com/pyrtcm/"
+documentation = "https://pyrtcm.readthedocs.io/"
 repository = "https://github.com/semuconsulting/pyrtcm"
 changelog = "https://github.com/semuconsulting/pyrtcm/blob/master/RELEASE_NOTES.md"
 
