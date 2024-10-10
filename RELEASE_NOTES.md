@@ -1,5 +1,13 @@
 # pyrtcm Release Notes
 
+### RELEASE 1.1.2
+
+CHANGES:
+
+1. Sphinx documentation and docstrings enhanced to include global constants and decodes.
+1. `socket_stream.SocketStream` class renamed to `socket_wrapper.SocketWrapper` class for clarity.
+1. Drop active support for Python 3.8 - now End of Life as at October 2024.
+
 ### RELEASE 1.1.1
 
 ENHANCEMENTS:

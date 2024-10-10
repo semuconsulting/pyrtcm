@@ -15,7 +15,7 @@ If you're adding or amending rtcm payload definitions or configuration database 
 ## Coding conventions
 
 * This is open source software. Code should be as simple and transparent as possible. Favour clarity over brevity.
-* The code should be compatible with Python >=3.8.
+* The code should be compatible with Python >=3.9.
 * The core code should be as generic and reusable as possible. We endeavour to limit the amount of processing dedicated to specific rtcm message types, though this is sometimes unavoidable.
 * Avoid external library dependencies unless there's a compelling reason not to.
 * We use and recommend [Visual Studio Code](https://code.visualstudio.com/) with the [Python Extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python) for development and testing.

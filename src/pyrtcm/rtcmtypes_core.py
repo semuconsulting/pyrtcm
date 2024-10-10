@@ -34,18 +34,34 @@ NMEA_HDR = [
     b"$W",
 ]
 UBX_HDR = b"\xb5\x62"
+"""UBX message header"""
 RTCM_HDR = b"\xd3"
-NMEA_PROTOCOL = 1
-UBX_PROTOCOL = 2
-RTCM3_PROTOCOL = 4
+"""RTCM3 message header"""
 GET = 0
+"""GET (receive, response) message types"""
 SET = 1
+"""SET (command) message types"""
 POLL = 2
+"""POLL (query) message types"""
+SETPOLL = 3
+"""SETPOLL (SET or POLL) message types"""
 VALNONE = 0
+"""Do not validate checksum"""
 VALCKSUM = 1
+"""Validate checksum"""
+NMEA_PROTOCOL = 1
+"""NMEA Protocol"""
+UBX_PROTOCOL = 2
+"""UBX Protocol"""
+RTCM3_PROTOCOL = 4
+"""RTCM3 Protocol"""
 ERR_RAISE = 2
+"""Raise error and quit"""
 ERR_LOG = 1
+"""Log errors"""
 ERR_IGNORE = 0
+"""Ignore errors"""
+
 NA = "N/A"
 
 NSAT = "NSat"
@@ -892,9 +908,11 @@ GNSSMAP = {
     "112": ("BEIDOU", "DF427"),
     "113": ("NAVIC", "DF546"),
 }
+"""Map of MSM message identity prefix to GNSS name & epoch attribute name"""
 
 # map of 4076_201 coefficients
 COEFFS = {
     0: ("IDF039", "Cosine Coefficients"),
     1: ("IDF040", "Sine Coefficients"),
 }
+"""Map of 4076_01 message coefficient data attributes"""

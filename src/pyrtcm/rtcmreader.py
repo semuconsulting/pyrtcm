@@ -36,7 +36,7 @@ from pyrtcm.exceptions import (
 from pyrtcm.rtcmhelpers import calc_crc24q
 from pyrtcm.rtcmmessage import RTCMMessage
 from pyrtcm.rtcmtypes_core import ERR_LOG, ERR_RAISE, NMEA_HDR, UBX_HDR, VALCKSUM
-from pyrtcm.socket_stream import SocketStream
+from pyrtcm.socket_wrapper import SocketWrapper
 
 
 class RTCMReader:
@@ -66,7 +66,7 @@ class RTCMReader:
         """
 
         if isinstance(datastream, socket):
-            self._stream = SocketStream(datastream, bufsize=bufsize)
+            self._stream = SocketWrapper(datastream, bufsize=bufsize)
         else:
             self._stream = datastream
         self._quitonerror = quitonerror

@@ -76,10 +76,10 @@ pyrtcm.rtcmtypes\_get\_msm module
    :undoc-members:
    :show-inheritance:
 
-pyrtcm.socket\_stream module
-----------------------------
+pyrtcm.socket\_wrapper module
+-----------------------------
 
-.. automodule:: pyrtcm.socket_stream
+.. automodule:: pyrtcm.socket_wrapper
    :members:
    :undoc-members:
    :show-inheritance:

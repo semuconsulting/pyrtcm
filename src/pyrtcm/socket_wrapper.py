@@ -1,5 +1,5 @@
 """
-socket_stream class.
+socket_wrapper class.
 
 A skeleton socket wrapper which provides basic stream-like
 read(bytes) and readline() methods.
@@ -19,7 +19,7 @@ Created on 4 Apr 2022
 from socket import socket
 
 
-class SocketStream:
+class SocketWrapper:
     """
     socket stream class.
     """
