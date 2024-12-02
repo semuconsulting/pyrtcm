@@ -1,5 +1,12 @@
 # pyrtcm Release Notes
 
+### RELEASE 1.1.3
+
+1. Adopt more advanced `SocketWrapper` class from pygnssutils to support socket datastream encoding (chunked, gzip, compress, deflate).
+1. Add optional `encoding` argument to RTCMReader to support encoding values.
+
+CHANGES:
+
 ### RELEASE 1.1.2
 
 CHANGES:

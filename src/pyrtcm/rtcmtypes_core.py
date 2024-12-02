@@ -61,6 +61,18 @@ ERR_LOG = 1
 """Log errors"""
 ERR_IGNORE = 0
 """Ignore errors"""
+DEFAULT_BUFSIZE = 4096
+"""Default socket buffer size"""
+ENCODE_NONE = 0
+"""No socket encoding"""
+ENCODE_CHUNKED = 1
+"""chunked socket encoding"""
+ENCODE_GZIP = 2
+"""gzip socket encoding"""
+ENCODE_COMPRESS = 4
+"""compress socket encoding"""
+ENCODE_DEFLATE = 8
+"""deflate socket encoding"""
 
 NA = "N/A"
 

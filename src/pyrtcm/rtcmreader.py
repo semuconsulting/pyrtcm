@@ -35,8 +35,15 @@ from pyrtcm.exceptions import (
 )
 from pyrtcm.rtcmhelpers import calc_crc24q
 from pyrtcm.rtcmmessage import RTCMMessage
-from pyrtcm.rtcmtypes_core import ERR_LOG, ERR_RAISE, NMEA_HDR, UBX_HDR, VALCKSUM
-from pyrtcm.socket_wrapper import SocketWrapper
+from pyrtcm.rtcmtypes_core import (
+    ENCODE_NONE,
+    ERR_LOG,
+    ERR_RAISE,
+    NMEA_HDR,
+    UBX_HDR,
+    VALCKSUM,
+)
+from pyrtcm.socketwrapper import SocketWrapper
 
 
 class RTCMReader:
@@ -52,6 +59,7 @@ class RTCMReader:
         labelmsm: int = 1,
         bufsize: int = 4096,
         errorhandler: object = None,
+        encoding: int = ENCODE_NONE,
     ):  # pylint: disable=too-many-arguments
         """Constructor.
 
@@ -62,11 +70,13 @@ class RTCMReader:
         :param int labelmsm: MSM NSAT and NCELL attribute label (1 = RINEX, 2 = freq)
         :param int bufsize: socket recv buffer size (4096)
         :param object errorhandler: error handling object or function (None)
+        :param int encoding: encoding for socket stream \
+            (0 = none, 1 = chunk, 2 = gzip, 4 = compress, 8 = deflate (can be OR'd)) (0)
         :raises: RTCMStreamError (if mode is invalid)
         """
 
         if isinstance(datastream, socket):
-            self._stream = SocketWrapper(datastream, bufsize=bufsize)
+            self._stream = SocketWrapper(datastream, encoding=encoding, bufsize=bufsize)
         else:
             self._stream = datastream
         self._quitonerror = quitonerror
