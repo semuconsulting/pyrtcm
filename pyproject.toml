@@ -4,10 +4,10 @@ build-backend = "setuptools.build_meta:__legacy__"
 
 [project]
 name = "pyrtcm"
+dynamic = ["version"]
 authors = [{ name = "semuadmin", email = "semuadmin@semuconsulting.com" }]
 maintainers = [{ name = "semuadmin", email = "semuadmin@semuconsulting.com" }]
 description = "RTCM3 protocol parser"
-version = "1.1.2"
 license = { file = "LICENSE" }
 readme = "README.md"
 requires-python = ">=3.9"
@@ -52,6 +52,9 @@ test = [
     "Sphinx",
     "sphinx-rtd-theme",
 ]
+
+[tool.setuptools.dynamic]
+version = { attr = "pyrtcm._version.__version__" }
 
 [tool.black]
 target-version = ['py39']
