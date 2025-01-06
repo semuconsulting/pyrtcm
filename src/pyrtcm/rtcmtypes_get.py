@@ -1216,4 +1216,128 @@ RTCM_PAYLOADS_GET = {
             },
         ),
     },
+    "1300": {
+        "DF002": "Message Number",
+        "DF562": "Service CRS Name Counter",
+        "group-DF562": (
+            "DF562",
+            {
+                "DF563": "Service CRS Name",
+            },
+        ),
+        "DF564": "Coordinate Epoch CE",
+    },
+    "1301": {
+        "DF002": "Message Number",
+        "DF143": "",
+        "group-DF143": (
+            "DF143",
+            {
+                "DF144": "",
+            },
+        ),
+        "DF145": "",
+        "group-DF145": (
+            "DF145",
+            {
+                "DF146": "",
+            },
+        ),
+        "DF147": "System Identification Number",
+        "DF148": "Utilized Tranformation Message Indicator",
+        "DF547": "Reference Epoch t0",
+        "DF548": "dX0 Translation in X for Reference Epoch",
+        "DF549": "dY0 Translation in Y for Reference Epoch",
+        "DF550": "dZ0 Translation in Z for Reference Epoch",
+        "DF551": "R01 Rotation about X for Reference Epoch",
+        "DF552": "R02 Rotation about Y for Reference Epoch",
+        "DF553": "R03 Rotation about Z for Reference Epoch",
+        "DF554": "dS0 Scale Correction for Reference Epoch",
+        "DF555": "dot dX Rate of Change of Translation in X",
+        "DF556": "dot dY Rate of Change of Translation in Y",
+        "DF557": "dot dZ Rate of Change of Translation in Z",
+        "DF558": "dot R1 Rate of Change of Rotation about X",
+        "DF559": "dot R2 Rate of Change of Rotation about Y",
+        "DF560": "dot R3 Rate of Change of Rotation about Z",
+        "DF561": "dot dS Rate of Change of Scale Correction",
+    },
+    "1302": {
+        "DF002": "Message Number",
+        "DF565": "RTCM CRS Name Counter",
+        "group-DF565": (
+            "DF565",
+            {
+                "DF566": "RTCM CRS Name",
+            },
+        ),
+        "DF567": "Anchor - Global/Plate Fixed Indicator",
+        "DF149": "Plate Number",
+        "DF568": "Number of Database Links I",
+        "group-DF568": (
+            "DF568",
+            {
+                "DF569": "Database Link Counter N",
+                "group-DF569": (
+                    "DF569",
+                    {
+                        "DF570": "Database Link",
+                    },
+                ),
+            },
+        ),
+    },
+    "1303": {
+        "DF002": "Message Number",
+        "DF571": "Beidou Residuals Epoch Time TOW",
+        "DF003": "Reference Station ID",
+        "DF223": "N-Refs",
+        "DF572": "Beidou Number of Satellite Signals Processed",
+        "group-DF572": (
+            "DF572",
+            {
+                "DF488": "BDS Satellite ID",
+                "DF218": "soc",
+                "DF219": "sod",
+                "DF220": "soh",
+                "DF221": "sIc",
+                "DF222": "sId",
+            },
+        ),
+    },
+    "1304": {
+        "DF002": "Message Number",
+        "DF573": "Galileo Residuals Epoch Time TOW",
+        "DF003": "Reference Station ID",
+        "DF223": "N-Refs",
+        "DF574": "Galileo Number of Satellite Signals Processed",
+        "group-DF574": (
+            "DF574",
+            {
+                "DF252": "Galileo Satellite ID",
+                "DF218": "soc",
+                "DF219": "sod",
+                "DF220": "soh",
+                "DF221": "sIc",
+                "DF222": "sId",
+            },
+        ),
+    },
+    "1305": {
+        "DF002": "Message Number",
+        "DF575": "QZSS Residuals Epoch Time TOW",
+        "DF003": "Reference Station ID",
+        "DF223": "N-Refs",
+        "DF576": "QZSS Number of Satellite Signals Processed",
+        "group-DF576": (
+            "DF576",
+            {
+                "DF429": "QZSS Satellite ID",
+                "DF218": "soc",
+                "DF219": "sod",
+                "DF220": "soh",
+                "DF221": "sIc",
+                "DF222": "sId",
+            },
+        ),
+    },
 }

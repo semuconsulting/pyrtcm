@@ -2,6 +2,7 @@
 
 ### RELEASE 1.1.3
 
+1. Update RTCM message definitions - messages 1300-1305 added.
 1. Adopt more advanced `SocketWrapper` class from pygnssutils to support socket datastream encoding (chunked, gzip, compress, deflate).
 1. Add optional `encoding` argument to RTCMReader to support encoding values.
 
