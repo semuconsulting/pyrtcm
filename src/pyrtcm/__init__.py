@@ -21,6 +21,6 @@ from pyrtcm.rtcmtypes_core import *
 from pyrtcm.rtcmtypes_get import *
 from pyrtcm.rtcmtypes_get_igs import *
 from pyrtcm.rtcmtypes_get_msm import *
-from pyrtcm.socket_wrapper import SocketWrapper
+from pyrtcm.socketwrapper import SocketWrapper
 
 version = __version__  # pylint: disable=invalid-name

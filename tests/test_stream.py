@@ -286,6 +286,25 @@ class StreamTest(unittest.TestCase):
                     self.assertEqual(f"{parsed}", EXPECTED_RESULTS[i])
                     i += 1
 
+    def test1300(
+        self,
+    ):  # test 1300 messages using log from NTRIP caster products.igs-ip.net, mountpoint SIRGAS200001
+        EXPECTED_RESULTS = [
+            "<RTCM(1300, DF002=1300, DF562=31, DF563_01=I, DF563_02=G, DF563_03=S, DF563_04=2, DF563_05=0, DF563_06=\x00, DF563_07=\x00, DF563_08=\x00, DF563_09=\x00, DF563_10=\x00, DF563_11=\x00, DF563_12=\x00, DF563_13=\x00, DF563_14=\x00, DF563_15=\x00, DF563_16=\x00, DF563_17=\x00, DF563_18=\x00, DF563_19=\x00, DF563_20=\x00, DF563_21=\x00, DF563_22=\x00, DF563_23=\x00, DF563_24=\x00, DF563_25=\x00, DF563_26=\x00, DF563_27=\x00, DF563_28=\x00, DF563_29=\x00, DF563_30=\x00, DF563_31=\x00, DF564=0.0)>",
+            "<RTCM(1300, DF002=1300, DF562=31, DF563_01=I, DF563_02=G, DF563_03=S, DF563_04=2, DF563_05=0, DF563_06=\x00, DF563_07=\x00, DF563_08=\x00, DF563_09=\x00, DF563_10=\x00, DF563_11=\x00, DF563_12=\x00, DF563_13=\x00, DF563_14=\x00, DF563_15=\x00, DF563_16=\x00, DF563_17=\x00, DF563_18=\x00, DF563_19=\x00, DF563_20=\x00, DF563_21=\x00, DF563_22=\x00, DF563_23=\x00, DF563_24=\x00, DF563_25=\x00, DF563_26=\x00, DF563_27=\x00, DF563_28=\x00, DF563_29=\x00, DF563_30=\x00, DF563_31=\x00, DF564=0.0)>",
+        ]
+        dirname = os.path.dirname(__file__)
+        with open(os.path.join(dirname, "pygpsdata-NTRIP-1300.log"), "rb") as stream:
+            i = 0
+            raw = 0
+            rtr = RTCMReader(stream, labelmsm=True)
+            for raw, parsed in rtr:
+                if raw is not None:
+                    # print(f'"{parsed}",')
+                    self.assertEqual(f"{parsed}", EXPECTED_RESULTS[i])
+                    i += 1
+            self.assertEqual(i, 2)
+
     def testSerialize(self):  # test serialize()
         payload = self._raw1005[3:-3]
         msg1 = RTCMReader.parse(self._raw1005)
