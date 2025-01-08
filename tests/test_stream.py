@@ -314,8 +314,8 @@ class StreamTest(unittest.TestCase):
             for raw, parsed in rtr:
                 if raw is not None:
                     if parsed.identity in ("1300"):  # , "1302"):
-                        print(f'"{parsed}",')
-                        # self.assertEqual(f"{parsed}", EXPECTED_RESULTS[i])
+                        # print(f'"{parsed}",')
+                        self.assertEqual(f"{parsed}", EXPECTED_RESULTS[i])
                         i += 1
             self.assertEqual(i, 6)
 
