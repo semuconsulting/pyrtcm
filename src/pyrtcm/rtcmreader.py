@@ -58,6 +58,7 @@ class RTCMReader:
         quitonerror: int = ERR_LOG,
         labelmsm: int = 1,
         bufsize: int = 4096,
+        parsed: bool = True,
         errorhandler: object = None,
         encoding: int = ENCODE_NONE,
     ):  # pylint: disable=too-many-arguments
@@ -69,6 +70,8 @@ class RTCMReader:
             ERR_RAISE (2) = (re)raise (1)
         :param int labelmsm: MSM NSAT and NCELL attribute label (1 = RINEX, 2 = freq)
         :param int bufsize: socket recv buffer size (4096)
+        :param bool parsed: 1 = return raw and parsed data, 0 = return only raw data \
+            (parsed = None) (1)
         :param object errorhandler: error handling object or function (None)
         :param int encoding: encoding for socket stream \
             (0 = none, 1 = chunk, 2 = gzip, 4 = compress, 8 = deflate (can be OR'd)) (0)
@@ -83,6 +86,7 @@ class RTCMReader:
         self._errorhandler = errorhandler
         self._validate = validate
         self._labelmsm = labelmsm
+        self._parsed = parsed
         self._logger = getLogger(__name__)
 
     def __iter__(self):
@@ -209,11 +213,14 @@ class RTCMReader:
         payload = self._read_bytes(size)
         crc = self._read_bytes(3)
         raw_data = hdr + hdr3 + payload + crc
-        parsed_data = self.parse(
-            raw_data,
-            validate=self._validate,
-            labelmsm=self._labelmsm,
-        )
+        if self._parsed:
+            parsed_data = self.parse(
+                raw_data,
+                validate=self._validate,
+                labelmsm=self._labelmsm,
+            )
+        else:
+            parsed_data = None
         return (raw_data, parsed_data)
 
     def _read_bytes(self, size: int) -> bytes:

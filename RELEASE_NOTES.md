@@ -1,5 +1,11 @@
 # pyrtcm Release Notes
 
+### RELEASE 1.1.4
+
+1. Refine handling of string attributes (e.g. DF140, DF563, DF566).
+1. Add optional 'parsed' argument to RTCMReader - 1 = return raw and parsed data, 0 = return only raw data (parsed will be None)
+2. Temporarily suppress 1302 test cases **NB:** sample 1302 messages from euref-ip.net:2101/EUREF01 appear to be truncated (to 59 bytes), causing a `ValueError - negative shift count` exception; this mountpoint also causes the BNC 2.13.1 NTRIP client to bomb every time, so possibly an issue with the source implementation or documentation???
+
 ### RELEASE 1.1.3
 
 1. Update RTCM message definitions - messages 1300-1305 added.
