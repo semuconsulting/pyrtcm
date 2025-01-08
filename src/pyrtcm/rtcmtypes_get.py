@@ -1272,13 +1272,15 @@ RTCM_PAYLOADS_GET = {
         ),
         "DF567": "Anchor - Global/Plate Fixed Indicator",
         "DF149": "Plate Number",
-        "DF568": "Number of Database Links I",
+        "DF568": "Number of Database Links",
         "group-DF568": (
             "DF568",
             {
-                "DF569": "Database Link Counter N",
+                "DF569": "Database Link Counter",
+                # TODO check correct payload definition
+                # 1302 messages from EUREF01 appear to be truncated?
                 "group-DF569": (
-                    "DF569",
+                    "DF569+1",
                     {
                         "DF570": "Database Link",
                     },

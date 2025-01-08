@@ -114,10 +114,10 @@ P2_66 = 1.3552527156068805e-20  # 2**-66
 BIT = "BIT"  # bitfield
 BITX = "BITX"  # variable bitfield
 CHA = "CHA"  # characters, ISO 8859-1 (not limited to ASCII)
+STR = "STR"  # concatenated UTF-8 string
 INT = "INT"  # 2’s complement integer
 UINT = "UINT"  # unsigned integer
 INTS = "SNT"  # sign-magnitude integer
-UTF = "UTF"  # Unicode UTF-8 Code Unit
 PRN = "PRN"  # Derived satellite PRN
 CELPRN = "CPR"  # Derived cell PRN
 CELSIG = "CSG"  # Derived cell Signal ID
@@ -329,7 +329,7 @@ RTCM_DATA_FIELDS = {
     "DF137": (BIT, 1, 1, "GPS Fit Interval"),
     "DF138": (UINT, 7, 1, "Number of Characters to Follow"),
     "DF139": (UINT, 8, 1, "Number of UTF-8 Code Units"),
-    "DF140": (UTF, 8, 0, "UTF-8 Character Code Units"),
+    "DF140": (STR, 8, 0, "UTF-8 Character Code Units"),
     "DF141": (BIT, 1, 0, "Reference-Station Indicator"),
     "DF142": (BIT, 1, 0, "Single Receiver Oscillator Indicator"),
     "DF143": (UINT, 5, 0, "Source Name Counter"),
@@ -668,14 +668,14 @@ RTCM_DATA_FIELDS = {
     "DF560": (INT, 17, 0.0000004, "dot R3 Rate of Change of Rotation about Z"),
     "DF561": (INT, 14, 0.0000002, "dot dS Rate of Change of Scale Correction"),
     "DF562": (UINT, 5, 0, "Service CRS Name Counter"),
-    "DF563": (CHA, 8, 0, "Service CRS Name"),
+    "DF563": (STR, 8, 0, "Service CRS Name"),
     "DF564": (UINT, 16, 0.01, "Coordinate Epoch CE"),
     "DF565": (UINT, 5, 0, "RTCM CRS Name Counter"),
-    "DF566": (CHA, 8, 0, "RTCM CRS Name"),
+    "DF566": (STR, 8, 0, "RTCM CRS Name"),
     "DF567": (BIT, 1, 0, "Anchor - Global/Plate Fixed Indicator"),
     "DF568": (UINT, 3, 1, "Number of Database Links"),
     "DF569": (UINT, 5, 0, "Database Link Counter"),
-    "DF570": (CHA, 8, 0, "Database Link"),
+    "DF570": (STR, 8, 0, "Database Link Name"),
     "DF571": (UINT, 20, 1, "Beidou Residuals Epoch Time TOW"),
     "DF572": (UINT, 5, 0, "Beidou Number of Satellite Signals Processed"),
     "DF573": (UINT, 20, 1, "Galileo Residuals Epoch Time TOW"),

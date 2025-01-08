@@ -14,6 +14,9 @@ from pyrtcm.rtcmtables import PRNSIGMAP
 from pyrtcm.rtcmtypes_core import (
     CELPRN,
     CELSIG,
+    CHA,
+    INT,
+    INTS,
     NA,
     NCELL,
     NHARMCOEFFC,
@@ -24,6 +27,7 @@ from pyrtcm.rtcmtypes_core import (
     RTCM_DATA_FIELDS,
     RTCM_HDR,
     RTCM_MSGIDS,
+    STR,
 )
 from pyrtcm.rtcmtypes_get import RTCM_PAYLOADS_GET
 from pyrtcm.rtcmtypes_get_igs import RTCM_PAYLOADS_GET_IGS
@@ -216,22 +220,27 @@ class RTCMMessage:
         else:
             # done inline for performance reasons...
             bits = self._payloadi >> (self._payblen - offset - asiz) & ((1 << asiz) - 1)
-            msb = 1 << asiz - 1 if atyp in ("SNT", "INT") else 0
-            if atyp == "SNT":  # int, MSB indicates sign
+            msb = 1 << asiz - 1 if atyp in (INTS, INT) else 0
+            if atyp == INTS:  # int, MSB indicates sign
                 val = bits & msb - 1
                 if bits & msb:
                     val *= -1
+            elif atyp == CHA:
+                val = chr(bits)
             else:  # all other types
                 val = bits
-            if atyp == "INT" and bits & msb:  # 2's compliment -ve int
+            if atyp == INT and bits & msb:  # 2's compliment -ve int
                 val -= 1 << asiz
-            if atyp in ("CHA", "UTF"):  # ASCII or UTF-8 character
-                val = chr(val)
+            if atyp == STR:
+                val = "" if val == 0 else chr(bits)
             else:
                 if ares not in (0, 1):  # apply any scaling factor
                     val *= ares
 
-        setattr(self, anami, val)
+        if atyp == STR:  # concatenated string
+            setattr(self, anam, getattr(self, anam, "") + val)
+        else:
+            setattr(self, anami, val)
         offset += asiz
 
         # add special attributes to keep track of
