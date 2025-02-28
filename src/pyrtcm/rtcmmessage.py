@@ -281,34 +281,31 @@ class RTCMMessage:
         prnmap, sigmap = PRNSIGMAP[str(self.identity)[0:3]]
         sigcode = 0 if self._labelmsm == 2 else 1
 
-        sats = {}
+        self._satmap = {}
         nsat = 0
-        for idx in range(1, 65):
+        for idx in range(65):
             if getattr(self, "DF394") >> (64 - idx) & 1:
                 nsat += 1
-                sats[nsat] = prnmap.get(idx, NA)
+                self._satmap[nsat] = prnmap.get(idx, NA)
 
         sigs = []
         nsig = 0
-        for idx in range(1, 33):
+        for idx in range(33):
             if getattr(self, "DF395") >> (32 - idx) & 1:
                 sgc = sigmap.get(idx, NA)
                 fqc = sgc[1] if sigcode else sgc[0]
                 sigs.append(fqc)
                 nsig += 1
 
-        ncells = int(nsat * nsig)
-        cells = {}
+        ncells = nsat * nsig
+        self._cellmap = {}
         ncell = idx = 0
         for sat in range(nsat):
             for sig in range(nsig):
                 idx += 1
                 if getattr(self, "DF396") >> (ncells - idx) & 1:
                     ncell += 1
-                    cells[ncell] = (sats[sat + 1], sigs[sig])
-
-        self._satmap = sats
-        self._cellmap = cells
+                    self._cellmap[ncell] = (self._satmap[sat + 1], sigs[sig])
 
     def _get_dict(self) -> dict:
         """

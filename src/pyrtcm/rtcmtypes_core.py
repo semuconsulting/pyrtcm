@@ -215,7 +215,7 @@ RTCM_DATA_FIELDS = {
     "DF068": (UINT, 6, 1, "GPS Satellite ID"),
     "DF069": (INT, 17, 0.5, "GPS Ionospheric Carrier Phase Correction Difference"),
     "DF070": (INT, 17, 0.5, "GPS Geometric Carrier Phase Correction Difference"),
-    "DF071": (BIT, 8, 1, "GPS IODE"),
+    "DF071": (UINT, 8, 1, "GPS IODE"),
     "DF072": (UINT, 4, 0, "Subnetwork ID"),
     "DF073": (UINT, 8, 0, "RESERVED for Provider ID"),
     "DF074": (BIT, 2, 0, "GPS Ambiguity Status Flag"),
