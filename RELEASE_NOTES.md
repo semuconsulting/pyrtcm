@@ -1,5 +1,11 @@
 # pyrtcm Release Notes
 
+### RELEASE 1.1.5
+
+1. Minor internal performance enhancements.
+1. DF071 field definition updated.
+1. Test cases enhanced.
+
 ### RELEASE 1.1.4
 
 1. Refine handling of string attributes (e.g. DF140, DF563, DF566).
