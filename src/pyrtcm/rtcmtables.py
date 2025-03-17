@@ -12,10 +12,7 @@ Information sourced from RTCM STANDARD 10403.3 © 2016 RTCM
 # GPS
 #################################################
 
-GPS_PRN_MAP = {}
-for i in range(1, 64):
-    GPS_PRN_MAP[i] = f"{i:03d}"
-
+GPS_PRN_MAP = {i: f"{i:03d}" for i in range(1, 64)}
 GPS_SIG_MAP = {
     2: ("L1", "1C"),
     3: ("L1", "1P"),
@@ -38,10 +35,7 @@ GPS_SIG_MAP = {
 # GLONASS
 #################################################
 
-GLONASS_PRN_MAP = {}
-for i in range(1, 25):
-    GLONASS_PRN_MAP[i] = f"{i:03d}"
-
+GLONASS_PRN_MAP = {i: f"{i:03d}" for i in range(1, 25)}
 GLONASS_SIG_MAP = {
     2: ("G1", "1C"),
     3: ("G1", "1P"),
@@ -53,12 +47,9 @@ GLONASS_SIG_MAP = {
 # GALILEO
 #################################################
 
-GALILEO_PRN_MAP = {}
-for i in range(1, 51):
-    GALILEO_PRN_MAP[i] = f"{i:03d}"
+GALILEO_PRN_MAP = {i: f"{i:03d}" for i in range(1, 51)}
 GALILEO_PRN_MAP[51] = "GIOVE-A"
 GALILEO_PRN_MAP[52] = "GIOVE-B"
-
 GALILEO_SIG_MAP = {
     2: ("E1", "1C"),
     3: ("E1", "1A"),
@@ -85,10 +76,7 @@ GALILEO_SIG_MAP = {
 # SBAS
 #################################################
 
-SBAS_PRN_MAP = {}
-for i in range(1, 40):
-    SBAS_PRN_MAP[i] = f"{i+119:03d}"
-
+SBAS_PRN_MAP = {i: f"{i+119:03d}" for i in range(1, 40)}
 SBAS_SIG_MAP = {
     2: ("L1", "1C"),
     22: ("L5", "5I"),
@@ -100,10 +88,7 @@ SBAS_SIG_MAP = {
 # QZSS
 #################################################
 
-QZSS_PRN_MAP = {}
-for i in range(1, 11):
-    QZSS_PRN_MAP[i] = f"{i+192:03d}"
-
+QZSS_PRN_MAP = {i: f"{i+192:03d}" for i in range(1, 11)}
 QZSS_SIG_MAP = {
     2: ("L1", "1C"),
     9: ("LEX", "6S"),
@@ -125,7 +110,6 @@ QZSS_SIG_MAP = {
 #################################################
 
 BEIDOU_PRN_MAP = GPS_PRN_MAP
-
 BEIDOU_SIG_MAP = {
     2: ("B1", "2I"),
     3: ("B1", "2Q"),
@@ -149,10 +133,7 @@ BEIDOU_SIG_MAP = {
 # IRNSS (NavIC)
 #################################################
 
-IRNSS_PRN_MAP = {}
-for i in range(1, 15):
-    IRNSS_PRN_MAP[i] = f"{i:03d}"
-
+IRNSS_PRN_MAP = {i: f"{i:03d}" for i in range(1, 15)}
 IRNSS_SIG_MAP = {
     22: ("L5", "5A"),
 }
