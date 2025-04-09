@@ -1404,7 +1404,7 @@ RTCM_PAYLOADS_GET = {
                 "groupbias": (  # nested group
                     "DF379+1",  # +1 signifies 1 nested group index must be added
                     {
-                        "DF461": "QZSS Signal and Tracking Mode Identifier ",
+                        "DF461": "QZSS Signal and Tracking Mode Identifier",
                         "DF383": "Code Bias",
                     },
                 ),
@@ -1533,7 +1533,7 @@ RTCM_PAYLOADS_GET = {
                 "groupbias": (  # nested group
                     "DF379+1",  # +1 signifies 1 nested group index must be added
                     {
-                        "DF464": "SBAS Signal and Tracking Mode Identifier ",
+                        "DF464": "SBAS Signal and Tracking Mode Identifier",
                         "DF383": "Code Bias",
                     },
                 ),
@@ -1598,6 +1598,136 @@ RTCM_PAYLOADS_GET = {
             "DF387",
             {
                 "DF463": "SBAS Satellite ID",
+                "DF390": "High Rate Clock Correction",
+            },
+        ),
+    },
+    "1258": {
+        "DF002": "Message Number",
+        "DF465": "BDS Epoch Time 1s",
+        "DF391": "SSR Update Interval",
+        "DF388": "Multiple Message Indicator",
+        "DF375": "Satellite Reference Datum",
+        "DF413": "IOD SSR",
+        "DF414": "SSR Provider ID",
+        "DF415": "SSR Solution ID",
+        "DF387": "No. of Satellites",
+        "group": (
+            "DF387",
+            {
+                "DF488": "BDS Satellite ID",
+                "DF470": "BDS toe Modulo",
+                "DF471": "BDS IOD",
+                "DF365": "Delta Radial",
+                "DF366": "Delta Along-Track",
+                "DF367": "Delta Cross-Track",
+                "DF368": "Dot Delta Radial",
+                "DF369": "Dot Delta Along-Track",
+                "DF370": "Dot Delta Cross-Track",
+            },
+        ),
+    },
+    "1259": {
+        "DF002": "Message Number",
+        "DF465": "BDS Epoch Time 1s",
+        "DF391": "SSR Update Interval",
+        "DF388": "Multiple Message Indicator",
+        "DF413": "IOD SSR",
+        "DF414": "SSR Provider ID",
+        "DF415": "SSR Solution ID",
+        "DF387": "No. of Satellites",
+        "group": (
+            "DF387",
+            {
+                "DF488": "BDS Satellite ID",
+                "DF376": "Delta Clock C0",
+                "DF377": "Delta Clock C1",
+                "DF378": "Delta Clock C2",
+            },
+        ),
+    },
+    "1260": {
+        "DF002": "Message Number",
+        "DF465": "BDS Epoch Time 1s",
+        "DF391": "SSR Update Interval",
+        "DF388": "Multiple Message Indicator",
+        "DF413": "IOD SSR",
+        "DF414": "SSR Provider ID",
+        "DF415": "SSR Solution ID",
+        "DF387": "No. of Satellites",
+        "groupsat": (
+            "DF387",
+            {
+                "DF488": "BDS Satellite ID",
+                "DF379": "No. of Code Biases Processed",
+                "groupbias": (  # nested group
+                    "DF379+1",  # +1 signifies 1 nested group index must be added
+                    {
+                        "DF467": "BDS Signal and Tracking Mode Identifier",
+                        "DF383": "Code Bias",
+                    },
+                ),
+            },
+        ),
+    },
+    "1261": {
+        "DF002": "Message Number",
+        "DF465": "BDS Epoch Time 1s",
+        "DF391": "SSR Update Interval",
+        "DF388": "Multiple Message Indicator",
+        "DF375": "Satellite Reference Datum",
+        "DF413": "IOD SSR",
+        "DF414": "SSR Provider ID",
+        "DF415": "SSR Solution ID",
+        "DF387": "No. of Satellites",
+        "group": (
+            "DF387",
+            {
+                "DF488": "BDS Satellite ID",
+                "DF470": "BDS toe Modulo",
+                "DF471": "BDS IOD",
+                "DF365": "Delta Radial",
+                "DF366": "Delta Along-Track",
+                "DF367": "Delta Cross-Track",
+                "DF368": "Dot Delta Radial",
+                "DF369": "Dot Delta Along-Track",
+                "DF370": "Dot Delta Cross-Track",
+                "DF376": "Delta Clock C0",
+                "DF377": "Delta Clock C1",
+                "DF378": "Delta Clock C2",
+            },
+        ),
+    },
+    "1262": {
+        "DF002": "Message Number",
+        "DF465": "BDS Epoch Time 1s",
+        "DF391": "SSR Update Interval",
+        "DF388": "Multiple Message Indicator",
+        "DF413": "IOD SSR",
+        "DF414": "SSR Provider ID",
+        "DF415": "SSR Solution ID",
+        "DF387": "No. of Satellites",
+        "group": (
+            "DF387",
+            {
+                "DF488": "BDS Satellite ID",
+                "DF389": "SSR URA",
+            },
+        ),
+    },
+    "1263": {
+        "DF002": "Message Number",
+        "DF465": "BDS Epoch Time 1s",
+        "DF391": "SSR Update Interval",
+        "DF388": "Multiple Message Indicator",
+        "DF413": "IOD SSR",
+        "DF414": "SSR Provider ID",
+        "DF415": "SSR Solution ID",
+        "DF387": "No. of Satellites",
+        "group": (
+            "DF387",
+            {
+                "DF488": "BDS Satellite ID",
                 "DF390": "High Rate Clock Correction",
             },
         ),
