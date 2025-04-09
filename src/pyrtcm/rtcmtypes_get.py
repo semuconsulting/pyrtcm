@@ -53,7 +53,7 @@ name which is calculated within `rtcmmessage.py` e.g. 'NHARMCOEFFC'
 
 # pylint: disable=too-many-lines
 
-from pyrtcm.rtcmtypes_core import NRES
+from pyrtcm.rtcmtypes_core import NRES, NHARMCOEFFC, NHARMCOEFFS
 
 # *************************************************************
 # RTCM3 MESSAGE GROUP HEADER DEFINITIONS
@@ -1729,6 +1729,37 @@ RTCM_PAYLOADS_GET = {
             {
                 "DF488": "BDS Satellite ID",
                 "DF390": "High Rate Clock Correction",
+            },
+        ),
+    },
+    "1264": {
+        "DF002": "Message Number",
+        "DF385": "GPS Epoch Time 1s",
+        "DF391": "SSR Update Interval",
+        "DF388": "Multiple Message Indicator",
+        "DF413": "IOD SSR",
+        "DF414": "SSR Provider ID",
+        "DF415": "SSR Solution ID",
+        "DF478": "VTEC Quality Indicator",
+        "DF472": "Number of Ionospheric Layers",  # Nᴵᴸ - 1
+        "groupion": (
+            "DF472",
+            {
+                "DF473": "Height of Ionospheric Layer",
+                "DF474": "Spherical Harmonics Degree",  # N - 1
+                "DF475": "Spherical Harmonics Order",  # M - 1
+                "groupcoeffC": (
+                    NHARMCOEFFC,
+                    {
+                        "DF476": "Spherical Harmonic Coefficient C",
+                    },
+                ),
+                "groupcoeffS": (
+                    NHARMCOEFFS,
+                    {
+                        "DF477": "Spherical Harmonic Coefficient S",
+                    },
+                ),
             },
         ),
     },

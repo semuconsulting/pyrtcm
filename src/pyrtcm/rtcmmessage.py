@@ -259,11 +259,17 @@ class RTCMMessage:
                 # populate NSAT and NCELL mapping dictionaries
                 self._getsatcellmaps()
 
-        # add special coefficient attributes for message 4076_201
-        if anam == "IDF038":
+        # add special coefficient attributes for message 4076_201 and 1264
+        special_cases = {
+            "IDF038": ("IDF037", "IDF038"),  # message 4076_201
+            "DF475": ("DF476", "DF475"),  # message 1264
+        }
+
+        if anam in special_cases:
+            base1, base2 = special_cases[anam]
             i = index[0]
-            N = getattr(self, f"IDF037_{i:02d}") + 1
-            M = getattr(self, f"IDF038_{i:02d}") + 1
+            N = getattr(self, f"{base1}_{i:02d}") + 1
+            M = getattr(self, f"{base2}_{i:02d}") + 1
             nc = int(((N + 1) * (N + 2) / 2) - ((N - M) * (N - M + 1) / 2))
             ns = int(nc - (N + 1))
             # ncs = (N + 1) * (N + 1) - (N - M) * (N - M + 1)
