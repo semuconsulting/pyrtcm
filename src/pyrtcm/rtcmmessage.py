@@ -262,7 +262,7 @@ class RTCMMessage:
         # add special coefficient attributes for message 4076_201 and 1264
         special_cases = {
             "IDF038": ("IDF037", "IDF038"),  # message 4076_201
-            "DF475": ("DF476", "DF475"),  # message 1264
+            "DF475": ("DF474", "DF475"),  # message 1264
         }
 
         if anam in special_cases:
