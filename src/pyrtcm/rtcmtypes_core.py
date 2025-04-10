@@ -902,7 +902,7 @@ RTCM_MSGIDS = {
     "1261": "SSR BDS Combined Orbit and Clock Corrections",
     "1262": "SSR BDS URA",
     "1263": "SSR BDS High Rate Clock Correction",
-    "1264": "SSR Ionosphere VTEC SphericalHarmonics",
+    "1264": "SSR Ionosphere VTEC Spherical Harmonics",
     "1300": "Service CRS",
     "1301": "Parameter Transformation 15",
     "1302": "RTCM CRS",
