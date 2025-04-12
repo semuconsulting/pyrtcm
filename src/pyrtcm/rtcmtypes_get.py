@@ -5,6 +5,10 @@ Created on 14 Feb 2022
 
 Information sourced from RTCM STANDARD 10403.3 © 2016 RTCM
 
+Message definitions 1240-1264 sourced from from:
+- Proposal of new RTCM SSR Messages SSR Stage 1: Galileo, QZSS, SBAS, BDS
+- Proposal of new RTCM SSR Messages SSR Stage 2: Vertical TEC (VTEC)
+
 Payload definitions are contained in a series of dictionaries.
 Repeating and conditional elements are defined as a tuple of
 (element size/presence designator, element dictionary). The element
@@ -53,7 +57,7 @@ name which is calculated within `rtcmmessage.py` e.g. 'NHARMCOEFFC'
 
 # pylint: disable=too-many-lines
 
-from pyrtcm.rtcmtypes_core import NRES, NHARMCOEFFC, NHARMCOEFFS
+from pyrtcm.rtcmtypes_core import NHARMCOEFFC, NHARMCOEFFS, NRES
 
 # *************************************************************
 # RTCM3 MESSAGE GROUP HEADER DEFINITIONS

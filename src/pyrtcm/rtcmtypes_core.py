@@ -802,7 +802,7 @@ RTCM_MSGIDS = {
     "1060": "GPS SSR Combined Orbit and Clock Corrections",
     "1061": "GPS SSR URA",
     "1062": "GPS SSR High Rate Clock Correction",
-    "1063": "GLONASS SSR OrBIT,  Correction",
+    "1063": "GLONASS SSR Orbit Correction",
     "1064": "GLONASS SSR Clock Correction",
     "1065": "GLONASS SSR Code Bias",
     "1066": "GLONASS SSR Combined Orbit and Clock Correction",
@@ -902,7 +902,7 @@ RTCM_MSGIDS = {
     "1261": "SSR BDS Combined Orbit and Clock Corrections",
     "1262": "SSR BDS URA",
     "1263": "SSR BDS High Rate Clock Correction",
-    "1264": "SSR Ionosphere VTEC SphericalHarmonics",
+    "1264": "SSR Ionosphere VTEC Spherical Harmonics",
     "1300": "Service CRS",
     "1301": "Parameter Transformation 15",
     "1302": "RTCM CRS",
@@ -1028,9 +1028,19 @@ GNSSMAP = {
 }
 """Map of MSM message identity prefix to GNSS name & epoch attribute name"""
 
-# map of 4076_201 coefficients
-COEFFS = {
-    0: ("IDF039", "Cosine Coefficients"),
-    1: ("IDF040", "Sine Coefficients"),
+# map of 4076_201 and 1264 spherical coefficients
+SSR_SPHER_COEFFS = {
+    "4076_201": {
+        0: ("IDF039", "Cosine Coefficients"),
+        1: ("IDF040", "Sine Coefficients"),
+    },
+    "1264": {0: ("DF476", "Cosine Coefficients"), 1: ("DF477", "Sine Coefficients")},
 }
-"""Map of 4076_01 message coefficient data attributes"""
+"""Map of 4076_201 and 1264 spherical coefficient data attributes"""
+
+# map of 4076_201 and 1264 special coefficients
+SSR_COEFF = {
+    "IDF038": ("IDF037", "IDF038"),  # message 4076_201
+    "DF475": ("DF474", "DF475"),  # message 1264
+}
+"""Map of 4076_201 and 1264 special coefficient attributes"""

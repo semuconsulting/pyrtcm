@@ -27,6 +27,7 @@ from pyrtcm.rtcmtypes_core import (
     RTCM_DATA_FIELDS,
     RTCM_HDR,
     RTCM_MSGIDS,
+    SSR_COEFF,
     STR,
 )
 from pyrtcm.rtcmtypes_get import RTCM_PAYLOADS_GET
@@ -259,14 +260,9 @@ class RTCMMessage:
                 # populate NSAT and NCELL mapping dictionaries
                 self._getsatcellmaps()
 
-        # add special coefficient attributes for message 4076_201 and 1264
-        special_cases = {
-            "IDF038": ("IDF037", "IDF038"),  # message 4076_201
-            "DF475": ("DF476", "DF475"),  # message 1264
-        }
-
-        if anam in special_cases:
-            base1, base2 = special_cases[anam]
+        # set lengths of harmonic coefficient attributes for SSR messages
+        if anam in SSR_COEFF:
+            base1, base2 = SSR_COEFF[anam]
             i = index[0]
             N = getattr(self, f"{base1}_{i:02d}") + 1
             M = getattr(self, f"{base2}_{i:02d}") + 1
