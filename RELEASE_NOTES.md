@@ -1,5 +1,9 @@
 # pyrtcm Release Notes
 
+### RELEASE 1.1.6
+
+1. Proposed SSR Stage 1 and 2 message definitions added (1240-1264) - thanks to @davidtlascelles for contribution.
+
 ### RELEASE 1.1.5
 
 1. Minor internal performance enhancements.
