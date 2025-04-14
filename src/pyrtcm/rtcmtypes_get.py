@@ -5,6 +5,10 @@ Created on 14 Feb 2022
 
 Information sourced from RTCM STANDARD 10403.3 © 2016 RTCM
 
+Message definitions 1240-1264 sourced from from:
+- Proposal of new RTCM SSR Messages SSR Stage 1: Galileo, QZSS, SBAS, BDS
+- Proposal of new RTCM SSR Messages SSR Stage 2: Vertical TEC (VTEC)
+
 Payload definitions are contained in a series of dictionaries.
 Repeating and conditional elements are defined as a tuple of
 (element size/presence designator, element dictionary). The element
@@ -53,7 +57,7 @@ name which is calculated within `rtcmmessage.py` e.g. 'NHARMCOEFFC'
 
 # pylint: disable=too-many-lines
 
-from pyrtcm.rtcmtypes_core import NRES
+from pyrtcm.rtcmtypes_core import NHARMCOEFFC, NHARMCOEFFS, NRES
 
 # *************************************************************
 # RTCM3 MESSAGE GROUP HEADER DEFINITIONS
@@ -1213,6 +1217,553 @@ RTCM_PAYLOADS_GET = {
             ("DF422_4", 1),  # if DF422_4 = 1
             {
                 "DF426": "GLONASS L2 P Code-Phase Bias",
+            },
+        ),
+    },
+    "1240": {
+        "DF002": "Message Number",
+        "DF458": "Galileo Epoch Time 1s",
+        "DF391": "SSR Update Interval",
+        "DF388": "Multiple Message Indicator",
+        "DF375": "Satellite Reference Datum",
+        "DF413": "IOD SSR",
+        "DF414": "SSR Provider ID",
+        "DF415": "SSR Solution ID",
+        "DF387": "No. of Satellites",
+        "group": (
+            "DF387",
+            {
+                "DF252": "Galileo Satellite ID",
+                "DF459": "Galileo IODnav I/NAV",
+                "DF365": "Delta Radial",
+                "DF366": "Delta Along-Track",
+                "DF367": "Delta Cross-Track",
+                "DF368": "Dot Delta Radial",
+                "DF369": "Dot Delta Along-Track",
+                "DF370": "Dot Delta Cross-Track",
+            },
+        ),
+    },
+    "1241": {
+        "DF002": "Message Number",
+        "DF458": "Galileo Epoch Time 1s",
+        "DF391": "SSR Update Interval",
+        "DF388": "Multiple Message Indicator",
+        "DF413": "IOD SSR",
+        "DF414": "SSR Provider ID",
+        "DF415": "SSR Solution ID",
+        "DF387": "No. of Satellites",
+        "group": (
+            "DF387",
+            {
+                "DF252": "Galileo Satellite ID",
+                "DF376": "Delta Clock C0",
+                "DF377": "Delta Clock C1",
+                "DF378": "Delta Clock C2",
+            },
+        ),
+    },
+    "1242": {
+        "DF002": "Message Number",
+        "DF458": "Galileo Epoch Time 1s",
+        "DF391": "SSR Update Interval",
+        "DF388": "Multiple Message Indicator",
+        "DF413": "IOD SSR",
+        "DF414": "SSR Provider ID",
+        "DF415": "SSR Solution ID",
+        "DF387": "No. of Satellites",
+        "groupsat": (
+            "DF387",
+            {
+                "DF252": "Galileo Satellite ID",
+                "DF379": "No. of Code Biases Processed",
+                "groupbias": (  # nested group
+                    "DF379+1",  # +1 signifies 1 nested group index must be added
+                    {
+                        "DF382": "Galileo Signal and Tracking Mode Indicator",
+                        "DF383": "Code Bias",
+                    },
+                ),
+            },
+        ),
+    },
+    "1243": {
+        "DF002": "Message Number",
+        "DF458": "Galileo Epoch Time 1s",
+        "DF391": "SSR Update Interval",
+        "DF388": "Multiple Message Indicator",
+        "DF375": "Satellite Reference Datum",
+        "DF413": "IOD SSR",
+        "DF414": "SSR Provider ID",
+        "DF415": "SSR Solution ID",
+        "DF387": "No. of Satellites",
+        "group": (
+            "DF387",
+            {
+                "DF252": "Galileo Satellite ID",
+                "DF459": "Galileo IODnav I/NAV",
+                "DF365": "Delta Radial",
+                "DF366": "Delta Along-Track",
+                "DF367": "Delta Cross-Track",
+                "DF368": "Dot Delta Radial",
+                "DF369": "Dot Delta Along-Track",
+                "DF370": "Dot Delta Cross-Track",
+                "DF376": "Delta Clock C0",
+                "DF377": "Delta Clock C1",
+                "DF378": "Delta Clock C2",
+            },
+        ),
+    },
+    "1244": {
+        "DF002": "Message Number",
+        "DF458": "Galileo Epoch Time 1s",
+        "DF391": "SSR Update Interval",
+        "DF388": "Multiple Message Indicator",
+        "DF413": "IOD SSR",
+        "DF414": "SSR Provider ID",
+        "DF415": "SSR Solution ID",
+        "DF387": "No. of Satellites",
+        "group": (
+            "DF387",
+            {
+                "DF252": "Galileo Satellite ID",
+                "DF389": "SSR URA",
+            },
+        ),
+    },
+    "1245": {
+        "DF002": "Message Number",
+        "DF458": "Galileo Epoch Time 1s",
+        "DF391": "SSR Update Interval",
+        "DF388": "Multiple Message Indicator",
+        "DF413": "IOD SSR",
+        "DF414": "SSR Provider ID",
+        "DF415": "SSR Solution ID",
+        "DF387": "No. of Satellites",
+        "group": (
+            "DF387",
+            {
+                "DF252": "Galileo Satellite ID",
+                "DF390": "High Rate Clock Correction",
+            },
+        ),
+    },
+    "1246": {
+        "DF002": "Message Number",
+        "DF460": "QZSS Epoch Time 1s",
+        "DF391": "SSR Update Interval",
+        "DF388": "Multiple Message Indicator",
+        "DF375": "Satellite Reference Datum",
+        "DF413": "IOD SSR",
+        "DF414": "SSR Provider ID",
+        "DF415": "SSR Solution ID",
+        "DF387": "No. of Satellites",
+        "group": (
+            "DF387",
+            {
+                "DF429": "QZSS Satellite ID",
+                "DF434": "QZSS IODE",
+                "DF365": "Delta Radial",
+                "DF366": "Delta Along-Track",
+                "DF367": "Delta Cross-Track",
+                "DF368": "Dot Delta Radial",
+                "DF369": "Dot Delta Along-Track",
+                "DF370": "Dot Delta Cross-Track",
+            },
+        ),
+    },
+    "1247": {
+        "DF002": "Message Number",
+        "DF460": "QZSS Epoch Time 1s",
+        "DF391": "SSR Update Interval",
+        "DF388": "Multiple Message Indicator",
+        "DF413": "IOD SSR",
+        "DF414": "SSR Provider ID",
+        "DF415": "SSR Solution ID",
+        "DF387": "No. of Satellites",
+        "group": (
+            "DF387",
+            {
+                "DF429": "QZSS Satellite ID",
+                "DF376": "Delta Clock C0",
+                "DF377": "Delta Clock C1",
+                "DF378": "Delta Clock C2",
+            },
+        ),
+    },
+    "1248": {
+        "DF002": "Message Number",
+        "DF460": "QZSS Epoch Time 1s",
+        "DF391": "SSR Update Interval",
+        "DF388": "Multiple Message Indicator",
+        "DF413": "IOD SSR",
+        "DF414": "SSR Provider ID",
+        "DF415": "SSR Solution ID",
+        "DF387": "No. of Satellites",
+        "groupsat": (
+            "DF387",
+            {
+                "DF429": "QZSS Satellite ID",
+                "DF379": "No. of Code Biases Processed",
+                "groupbias": (  # nested group
+                    "DF379+1",  # +1 signifies 1 nested group index must be added
+                    {
+                        "DF461": "QZSS Signal and Tracking Mode Identifier",
+                        "DF383": "Code Bias",
+                    },
+                ),
+            },
+        ),
+    },
+    "1249": {
+        "DF002": "Message Number",
+        "DF460": "QZSS Epoch Time 1s",
+        "DF391": "SSR Update Interval",
+        "DF388": "Multiple Message Indicator",
+        "DF375": "Satellite Reference Datum",
+        "DF413": "IOD SSR",
+        "DF414": "SSR Provider ID",
+        "DF415": "SSR Solution ID",
+        "DF387": "No. of Satellites",
+        "group": (
+            "DF387",
+            {
+                "DF429": "QZSS Satellite ID",
+                "DF434": "QZSS IODE",
+                "DF365": "Delta Radial",
+                "DF366": "Delta Along-Track",
+                "DF367": "Delta Cross-Track",
+                "DF368": "Dot Delta Radial",
+                "DF369": "Dot Delta Along-Track",
+                "DF370": "Dot Delta Cross-Track",
+                "DF376": "Delta Clock C0",
+                "DF377": "Delta Clock C1",
+                "DF378": "Delta Clock C2",
+            },
+        ),
+    },
+    "1250": {
+        "DF002": "Message Number",
+        "DF460": "QZSS Epoch Time 1s",
+        "DF391": "SSR Update Interval",
+        "DF388": "Multiple Message Indicator",
+        "DF413": "IOD SSR",
+        "DF414": "SSR Provider ID",
+        "DF415": "SSR Solution ID",
+        "DF387": "No. of Satellites",
+        "group": (
+            "DF387",
+            {
+                "DF429": "QZSS Satellite ID",
+                "DF389": "SSR URA",
+            },
+        ),
+    },
+    "1251": {
+        "DF002": "Message Number",
+        "DF460": "QZSS Epoch Time 1s",
+        "DF391": "SSR Update Interval",
+        "DF388": "Multiple Message Indicator",
+        "DF413": "IOD SSR",
+        "DF414": "SSR Provider ID",
+        "DF415": "SSR Solution ID",
+        "DF387": "No. of Satellites",
+        "group": (
+            "DF387",
+            {
+                "DF429": "QZSS Satellite ID",
+                "DF390": "High Rate Clock Correction",
+            },
+        ),
+    },
+    "1252": {
+        "DF002": "Message Number",
+        "DF462": "SBAS Epoch Time 1s",
+        "DF391": "SSR Update Interval",
+        "DF388": "Multiple Message Indicator",
+        "DF375": "Satellite Reference Datum",
+        "DF413": "IOD SSR",
+        "DF414": "SSR Provider ID",
+        "DF415": "SSR Solution ID",
+        "DF387": "No. of Satellites",
+        "group": (
+            "DF387",
+            {
+                "DF463": "SBAS Satellite ID",
+                "DF468": "SBAS t0 Modulo",
+                "DF469": "SBAS IODE CRC",
+                "DF365": "Delta Radial",
+                "DF366": "Delta Along-Track",
+                "DF367": "Delta Cross-Track",
+                "DF368": "Dot Delta Radial",
+                "DF369": "Dot Delta Along-Track",
+                "DF370": "Dot Delta Cross-Track",
+            },
+        ),
+    },
+    "1253": {
+        "DF002": "Message Number",
+        "DF462": "SBAS Epoch Time 1s",
+        "DF391": "SSR Update Interval",
+        "DF388": "Multiple Message Indicator",
+        "DF413": "IOD SSR",
+        "DF414": "SSR Provider ID",
+        "DF415": "SSR Solution ID",
+        "DF387": "No. of Satellites",
+        "group": (
+            "DF387",
+            {
+                "DF463": "SBAS Satellite ID",
+                "DF376": "Delta Clock C0",
+                "DF377": "Delta Clock C1",
+                "DF378": "Delta Clock C2",
+            },
+        ),
+    },
+    "1254": {
+        "DF002": "Message Number",
+        "DF462": "SBAS Epoch Time 1s",
+        "DF391": "SSR Update Interval",
+        "DF388": "Multiple Message Indicator",
+        "DF413": "IOD SSR",
+        "DF414": "SSR Provider ID",
+        "DF415": "SSR Solution ID",
+        "DF387": "No. of Satellites",
+        "groupsat": (
+            "DF387",
+            {
+                "DF463": "SBAS Satellite ID",
+                "DF379": "No. of Code Biases Processed",
+                "groupbias": (  # nested group
+                    "DF379+1",  # +1 signifies 1 nested group index must be added
+                    {
+                        "DF464": "SBAS Signal and Tracking Mode Identifier",
+                        "DF383": "Code Bias",
+                    },
+                ),
+            },
+        ),
+    },
+    "1255": {
+        "DF002": "Message Number",
+        "DF462": "SBAS Epoch Time 1s",
+        "DF391": "SSR Update Interval",
+        "DF388": "Multiple Message Indicator",
+        "DF375": "Satellite Reference Datum",
+        "DF413": "IOD SSR",
+        "DF414": "SSR Provider ID",
+        "DF415": "SSR Solution ID",
+        "DF387": "No. of Satellites",
+        "group": (
+            "DF387",
+            {
+                "DF463": "SBAS Satellite ID",
+                "DF468": "SBAS t0 Modulo",
+                "DF469": "SBAS IODE CRC",
+                "DF365": "Delta Radial",
+                "DF366": "Delta Along-Track",
+                "DF367": "Delta Cross-Track",
+                "DF368": "Dot Delta Radial",
+                "DF369": "Dot Delta Along-Track",
+                "DF370": "Dot Delta Cross-Track",
+                "DF376": "Delta Clock C0",
+                "DF377": "Delta Clock C1",
+                "DF378": "Delta Clock C2",
+            },
+        ),
+    },
+    "1256": {
+        "DF002": "Message Number",
+        "DF462": "SBAS Epoch Time 1s",
+        "DF391": "SSR Update Interval",
+        "DF388": "Multiple Message Indicator",
+        "DF413": "IOD SSR",
+        "DF414": "SSR Provider ID",
+        "DF415": "SSR Solution ID",
+        "DF387": "No. of Satellites",
+        "group": (
+            "DF387",
+            {
+                "DF463": "SBAS Satellite ID",
+                "DF389": "SSR URA",
+            },
+        ),
+    },
+    "1257": {
+        "DF002": "Message Number",
+        "DF462": "SBAS Epoch Time 1s",
+        "DF391": "SSR Update Interval",
+        "DF388": "Multiple Message Indicator",
+        "DF413": "IOD SSR",
+        "DF414": "SSR Provider ID",
+        "DF415": "SSR Solution ID",
+        "DF387": "No. of Satellites",
+        "group": (
+            "DF387",
+            {
+                "DF463": "SBAS Satellite ID",
+                "DF390": "High Rate Clock Correction",
+            },
+        ),
+    },
+    "1258": {
+        "DF002": "Message Number",
+        "DF465": "BDS Epoch Time 1s",
+        "DF391": "SSR Update Interval",
+        "DF388": "Multiple Message Indicator",
+        "DF375": "Satellite Reference Datum",
+        "DF413": "IOD SSR",
+        "DF414": "SSR Provider ID",
+        "DF415": "SSR Solution ID",
+        "DF387": "No. of Satellites",
+        "group": (
+            "DF387",
+            {
+                "DF488": "BDS Satellite ID",
+                "DF470": "BDS toe Modulo",
+                "DF471": "BDS IOD",
+                "DF365": "Delta Radial",
+                "DF366": "Delta Along-Track",
+                "DF367": "Delta Cross-Track",
+                "DF368": "Dot Delta Radial",
+                "DF369": "Dot Delta Along-Track",
+                "DF370": "Dot Delta Cross-Track",
+            },
+        ),
+    },
+    "1259": {
+        "DF002": "Message Number",
+        "DF465": "BDS Epoch Time 1s",
+        "DF391": "SSR Update Interval",
+        "DF388": "Multiple Message Indicator",
+        "DF413": "IOD SSR",
+        "DF414": "SSR Provider ID",
+        "DF415": "SSR Solution ID",
+        "DF387": "No. of Satellites",
+        "group": (
+            "DF387",
+            {
+                "DF488": "BDS Satellite ID",
+                "DF376": "Delta Clock C0",
+                "DF377": "Delta Clock C1",
+                "DF378": "Delta Clock C2",
+            },
+        ),
+    },
+    "1260": {
+        "DF002": "Message Number",
+        "DF465": "BDS Epoch Time 1s",
+        "DF391": "SSR Update Interval",
+        "DF388": "Multiple Message Indicator",
+        "DF413": "IOD SSR",
+        "DF414": "SSR Provider ID",
+        "DF415": "SSR Solution ID",
+        "DF387": "No. of Satellites",
+        "groupsat": (
+            "DF387",
+            {
+                "DF488": "BDS Satellite ID",
+                "DF379": "No. of Code Biases Processed",
+                "groupbias": (  # nested group
+                    "DF379+1",  # +1 signifies 1 nested group index must be added
+                    {
+                        "DF467": "BDS Signal and Tracking Mode Identifier",
+                        "DF383": "Code Bias",
+                    },
+                ),
+            },
+        ),
+    },
+    "1261": {
+        "DF002": "Message Number",
+        "DF465": "BDS Epoch Time 1s",
+        "DF391": "SSR Update Interval",
+        "DF388": "Multiple Message Indicator",
+        "DF375": "Satellite Reference Datum",
+        "DF413": "IOD SSR",
+        "DF414": "SSR Provider ID",
+        "DF415": "SSR Solution ID",
+        "DF387": "No. of Satellites",
+        "group": (
+            "DF387",
+            {
+                "DF488": "BDS Satellite ID",
+                "DF470": "BDS toe Modulo",
+                "DF471": "BDS IOD",
+                "DF365": "Delta Radial",
+                "DF366": "Delta Along-Track",
+                "DF367": "Delta Cross-Track",
+                "DF368": "Dot Delta Radial",
+                "DF369": "Dot Delta Along-Track",
+                "DF370": "Dot Delta Cross-Track",
+                "DF376": "Delta Clock C0",
+                "DF377": "Delta Clock C1",
+                "DF378": "Delta Clock C2",
+            },
+        ),
+    },
+    "1262": {
+        "DF002": "Message Number",
+        "DF465": "BDS Epoch Time 1s",
+        "DF391": "SSR Update Interval",
+        "DF388": "Multiple Message Indicator",
+        "DF413": "IOD SSR",
+        "DF414": "SSR Provider ID",
+        "DF415": "SSR Solution ID",
+        "DF387": "No. of Satellites",
+        "group": (
+            "DF387",
+            {
+                "DF488": "BDS Satellite ID",
+                "DF389": "SSR URA",
+            },
+        ),
+    },
+    "1263": {
+        "DF002": "Message Number",
+        "DF465": "BDS Epoch Time 1s",
+        "DF391": "SSR Update Interval",
+        "DF388": "Multiple Message Indicator",
+        "DF413": "IOD SSR",
+        "DF414": "SSR Provider ID",
+        "DF415": "SSR Solution ID",
+        "DF387": "No. of Satellites",
+        "group": (
+            "DF387",
+            {
+                "DF488": "BDS Satellite ID",
+                "DF390": "High Rate Clock Correction",
+            },
+        ),
+    },
+    "1264": {
+        "DF002": "Message Number",
+        "DF385": "GPS Epoch Time 1s",
+        "DF391": "SSR Update Interval",
+        "DF388": "Multiple Message Indicator",
+        "DF413": "IOD SSR",
+        "DF414": "SSR Provider ID",
+        "DF415": "SSR Solution ID",
+        "DF478": "VTEC Quality Indicator",
+        "DF472": "Number of Ionospheric Layers",  # Nᴵᴸ - 1
+        "groupion": (
+            "DF472",
+            {
+                "DF473": "Height of Ionospheric Layer",
+                "DF474": "Spherical Harmonics Degree",  # N - 1
+                "DF475": "Spherical Harmonics Order",  # M - 1
+                "groupcoeffC": (
+                    NHARMCOEFFC,
+                    {
+                        "DF476": "Spherical Harmonic Coefficient C",
+                    },
+                ),
+                "groupcoeffS": (
+                    NHARMCOEFFS,
+                    {
+                        "DF477": "Spherical Harmonic Coefficient S",
+                    },
+                ),
             },
         ),
     },

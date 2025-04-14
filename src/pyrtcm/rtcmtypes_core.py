@@ -494,7 +494,7 @@ RTCM_DATA_FIELDS = {
     "DF379": (UINT, 5, 1, "No. of Code Biases Processed"),
     "DF380": (UINT, 5, 1, "GPS Signal and Tracking Mode Identifier"),
     "DF381": (UINT, 5, 1, "GLONASS Signal and Tracking Mode Identifier"),
-    "DF382": (UINT, 5, 1, "RESERVED for Galileo Signal and Tracking Mode Identifier"),
+    "DF382": (UINT, 5, 1, "Galileo Signal and Tracking Mode Identifier"),
     "DF383": (INT, 14, 0.01, "Code Bias"),
     "DF384": (UINT, 5, 1, "GLONASS Satellite ID"),
     "DF385": (UINT, 20, 1, "GPS Epoch Time 1s"),
@@ -593,6 +593,26 @@ RTCM_DATA_FIELDS = {
     "DF455": (INT, 8, P2_31, "QZSS TGD"),
     "DF456": (UINT, 10, 1, "QZSS IODC"),
     "DF457": (BIT, 1, 1, "QZSS Fit Interval"),
+    "DF458": (UINT, 20, 1, "Galileo Epoch Time 1s"),
+    "DF459": (UINT, 10, 1, "Galileo IODnav I/NAV"),
+    "DF460": (UINT, 20, 1, "QZSS Epoch Time 1s"),
+    "DF461": (UINT, 5, 1, "QZSS Signal and Tracking Mode Identifier"),
+    "DF462": (UINT, 20, 1, "SBAS Epoch Time 1s"),
+    "DF463": (UINT, 6, 0, "SBAS Satellite ID"),
+    "DF464": (UINT, 5, 1, "SBAS Signal and Tracking Mode Identifier"),
+    "DF465": (UINT, 20, 1, "BDS Epoch Time 1s"),
+    "DF467": (UINT, 5, 1, "BDS Signal and Tracking Mode Identifier"),
+    "DF468": (BIT, 9, 16, "SBAS t0 Modulo"),
+    "DF469": (BIT, 24, 0, "SBAS IOD CRC"),
+    "DF470": (BIT, 10, 8, "BDS toe Modulo"),
+    "DF471": (BIT, 8, 0, "BDS IOD"),
+    "DF472": (UINT, 2, 1, "Number of Ionospheric Layers"),
+    "DF473": (UINT, 8, 10, "Height of Ionospheric Layer"),
+    "DF474": (UINT, 4, 1, "Spherical Harmonics Degree"),
+    "DF475": (UINT, 4, 1, "Spherical Harmonics Order"),
+    "DF476": (INT, 16, 0.005, "Spherical Harmonic Coefficient C"),
+    "DF477": (INT, 16, 0.005, "Spherical Harmonic Coefficient S"),
+    "DF478": (UINT, 9, 0.05, "VTEC Quality Indicator"),
     "DF488": (UINT, 6, 0, "BDS Satellite ID"),
     "DF489": (UINT, 13, 1, "BDS Week Number"),
     "DF490": (BIT, 4, 1, "BDS URAI"),
@@ -782,7 +802,7 @@ RTCM_MSGIDS = {
     "1060": "GPS SSR Combined Orbit and Clock Corrections",
     "1061": "GPS SSR URA",
     "1062": "GPS SSR High Rate Clock Correction",
-    "1063": "GLONASS SSR OrBIT,  Correction",
+    "1063": "GLONASS SSR Orbit Correction",
     "1064": "GLONASS SSR Clock Correction",
     "1065": "GLONASS SSR Code Bias",
     "1066": "GLONASS SSR Combined Orbit and Clock Correction",
@@ -858,6 +878,31 @@ RTCM_MSGIDS = {
     "1137": "NavIC/IRNSS MSM7",
     # "1138-1229":"Reserved MSM",
     "1230": "GLONASS L1 and L2 Code-Phase Biases",
+    "1240": "SSR Galileo Orbit Correction",
+    "1241": "SSR Galileo Clock Correction",
+    "1242": "SSR Galileo Code Bias",
+    "1243": "SSR Galileo Combined Orbit and Clock Corrections",
+    "1244": "SSR Galileo URA",
+    "1245": "SSR Galileo High Rate Clock Correction",
+    "1246": "SSR QZSS Orbit Correction",
+    "1247": "SSR QZSS Clock Correction",
+    "1248": "SSR QZSS Code Bias",
+    "1249": "SSR QZSS Combined Orbit and Clock Corrections",
+    "1250": "SSR QZSS URA",
+    "1251": "SSR QZSS High Rate Clock Correction",
+    "1252": "SSR SBAS Orbit Correction",
+    "1253": "SSR SBAS Clock Correction",
+    "1254": "SSR SBAS Code Bias",
+    "1255": "SSR SBAS Combined Orbit and Clock Corrections",
+    "1256": "SSR SBAS URA",
+    "1257": "SSR SBAS High Rate Clock Correction",
+    "1258": "SSR BDS Orbit Correction",
+    "1259": "SSR BDS Clock Correction",
+    "1260": "SSR BDS Code Bias",
+    "1261": "SSR BDS Combined Orbit and Clock Corrections",
+    "1262": "SSR BDS URA",
+    "1263": "SSR BDS High Rate Clock Correction",
+    "1264": "SSR Ionosphere VTEC Spherical Harmonics",
     "1300": "Service CRS",
     "1301": "Parameter Transformation 15",
     "1302": "RTCM CRS",
@@ -983,9 +1028,19 @@ GNSSMAP = {
 }
 """Map of MSM message identity prefix to GNSS name & epoch attribute name"""
 
-# map of 4076_201 coefficients
-COEFFS = {
-    0: ("IDF039", "Cosine Coefficients"),
-    1: ("IDF040", "Sine Coefficients"),
+# map of 4076_201 and 1264 spherical coefficients
+SSR_SPHER_COEFFS = {
+    "4076_201": {
+        0: ("IDF039", "Cosine Coefficients"),
+        1: ("IDF040", "Sine Coefficients"),
+    },
+    "1264": {0: ("DF476", "Cosine Coefficients"), 1: ("DF477", "Sine Coefficients")},
 }
-"""Map of 4076_01 message coefficient data attributes"""
+"""Map of 4076_201 and 1264 spherical coefficient data attributes"""
+
+# map of 4076_201 and 1264 special coefficients
+SSR_COEFF = {
+    "IDF038": ("IDF037", "IDF038"),  # message 4076_201
+    "DF475": ("DF474", "DF475"),  # message 1264
+}
+"""Map of 4076_201 and 1264 special coefficient attributes"""

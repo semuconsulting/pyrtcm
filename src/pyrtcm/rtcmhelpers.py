@@ -11,7 +11,7 @@ Created on 14 Feb 2022
 
 from datetime import datetime, timedelta
 
-from pyrtcm.rtcmtypes_core import COEFFS, GNSSMAP, RTCM_DATA_FIELDS
+from pyrtcm.rtcmtypes_core import GNSSMAP, RTCM_DATA_FIELDS, SSR_SPHER_COEFFS
 
 
 def att2idx(att: str) -> int:
@@ -252,7 +252,7 @@ def parse_4076_201(msg: object):
         hmc[lyr] = {}
         hmc[lyr]["Layer Height"] = getattr(msg, f"IDF036_{lyr+1:02d}")
         # for each coefficient (cosine & sine)
-        for field, coeff in COEFFS.values():
+        for field, coeff in SSR_SPHER_COEFFS[msg.identity].values():
             hmc[lyr][coeff] = []
             i = 0
             eof = False
