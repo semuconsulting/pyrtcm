@@ -1,5 +1,9 @@
 # pyrtcm Release Notes
 
+### RELEASE 1.1.7
+
+1. Internal streamlining of RTCMReader - no functional changes.
+
 ### RELEASE 1.1.6
 
 1. Proposed SSR Stage 1 and 2 message definitions added (1240-1264) - thanks to @davidtlascelles for contribution.

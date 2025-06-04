@@ -11,7 +11,7 @@ Created on 3 Oct 2020
 # pylint: disable=line-too-long, invalid-name, missing-docstring, no-member
 
 import os
-from io import BufferedReader
+from io import BufferedReader, BytesIO
 import sys
 import unittest
 from logging import ERROR
@@ -22,6 +22,7 @@ from pyrtcm import (
     RTCMMessage,
     RTCMParseError,
     RTCMMessageError,
+    RTCMStreamError,
     ERR_IGNORE,
     ERR_LOG,
     ERR_RAISE,
@@ -461,27 +462,85 @@ class StreamTest(unittest.TestCase):
                 log.output,
             )
 
-    def testBADHDR_FAIL(self):  # invalid header in data with quitonerror = 2
-        EXPECTED_ERROR = "Unknown protocol header b'\\xb5w'"
-        with self.assertRaises(RTCMParseError) as context:
-            i = 0
-            with open(os.path.join(DIRNAME, "pygpsdata-BADHDR.log"), "rb") as stream:
-                ubr = RTCMReader(stream, quitonerror=ERR_RAISE)
-                for _, _ in ubr:
-                    i += 1
-        self.assertTrue(EXPECTED_ERROR in str(context.exception))
-
-    def testBADHDR_LOG(self):  # invalid header in data with quitonerror = 1
+    def testNOPARSE(self):
+        EXPECTED_RESULTS = [
+            b"\xd3\x00\x13>\xd0\x00\x03\x84\x1a\x86\x92\xbf\xb4KK\xf4\xfa\xb7\xdc7b\x8a3\x84y",
+            b"\xd3\x00\x15>\xe0\x00\x03\x84\x1a\x86\x92\xbf\xb4KK\xf4\xfa\xb7\xdc7b\x8a\x01W\x1b\xa9\xd6",
+            b"\xd3\x00\x19>\xf0\x00\x14SEPCHOKE_B3E6   SPKE\x00\x07nf",
+            b"\xd3\x00\x1e?\x00\x00\x14SEPCHOKE_B3E6   SPKE\x00\x045856\xffh\x94",
+            b'\xd3\x00H?\x10\x00\x86\x85\x03\x14\x00$4\x07\xbaAt\x0b\xfa\xc2 3\x11=\xa0+\xfb\x04\xb8q\x80\xc0\xbd\xdf\xf9\x06\xb8\xd7U\x80u\xbb\xf8\xe6 \xc5\x18=#\xb7\xfa\xe5\\\x85\xd8\x80\\\x83\xf9@m\x8d%\x01\xb17\xf9"\xbdz\xc2\x81h\x03\xf8\x9f\xc6\xe6',
+        ]
+        RTCMMESSAGES = [
+            b"\xd3\x00\x13>\xd0\x00\x03\x84\x1a\x86\x92\xbf\xb4KK\xf4\xfa\xb7\xdc7b\x8a3\x84y",
+            b"\xd3\x00\x15>\xe0\x00\x03\x84\x1a\x86\x92\xbf\xb4KK\xf4\xfa\xb7\xdc7b\x8a\x01W\x1b\xa9\xd6",
+            b"\xd3\x00\x19>\xf0\x00\x14SEPCHOKE_B3E6   SPKE\x00\x07nf",
+            b"\xd3\x00\x1e?\x00\x00\x14SEPCHOKE_B3E6   SPKE\x00\x045856\xffh\x94",
+            b'\xd3\x00H?\x10\x00\x86\x85\x03\x14\x00$4\x07\xbaAt\x0b\xfa\xc2 3\x11=\xa0+\xfb\x04\xb8q\x80\xc0\xbd\xdf\xf9\x06\xb8\xd7U\x80u\xbb\xf8\xe6 \xc5\x18=#\xb7\xfa\xe5\\\x85\xd8\x80\\\x83\xf9@m\x8d%\x01\xb17\xf9"\xbdz\xc2\x81h\x03\xf8\x9f\xc6\xe6',
+        ]
+        msgb = b""
+        for msg in RTCMMESSAGES:
+            msgb += msg
+        RTCMBYTES = msgb
+        stream = BytesIO(RTCMBYTES)
+        rtr = RTCMReader(stream, parsed=False)
         i = 0
-        with self.assertLogs(level=ERROR) as log:
-            with open(os.path.join(DIRNAME, "pygpsdata-BADHDR.log"), "rb") as stream:
-                ubr = RTCMReader(stream, quitonerror=ERR_LOG)
-                for raw, parsed in ubr:
-                    i += 1
-            self.assertEqual(
-                ["ERROR:pyrtcm.rtcmreader:Unknown protocol header b'\\xb5w'."],
-                log.output,
-            )
+        for raw, parsed in rtr:
+            # print(f"{raw},")
+            self.assertEqual(EXPECTED_RESULTS[i], raw)
+            i += 1
+        self.assertEqual(i, 5)
+
+    def testUNKNOWNHDR(self):
+        EXPECTED_RESULTS = [
+            "<RTCM(1005, DF002=1005, DF003=0, DF021=0, DF022=1, DF023=1, DF024=1, DF141=0, DF025=1762489.6191, DF142=1, DF001_1=0, DF026=-5027633.8438, DF364=2, DF027=-3496008.8438000004)>",
+            "<RTCM(1006, DF002=1006, DF003=0, DF021=0, DF022=1, DF023=1, DF024=1, DF141=0, DF025=1762489.6191, DF142=1, DF001_1=0, DF026=-5027633.8438, DF364=2, DF027=-3496008.8438000004, DF028=0.034300000000000004)>",
+            "<RTCM(1007, DF002=1007, DF003=0, DF029=20, DF030_01=S, DF030_02=E, DF030_03=P, DF030_04=C, DF030_05=H, DF030_06=O, DF030_07=K, DF030_08=E, DF030_09=_, DF030_10=B, DF030_11=3, DF030_12=E, DF030_13=6, DF030_14= , DF030_15= , DF030_16= , DF030_17=S, DF030_18=P, DF030_19=K, DF030_20=E, DF031=0)>",
+            "<RTCM(1008, DF002=1008, DF003=0, DF029=20, DF030_01=S, DF030_02=E, DF030_03=P, DF030_04=C, DF030_05=H, DF030_06=O, DF030_07=K, DF030_08=E, DF030_09=_, DF030_10=B, DF030_11=3, DF030_12=E, DF030_13=6, DF030_14= , DF030_15= , DF030_16= , DF030_17=S, DF030_18=P, DF030_19=K, DF030_20=E, DF031=0, DF032=4, DF033_01=5, DF033_02=8, DF033_03=5, DF033_04=6)>",
+            "<RTCM(1009, DF002=1009, DF003=0, DF034=70527000, DF005=1, DF035=8, DF036=0, DF037=0, DF038_01=1, DF039_01=0, DF040_01=8, DF041_01=272788.02, DF042_01=11.905, DF043_01=127, DF038_02=22, DF039_02=0, DF040_02=4, DF041_02=168818.0, DF042_02=-19.451, DF043_02=127, DF038_03=24, DF039_03=0, DF040_03=9, DF041_03=295925.82, DF042_03=6.0755, DF043_03=127, DF038_04=8, DF039_04=0, DF040_04=13, DF041_04=298011.32, DF042_04=3.767, DF043_04=127, DF038_05=7, DF039_05=0, DF040_05=12, DF041_05=171808.64, DF042_05=-23.433500000000002, DF043_05=127, DF038_06=23, DF039_06=0, DF040_06=10, DF041_06=485086.12, DF042_06=2.96, DF043_06=127, DF038_07=10, DF039_07=0, DF040_07=0, DF041_07=574364.56, DF042_07=13.8625, DF043_07=127, DF038_08=9, DF039_08=0, DF040_08=5, DF041_08=322329.8, DF042_08=11.52, DF043_08=127)>",
+        ]
+        RTCMMESSAGES = [
+            b"\xd3\x00\x13>\xd0\x00\x03\x84\x1a\x86\x92\xbf\xb4KK\xf4\xfa\xb7\xdc7b\x8a3\x84y",
+            b"\xd3\x00\x15>\xe0\x00\x03\x84\x1a\x86\x92\xbf\xb4KK\xf4\xfa\xb7\xdc7b\x8a\x01W\x1b\xa9\xd6",
+            b"\xd3\x00\x19>\xf0\x00\x14SEPCHOKE_B3E6   SPKE\x00\x07nf",
+            b"\xd3\x00\x1e?\x00\x00\x14SEPCHOKE_B3E6   SPKE\x00\x045856\xffh\x94",
+            b"\xd3\xa3\xa3\xa3\xa3\xa3\xa3\xa3\xa3\xa3\xa3\xa3\xa3\xa3",  # not RTCM3, discarded
+            b'\xd3\x00H?\x10\x00\x86\x85\x03\x14\x00$4\x07\xbaAt\x0b\xfa\xc2 3\x11=\xa0+\xfb\x04\xb8q\x80\xc0\xbd\xdf\xf9\x06\xb8\xd7U\x80u\xbb\xf8\xe6 \xc5\x18=#\xb7\xfa\xe5\\\x85\xd8\x80\\\x83\xf9@m\x8d%\x01\xb17\xf9"\xbdz\xc2\x81h\x03\xf8\x9f\xc6\xe6',
+        ]
+        msgb = b""
+        for msg in RTCMMESSAGES:
+            msgb += msg
+        RTCMBYTES = msgb
+        stream = BytesIO(RTCMBYTES)
+        rtr = RTCMReader(stream)
+        i = 0
+        for _, parsed in rtr:
+            # print(f'"{parsed}",')
+            self.assertEqual(EXPECTED_RESULTS[i], str(parsed))
+            i += 1
+        self.assertEqual(i, 5)
+
+    def testPREMATUREEOF(self):
+        RTCMMESSAGES = [
+            b"\xd3\x00\x13>\xd0\x00\x03\x84\x1a\x86\x92\xbf\xb4KK\xf4\xfa\xb7\xdc7b\x8a3\x84y",
+            b"\xd3\x00\x15>\xe0\x00\x03\x84\x1a\x86\x92\xbf\xb4KK\xf4\xfa\xb7\xdc7b\x8a\x01W\x1b\xa9\xd6",
+            b"\xd3\x00\x19>\xf0\x00\x14SEPCHOKE_B3E6   SPKE\x00\x07nf",
+            b"\xd3\x00\x1e?\x00\x00\x14SEPCHOKE_B3E6   SPKE\x00\x045856\xffh\x94",
+            b"\xd3\xa3\xa3\xa3\xa3\xa3\xa3\xa3\xa3\xa3\xa3\xa3\xa3\xa3",  # not RTCM3, discarded
+            b"\xd3\x00H?\x10\x00\x86\x85\x03\x14\x00$4\x07\xbaAt\x0b\xfa\xca",
+        ]
+        msgb = b""
+        for msg in RTCMMESSAGES:
+            msgb += msg
+        RTCMBYTES = msgb
+        stream = BytesIO(RTCMBYTES)
+        rtr = RTCMReader(stream, quitonerror=ERR_RAISE)
+        with self.assertRaisesRegex(
+            RTCMStreamError,
+            "Serial stream terminated unexpectedly. 72 bytes requested, 17 bytes returned.",
+        ):
+            for _, parsed in rtr:
+                pass
+                # print(f'"{parsed}",')
 
     def testBADHDR_IGNORE(self):  # invalid header in data with quitonerror = 0
         i = 0
