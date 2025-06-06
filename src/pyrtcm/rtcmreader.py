@@ -39,8 +39,6 @@ from pyrtcm.rtcmtypes_core import (
     ENCODE_NONE,
     ERR_LOG,
     ERR_RAISE,
-    NMEA_HDR,
-    UBX_HDR,
     VALCKSUM,
 )
 from pyrtcm.socketwrapper import SocketWrapper
@@ -103,10 +101,10 @@ class RTCMReader:
         :raises: StopIteration
         """
 
-        (raw_data, parsed_data) = self.read()
+        raw_data, parsed_data = self.read()
         if raw_data is None and parsed_data is None:
             raise StopIteration
-        return (raw_data, parsed_data)
+        return raw_data, parsed_data
 
     def read(self) -> tuple:
         """
@@ -127,30 +125,21 @@ class RTCMReader:
                 raw_data = None
                 parsed_data = None
                 byte1 = self._read_bytes(1)  # read the first byte
-                # if not UBX, NMEA or RTCM3, discard and continue
-                if byte1 not in (b"\xb5", b"\x24", b"\xd3"):
+                if byte1 != b"\xd3":
+                    # not RTCM3, discard and continue
                     continue
                 byte2 = self._read_bytes(1)
-                bytehdr = byte1 + byte2
-                # if it's a UBX message (b'\xb5\x62'), ignore it
-                if bytehdr == UBX_HDR:
-                    (raw_data, parsed_data) = self._parse_ubx(bytehdr)
-                    continue
-                # if it's an NMEA message ('$G' or '$P'), ignore it
-                if bytehdr in NMEA_HDR:
-                    (raw_data, parsed_data) = self._parse_nmea(bytehdr)
-                    continue
                 # if it's a RTCM3 message
                 # (byte1 = 0xd3; byte2 = 0b000000**)
                 if byte1 == b"\xd3" and (byte2[0] & ~0x03) == 0:
-                    (raw_data, parsed_data) = self._parse_rtcm3(bytehdr)
+                    raw_data, parsed_data = self._parse_rtcm3(byte1 + byte2)
                     parsing = False
-                # unrecognised protocol header
                 else:
-                    raise RTCMParseError(f"Unknown protocol header {bytehdr}.")
+                    # not RTCM3, discard and continue
+                    continue
 
             except EOFError:
-                return (None, None)
+                return None, None
             except (
                 RTCMMessageError,
                 RTCMParseError,
@@ -161,43 +150,7 @@ class RTCMReader:
                     self._do_error(err)
                 continue
 
-        return (raw_data, parsed_data)
-
-    def _parse_ubx(self, hdr: bytes) -> tuple:
-        """
-        Parse remainder of UBX message.
-
-        :param bytes hdr: UBX header (b'\xb5\x62')
-        :return: tuple of (raw_data as bytes, parsed_data as UBXMessage or None)
-        :rtype: tuple
-        """
-
-        # read the rest of the UBX message from the buffer
-        byten = self._read_bytes(4)
-        msgid = byten[0:2]
-        lenb = byten[2:4]
-        leni = int.from_bytes(lenb, "little", signed=False)
-        byten = self._read_bytes(leni + 2)
-        plb = byten[0:leni]
-        cksum = byten[leni : leni + 2]
-        raw_data = hdr + msgid + lenb + plb + cksum
-        parsed_data = None
-        return (raw_data, parsed_data)
-
-    def _parse_nmea(self, hdr: bytes) -> tuple:
-        """
-        Parse remainder of NMEA message.
-
-        :param bytes hdr: NMEA header ($G or $P)
-        :return: tuple of (raw_data as bytes, parsed_data as NMEAMessage or None)
-        :rtype: tuple
-        """
-
-        # read the rest of the NMEA message from the buffer
-        byten = self._read_line()  # NMEA protocol is CRLF-terminated
-        raw_data = hdr + byten
-        parsed_data = None
-        return (raw_data, parsed_data)
+        return raw_data, parsed_data
 
     def _parse_rtcm3(self, hdr: bytes) -> tuple:
         """
@@ -221,7 +174,7 @@ class RTCMReader:
             )
         else:
             parsed_data = None
-        return (raw_data, parsed_data)
+        return raw_data, parsed_data
 
     def _read_bytes(self, size: int) -> bytes:
         """
@@ -240,25 +193,6 @@ class RTCMReader:
             raise RTCMStreamError(
                 "Serial stream terminated unexpectedly. "
                 f"{size} bytes requested, {len(data)} bytes returned."
-            )
-        return data
-
-    def _read_line(self) -> bytes:
-        """
-        Read bytes until LF (0x0a) terminator.
-
-        :return: bytes
-        :rtype: bytes
-        :raises: EOFError if stream ends prematurely
-        """
-
-        data = self._stream.readline()  # NMEA protocol is CRLF-terminated
-        if len(data) == 0:
-            raise EOFError()  # EOF
-        if data[-1:] != b"\x0a":  # truncated stream
-            raise RTCMStreamError(
-                "Serial stream terminated unexpectedly. "
-                f"Line requested, {len(data)} bytes returned."
             )
         return data
 

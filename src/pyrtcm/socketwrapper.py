@@ -94,7 +94,7 @@ class SocketWrapper:
         self._buffer = self._buffer[num:]
         return bytes(data)
 
-    def readline(self) -> bytes:
+    def readline(self) -> bytes:  # pragma: no cover
         """
         Read bytes from buffer until CRLF reached.
         NB: always check that return data terminator is CRLF.
