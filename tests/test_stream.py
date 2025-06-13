@@ -549,6 +549,41 @@ class StreamTest(unittest.TestCase):
             for raw, parsed in ubr:
                 i += 1
 
+    def testZeroLengthPayload(self):
+        DATA = (
+            b"\xd3\x00\x15>\xe0\x00\x03\x84\x1a\x86\x92\xbf\xb4KK\xf4\xfa\xb7\xdc7b\x8a\x01W\x1b\xa9\xd6"
+            b"\xd3\x00\x00>\xf0\x00\x14SEPCHOKE_B3E6   SPKE\x00\x07nf"
+            b"\xd3\x00\x1e?\x00\x00\x14SEPCHOKE_B3E6   SPKE\x00\x045856\xffh\x94"
+        )
+
+        with BytesIO(DATA) as stream:
+            with self.assertRaisesRegex(
+                RTCMStreamError, "Invalid payload size 0 bytes"
+            ):
+                ubr = RTCMReader(stream, quitonerror=ERR_RAISE)
+                for raw, parsed in ubr:
+                    print(parsed)
+
+    def testZeroLengthPayloadIgnore(self):
+        DATA = (
+            b"\xd3\x00\x15>\xe0\x00\x03\x84\x1a\x86\x92\xbf\xb4KK\xf4\xfa\xb7\xdc7b\x8a\x01W\x1b\xa9\xd6"
+            b"\xd3\x00\x00>\xf0\x00\x14SEPCHOKE_B3E6   SPKE\x00\x07nf"
+            b"\xd3\x00\x1e?\x00\x00\x14SEPCHOKE_B3E6   SPKE\x00\x045856\xffh\x94"
+        )
+        EXPECTED_RESULT = [
+            "<RTCM(1006, DF002=1006, DF003=0, DF021=0, DF022=1, DF023=1, DF024=1, DF141=0, DF025=1762489.6191, DF142=1, DF001_1=0, DF026=-5027633.8438, DF364=2, DF027=-3496008.8438000004, DF028=0.034300000000000004)>",
+            # "Invalid payload size 0 bytes",
+            "<RTCM(1008, DF002=1008, DF003=0, DF029=20, DF030_01=S, DF030_02=E, DF030_03=P, DF030_04=C, DF030_05=H, DF030_06=O, DF030_07=K, DF030_08=E, DF030_09=_, DF030_10=B, DF030_11=3, DF030_12=E, DF030_13=6, DF030_14= , DF030_15= , DF030_16= , DF030_17=S, DF030_18=P, DF030_19=K, DF030_20=E, DF031=0, DF032=4, DF033_01=5, DF033_02=8, DF033_03=5, DF033_04=6)>",
+        ]
+        with BytesIO(DATA) as stream:
+            ubr = RTCMReader(stream, quitonerror=ERR_LOG)
+            i = 0
+            for raw, parsed in ubr:
+                print(f'"{parsed}",')
+                self.assertEqual(str(parsed), EXPECTED_RESULT[i])
+                i += 1
+            self.assertEqual(i, 2)
+
 
 if __name__ == "__main__":
     # import sys;sys.argv = ['', 'Test.testName']

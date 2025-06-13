@@ -159,10 +159,13 @@ class RTCMReader:
         :param bytes hdr: first 2 bytes of RTCM3 header
         :return: tuple of (raw_data as bytes, parsed_stub as RTCMMessage)
         :rtype: tuple
+        :raises: RTCMStreamError
         """
 
         hdr3 = self._read_bytes(1)
         size = (hdr[1] << 8) | hdr3[0]
+        if size == 0:
+            raise RTCMStreamError(f"Invalid payload size {size} bytes")
         payload = self._read_bytes(size)
         crc = self._read_bytes(3)
         raw_data = hdr + hdr3 + payload + crc
