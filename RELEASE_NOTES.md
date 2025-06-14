@@ -1,5 +1,9 @@
 # pyrtcm Release Notes
 
+### RELEASE 1.1.8
+
+1. Address issue [#82](https://github.com/semuconsulting/pyrtcm/issues/82).
+
 ### RELEASE 1.1.7
 
 1. Internal streamlining of RTCMReader - no functional changes.
