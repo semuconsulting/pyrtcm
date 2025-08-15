@@ -4,7 +4,7 @@
 
 FIXES:
 
-1. Fix BEIDOU_SIG_MAP in rtcmtables.py
+1. Fix BEIDOU_SIG_MAP in rtcmtables.py Fixes #85
 
 ### RELEASE 1.1.8
 
