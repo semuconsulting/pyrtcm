@@ -1,5 +1,11 @@
 # pyrtcm Release Notes
 
+### RELEASE 1.1.9
+
+FIXES:
+
+1. Fix BEIDOU_SIG_MAP in rtcmtables.py Fixes #85
+
 ### RELEASE 1.1.8
 
 1. Address issue [#82](https://github.com/semuconsulting/pyrtcm/issues/82).
