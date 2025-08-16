@@ -108,7 +108,7 @@ source = ["src"]
 source = ["src"]
 
 [tool.coverage.report]
-fail_under = 15
+fail_under = 98
 
 [tool.coverage.html]
 directory = "htmlcov"
