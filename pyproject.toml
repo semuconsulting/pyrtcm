@@ -5,8 +5,8 @@ build-backend = "setuptools.build_meta:__legacy__"
 [project]
 name = "pyrtcm"
 dynamic = ["version"]
-authors = [{ name = "semuadmin", email = "semuadmin@semuconsulting.com" }]
-maintainers = [{ name = "semuadmin", email = "semuadmin@semuconsulting.com" }]
+authors = [{ name = "Steve Smith", email = "semuadmin@semuconsulting.com" }]
+maintainers = [{ name = "Steve Smith", email = "semuadmin@semuconsulting.com" }]
 description = "RTCM3 protocol parser"
 license = "BSD-3-Clause"
 license-files = ["LICENSE"]
@@ -28,6 +28,7 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Utilities",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Scientific/Engineering :: GIS",
