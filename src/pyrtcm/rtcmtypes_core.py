@@ -12,27 +12,8 @@ Information sourced from RTCM STANDARD 10403.3 © 2016 RTCM
 
 # pylint: disable=line-too-long
 
-NMEA_HDR = [
-    b"$V",
-    b"$M",
-    b"$P",
-    b"$B",
-    b"$D",
-    b"$I",
-    b"$L",
-    b"$G",
-    b"$F",
-    b"$S",
-    b"$H",
-    b"$R",
-    b"$E",
-    b"$Y",
-    b"$A",
-    b"$C",
-    b"$Z",
-    b"$T",
-    b"$W",
-]
+from pynmeagps import NMEA_HDR
+
 UBX_HDR = b"\xb5\x62"
 """UBX message header"""
 RTCM_HDR = b"\xd3"
