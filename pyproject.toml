@@ -42,6 +42,7 @@ repository = "https://github.com/semuconsulting/pyrtcm"
 changelog = "https://github.com/semuconsulting/pyrtcm/blob/master/RELEASE_NOTES.md"
 
 [dependency-groups]
+optional = []
 build = [
     "awscli",
     "build",
