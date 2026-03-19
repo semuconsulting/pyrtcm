@@ -619,8 +619,8 @@ RTCM_DATA_FIELDS = {
     "DF510": (INT, 18, P2_6, "BDS Crc"),
     "DF511": (INT, 32, P2_31, "BDS ω (Argument of Perigee)"),
     "DF512": (INT, 24, P2_43, "BDS ΩDOT (Rate of Right Ascension)"),
-    "DF513": (INT, 10, 0.1, "BDS TGD1"),
-    "DF514": (INT, 10, 0.1, "BDS TGD2"),
+    "DF513": (INT, 10, 0.1, "BDS TGD1"),  # ns
+    "DF514": (INT, 10, 0.1, "BDS TGD2"),  # ns
     "DF515": (BIT, 1, 1, "BSD SV Health"),
     "DF516": (UINT, 6, 1, "NAVIC/IRNSS Satellite ID"),
     "DF517": (UINT, 10, 1, "NAVIC/IRNSS Week Number (WN)"),

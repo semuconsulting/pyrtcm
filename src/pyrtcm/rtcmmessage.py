@@ -8,7 +8,7 @@ Created on 14 Feb 2022
 :license: BSD 3-Clause
 """
 
-from pyrtcm.exceptions import RTCMMessageError, RTCMTypeError
+from pyrtcm.exceptions import RTCMMessageError, RTCMStreamError, RTCMTypeError
 from pyrtcm.rtcmhelpers import crc2bytes, escapeall, len2bytes
 from pyrtcm.rtcmtables import PRNSIGMAP
 from pyrtcm.rtcmtypes_core import (
@@ -404,15 +404,21 @@ class RTCMMessage:
 
         :return: message identity e.g. "1005"
         :rtype: str
+        :raises: RTCMStreamError (if payload invalid)
         """
 
-        mid = self._payload[0] << 4 | self._payload[1] >> 4
+        try:
+            mid = self._payload[0] << 4 | self._payload[1] >> 4
 
-        if mid == 4076:  # proprietary IGS SSR message type
-            subtype = (self._payload[1] & 0x1) << 7 | self._payload[2] >> 1
-            mid = f"{mid}_{subtype:03d}"
+            if mid == 4076:  # proprietary IGS SSR message type
+                subtype = (self._payload[1] & 0x1) << 7 | self._payload[2] >> 1
+                mid = f"{mid}_{subtype:03d}"
 
-        return str(mid)
+            return str(mid)
+        except IndexError as err:
+            raise RTCMStreamError(
+                f"Invalid payload size {len(self._payload)} bytes"
+            ) from err
 
     @property
     def payload(self) -> bytes:
