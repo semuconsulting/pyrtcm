@@ -579,10 +579,45 @@ class StreamTest(unittest.TestCase):
             ubr = RTCMReader(stream, quitonerror=ERR_LOG)
             i = 0
             for raw, parsed in ubr:
-                print(f'"{parsed}",')
+                # print(f'"{parsed}",')
                 self.assertEqual(str(parsed), EXPECTED_RESULT[i])
                 i += 1
             self.assertEqual(i, 2)
+    
+    def testShortPayload(self):
+        EXPECTED_RESULT = [
+            "<RTCM(1006, DF002=1006, DF003=0, DF021=0, DF022=1, DF023=1, DF024=1, DF141=0, DF025=1762489.6191, DF142=1, DF001_1=0, DF026=-5027633.8438, DF364=2, DF027=-3496008.8438000004, DF028=0.034300000000000004)>",
+        ]
+        DATA = (
+            b"\xd3\x00\x15>\xe0\x00\x03\x84\x1a\x86\x92\xbf\xb4KK\xf4\xfa\xb7\xdc7b\x8a\x01W\x1b\xa9\xd6"
+            b'\xd3\x00\x02\xfe\xc0\xa2\x5d\x54'
+            b'\xd3\x00\x01\x00\n\x18\x8d'
+        )
+        with BytesIO(DATA) as stream:
+            with self.assertRaisesRegex(
+                RTCMStreamError, "Invalid payload size 2 bytes"
+            ):
+                ubr = RTCMReader(stream, quitonerror=ERR_RAISE)
+                for raw, parsed in ubr:
+                    print(parsed)
+
+    def testShortPayloadIgnore(self):
+        EXPECTED_RESULT = [
+            "<RTCM(1006, DF002=1006, DF003=0, DF021=0, DF022=1, DF023=1, DF024=1, DF141=0, DF025=1762489.6191, DF142=1, DF001_1=0, DF026=-5027633.8438, DF364=2, DF027=-3496008.8438000004, DF028=0.034300000000000004)>",
+        ]
+        DATA = (
+            b"\xd3\x00\x15>\xe0\x00\x03\x84\x1a\x86\x92\xbf\xb4KK\xf4\xfa\xb7\xdc7b\x8a\x01W\x1b\xa9\xd6"
+            b'\xd3\x00\x01\x00\n\x18\x8d'
+            b'\xd3\x00\x02\xfe\xc0\xa2\x5d\x54'
+        )
+        with BytesIO(DATA) as stream:
+            ubr = RTCMReader(stream,quitonerror=ERR_LOG)
+            i = 0
+            for raw, parsed in ubr:
+                print(f'"{parsed}",')
+                self.assertEqual(str(parsed), EXPECTED_RESULT[i])
+                i += 1
+            self.assertEqual(i, len(EXPECTED_RESULT))
 
 
 if __name__ == "__main__":

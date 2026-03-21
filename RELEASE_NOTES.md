@@ -1,6 +1,12 @@
 # pyrtcm Release Notes
 
-### RELEASE 1.1.10
+### RELEASE 1.1.12
+
+FIXES:
+
+1. Update exception handling to cater for invalid length payloads - Fixes #91
+
+### RELEASE 1.1.11
 
 1. Updates to VSCode and GitHub workflows. No functional changes.
 
