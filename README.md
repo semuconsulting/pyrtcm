@@ -40,9 +40,9 @@ Parses RTCM3 messages into their constituent data fields - `DF002`, `DF003`, etc
 
 Sphinx API Documentation in HTML format is available at [https://www.semuconsulting.com/pyrtcm/](https://www.semuconsulting.com/pyrtcm/)
 
-Contributions welcome - please refer to [CONTRIBUTING.MD](https://github.com/semuconsulting/pyrtcm/blob/master/CONTRIBUTING.md).
+Contributions welcome - please refer to [CONTRIBUTING.MD](https://github.com/semuconsulting/pyrtcm/blob/main/CONTRIBUTING.md).
 
-[Bug reports](https://github.com/semuconsulting/pyrtcm/blob/master/.github/ISSUE_TEMPLATE/bug_report.md) and [Feature requests](https://github.com/semuconsulting/pyrtcm/blob/master/.github/ISSUE_TEMPLATE/feature_request.md) - please use the templates provided. For general queries and advice, post a message to one of the [pyrtcm Discussions](https://github.com/semuconsulting/pyrtcm/discussions) channels.
+[Bug reports](https://github.com/semuconsulting/pyrtcm/blob/main/.github/ISSUE_TEMPLATE/bug_report.md) and [Feature requests](https://github.com/semuconsulting/pyrtcm/blob/main/.github/ISSUE_TEMPLATE/feature_request.md) - please use the templates provided. For general queries and advice, post a message to one of the [pyrtcm Discussions](https://github.com/semuconsulting/pyrtcm/discussions) channels.
 
 ![No Copilot](https://github.com/semuconsulting/PyGPSClient/blob/master/images/nocopilot100.png?raw=true)
 
