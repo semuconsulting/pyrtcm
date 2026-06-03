@@ -28,8 +28,3 @@ jobs:
         run: bandit -c pyproject.toml -r .
       - name: Generate coverage report
         run: pytest
-      - name: "Upload coverage to Codecov"
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }} # supposedly not required for public repos
-          fail_ci_if_error: true

@@ -33,7 +33,7 @@ classifiers = [
     "Topic :: Scientific/Engineering :: GIS",
 ]
 
-dependencies = ["pynmeagps >= 1.1.2"]
+dependencies = ["pynmeagps >= 1.1.4"]
 
 [project.urls]
 homepage = "https://github.com/semuconsulting/pyrtcm"
