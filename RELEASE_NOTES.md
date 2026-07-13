@@ -1,5 +1,15 @@
 # pyrtcm Release Notes
 
+### RELEASE 1.2.0
+
+ENHANCEMENTS:
+
+1. Add `msgfilter` argument to RTCMReader to allow user to filter output by one or more message identities. If set, only filtered raw messages will be parsed (e.g. `(1005,1077)`); the remainder will be `None`. Default is "" (no filter). If you're only interested in specific messages, this can significantly improve parsing speed for a given datastream.
+1. Enhance `parsed` argument to RTCMReader - permissible values:
+   - `PARSE_NONE` (0) - No message parsing, raw output only. Parsed data is `None`.
+   - `PARSE_FULL` (1) - Full parsing of all message attributes (the default). Parsed data is a `RTCMMessage` object.
+   - `PARSE_META` (2) - Parse only basic metadata from messages (protocol, identity and length). Parsed data is a formatted `str` object. Significantly faster than full parsing, but individual data attributes will no longer be available.
+
 ### RELEASE 1.1.12
 
 FIXES:

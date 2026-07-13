@@ -149,10 +149,30 @@ class StreamTest(unittest.TestCase):
             rtr = RTCMReader(stream)
             for raw, parsed in rtr:
                 if raw is not None:
-                    # print(f'"{parsed}",')
+                    # print(f'"{parsed}",'.replace("\\x","\\\\x"))
                     self.assertEqual(str(parsed), EXPECTED_RESULTS[i])
                     i += 1
         self.assertEqual(i, 11)
+
+    def testMIXEDRTCM_SCALEfiltered(
+        self,
+    ):  # test mixed stream of NMEA, UBX & RTCM messages with filtering applied
+        EXPECTED_RESULTS = (
+            "<RTCM(1005, length=25, ",
+            "<RTCM(1077, length=275, ",
+        )
+        dirname = os.path.dirname(__file__)
+        with open(os.path.join(dirname, "pygpsdata-RTCM3.log"), "rb") as stream:
+            i = 0
+            raw = 0
+            rtr = RTCMReader(stream,parsed=2,msgfilter=(1005,1077))
+            for raw, parsed in rtr:
+                if parsed is not None:
+                    d = parsed.split("data=",1)[0]
+                    # print(f'"{d}",')
+                    self.assertEqual(d, EXPECTED_RESULTS[i])
+                    i += 1
+        self.assertEqual(i, len(EXPECTED_RESULTS))
 
     def testMIXEDRTCM_SCALE_LABELMSM_RINEX(
         self,
