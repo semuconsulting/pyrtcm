@@ -26,6 +26,8 @@ Created on 14 Feb 2022
 
 from logging import getLogger
 from socket import socket
+from types import NoneType
+from typing import Literal
 
 from pynmeagps import SocketWrapper
 
@@ -35,12 +37,14 @@ from pyrtcm.exceptions import (
     RTCMStreamError,
     RTCMTypeError,
 )
-from pyrtcm.rtcmhelpers import calc_crc24q
+from pyrtcm.rtcmhelpers import calc_crc24q, escapeall
 from pyrtcm.rtcmmessage import RTCMMessage
 from pyrtcm.rtcmtypes_core import (
     ENCODE_NONE,
     ERR_LOG,
     ERR_RAISE,
+    PARSE_FULL,
+    PARSE_META,
     VALCKSUM,
 )
 
@@ -57,9 +61,10 @@ class RTCMReader:
         quitonerror: int = ERR_LOG,
         labelmsm: int = 1,
         bufsize: int = 4096,
-        parsed: bool = True,
+        parsed: Literal[0, 1, 2] = PARSE_FULL,
         errorhandler: object = None,
         encoding: int = ENCODE_NONE,
+        msgfilter: tuple | int | str = "",
     ):  # pylint: disable=too-many-arguments
         """Constructor.
 
@@ -69,14 +74,16 @@ class RTCMReader:
             ERR_RAISE (2) = (re)raise (1)
         :param int labelmsm: MSM NSAT and NCELL attribute label (1 = RINEX, 2 = freq)
         :param int bufsize: socket recv buffer size (4096)
-        :param bool parsed: 1 = return raw and parsed data, 0 = return only raw data \
-            (parsed = None) (1)
+        :param Literal[0,1,2] parsed: PARSE_NONE (0) = no parsing (raw only), \
+            PARSE_FULL (1) = full parsing, PARSE_META (2) = parse metadata only (1)
         :param object errorhandler: error handling object or function (None)
         :param int encoding: encoding for socket stream \
             (0 = none, 1 = chunk, 2 = gzip, 4 = compress, 8 = deflate (can be OR'd)) (0)
+        :param tuple | int | str msgfilter: parsed message filter ("" = ALL)
         :raises: RTCMStreamError (if mode is invalid)
         """
 
+        self._logger = getLogger(__name__)
         if isinstance(datastream, socket):
             self._stream = SocketWrapper(datastream, encoding=encoding, bufsize=bufsize)
         else:
@@ -85,8 +92,11 @@ class RTCMReader:
         self._errorhandler = errorhandler
         self._validate = validate
         self._labelmsm = labelmsm
-        self._parsed = parsed
-        self._logger = getLogger(__name__)
+        self._parsing = parsed
+        self._msgfilter = (
+            (msgfilter,) if not isinstance(msgfilter, tuple) else msgfilter
+        )
+        self._filtermsg = self._msgfilter not in ((), ("",))
 
     def __iter__(self):
         """Iterator."""
@@ -107,7 +117,7 @@ class RTCMReader:
             raise StopIteration
         return raw_data, parsed_data
 
-    def read(self) -> tuple:
+    def read(self) -> tuple[bytes | NoneType, RTCMMessage | str | NoneType]:
         """
         Read a single RTCM message from the stream buffer
         and return both raw and parsed data.
@@ -115,12 +125,13 @@ class RTCMReader:
         'quitonerror' determines whether to raise, log or ignore parsing errors.
 
         :return: tuple of (raw_data as bytes, parsed_data as RTCMMessage)
-        :rtype: tuple
+        :rtype: tuple[bytes | NoneType, RTCMMessage | str | NoneType]
         :raises: RTCMStreamError (if unrecognised protocol in data stream)
         """
 
         parsing = True
-
+        raw_data = None
+        parsed_data = None
         while parsing:  # loop until end of valid message or EOF
             try:
                 raw_data = None
@@ -153,13 +164,15 @@ class RTCMReader:
 
         return raw_data, parsed_data
 
-    def _parse_rtcm3(self, hdr: bytes) -> tuple:
+    def _parse_rtcm3(
+        self, hdr: bytes
+    ) -> tuple[bytes | NoneType, RTCMMessage | str | NoneType]:
         """
         Parse any RTCM3 data in the stream.
 
         :param bytes hdr: first 2 bytes of RTCM3 header
         :return: tuple of (raw_data as bytes, parsed_stub as RTCMMessage)
-        :rtype: tuple
+        :rtype: tuple[bytes | NoneType, RTCMMessage | str| NoneType]
         :raises: RTCMStreamError
         """
 
@@ -168,16 +181,20 @@ class RTCMReader:
         if size == 0:
             raise RTCMStreamError(f"Invalid payload size {size} bytes")
         payload = self._read_bytes(size)
+        msgidi = ((int.from_bytes(payload[0:2], "big")) >> 4) & 0xFFF
         crc = self._read_bytes(3)
         raw_data = hdr + hdr3 + payload + crc
-        if self._parsed:
-            parsed_data = self.parse(
-                raw_data,
-                validate=self._validate,
-                labelmsm=self._labelmsm,
-            )
-        else:
-            parsed_data = None
+        # only parse if we need to (filter passes RTCM)
+        parsed_data = None
+        if not self._filtermsg or msgidi in self._msgfilter:
+            if self._parsing == PARSE_FULL:
+                parsed_data = RTCMReader.parse(
+                    raw_data,
+                    validate=self._validate,
+                    labelmsm=self._labelmsm,
+                )
+            elif self._parsing == PARSE_META:
+                parsed_data = f"<RTCM({msgidi}, length={len(raw_data)}, data={escapeall(raw_data)})>"
         return raw_data, parsed_data
 
     def _read_bytes(self, size: int) -> bytes:
