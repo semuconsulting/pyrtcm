@@ -117,7 +117,7 @@ class RTCMReader:
             raise StopIteration
         return raw_data, parsed_data
 
-    def read(self) -> tuple[bytes | NoneType, RTCMMessage | NoneType]:
+    def read(self) -> tuple[bytes | NoneType, RTCMMessage | str | NoneType]:
         """
         Read a single RTCM message from the stream buffer
         and return both raw and parsed data.
@@ -125,7 +125,7 @@ class RTCMReader:
         'quitonerror' determines whether to raise, log or ignore parsing errors.
 
         :return: tuple of (raw_data as bytes, parsed_data as RTCMMessage)
-        :rtype: tuple[bytes, RTCMMessage | NoneType]
+        :rtype: tuple[bytes | NoneType, RTCMMessage | str | NoneType]
         :raises: RTCMStreamError (if unrecognised protocol in data stream)
         """
 
@@ -164,13 +164,15 @@ class RTCMReader:
 
         return raw_data, parsed_data
 
-    def _parse_rtcm3(self, hdr: bytes) -> tuple[bytes, RTCMMessage | str | NoneType]:
+    def _parse_rtcm3(
+        self, hdr: bytes
+    ) -> tuple[bytes | NoneType, RTCMMessage | str | NoneType]:
         """
         Parse any RTCM3 data in the stream.
 
         :param bytes hdr: first 2 bytes of RTCM3 header
         :return: tuple of (raw_data as bytes, parsed_stub as RTCMMessage)
-        :rtype: tuple[bytes, RTCMMessage | str| NoneType]
+        :rtype: tuple[bytes | NoneType, RTCMMessage | str| NoneType]
         :raises: RTCMStreamError
         """
 
