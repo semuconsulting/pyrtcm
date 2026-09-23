@@ -44,14 +44,14 @@ Contributions _**from human beings**_ welcome - please refer to [CONTRIBUTING.MD
 
 [Bug reports](https://github.com/semuconsulting/pyrtcm/blob/main/.github/ISSUE_TEMPLATE/bug_report.md) and [Feature requests](https://github.com/semuconsulting/pyrtcm/blob/main/.github/ISSUE_TEMPLATE/feature_request.md) - please use the templates provided. For general queries and advice, post a message to one of the [pyrtcm Discussions](https://github.com/semuconsulting/pyrtcm/discussions) channels.
 
-![No Copilot](https://github.com/semuconsulting/PyGPSClient/blob/master/images/nocopilot100.png?raw=true)
+![No Copilot](https://github.com/semuconsulting/PyGPSClient/blob/main/images/nocopilot100.png?raw=true)
 
 ---
 ## <a name="installation">Installation</a>
 
 ![Python version](https://img.shields.io/pypi/pyversions/pyrtcm.svg?style=flat)
 [![PyPI version](https://img.shields.io/pypi/v/pyrtcm.svg?style=flat)](https://pypi.org/project/pyrtcm/)
-[![PyPI downloads](https://github.com/semuconsulting/pygpsclient/blob/master/images/clickpy_top10.svg?raw=true)](https://clickpy.clickhouse.com/dashboard/pyrtcm)
+[![PyPI downloads](https://github.com/semuconsulting/pygpsclient/blob/main/images/clickpy_top10.svg?raw=true)](https://clickpy.clickhouse.com/dashboard/pyrtcm)
 
 `pyrtcm` is compatible with Python >=3.10. In the following, `python3` & `pip` refer to the Python 3 executables. You may need to substitute `python` for `python3`, depending on your particular environment (*on Windows it's generally `python`*).
 
@@ -321,6 +321,8 @@ A python/tkinter graphical GPS client which supports NMEA, UBX, RTCM3, NTRIP and
 semuadmin@semuconsulting.com
 
 ![License](https://img.shields.io/github/license/semuconsulting/pyrtcm.svg)
+
+[![ORCID iD icon](https://orcid.org/sites/default/files/images/orcid_16x16.png) https://orcid.org/0009-0002-5751-8719](https://orcid.org/0009-0002-5751-8719)
 
 `pyrtcm` is maintained entirely by unpaid volunteers. It receives no funding from advertising or corporate sponsorship. If you find the utility useful, please consider sponsoring the project with the price of a coffee...
 
