@@ -24,10 +24,12 @@ Created on 14 Feb 2022
 :license: BSD 3-Clause
 """
 
+# pylint: disable=too-many-positional-arguments
+
 from logging import getLogger
 from socket import socket
 from types import NoneType
-from typing import Literal
+from typing import Any, Callable, Literal
 
 from pynmeagps import SocketWrapper
 
@@ -62,7 +64,7 @@ class RTCMReader:
         labelmsm: int = 1,
         bufsize: int = 4096,
         parsed: Literal[0, 1, 2] = PARSE_FULL,
-        errorhandler: object = None,
+        errorhandler: Callable | NoneType = None,
         encoding: int = ENCODE_NONE,
         msgfilter: tuple | int | str = "",
     ):  # pylint: disable=too-many-arguments
@@ -76,7 +78,7 @@ class RTCMReader:
         :param int bufsize: socket recv buffer size (4096)
         :param Literal[0,1,2] parsed: PARSE_NONE (0) = no parsing (raw only), \
             PARSE_FULL (1) = full parsing, PARSE_META (2) = parse metadata only (1)
-        :param object errorhandler: error handling object or function (None)
+        :param Callable | NoneType errorhandler: error handling callback (None)
         :param int encoding: encoding for socket stream \
             (0 = none, 1 = chunk, 2 = gzip, 4 = compress, 8 = deflate (can be OR'd)) (0)
         :param tuple | int | str msgfilter: parsed message filter ("" = ALL)
@@ -129,10 +131,9 @@ class RTCMReader:
         :raises: RTCMStreamError (if unrecognised protocol in data stream)
         """
 
-        parsing = True
         raw_data = None
         parsed_data = None
-        while parsing:  # loop until end of valid message or EOF
+        while True:  # loop until end of valid message or EOF
             try:
                 raw_data = None
                 parsed_data = None
@@ -145,10 +146,8 @@ class RTCMReader:
                 # (byte1 = 0xd3; byte2 = 0b000000**)
                 if byte1 == b"\xd3" and (byte2[0] & ~0x03) == 0:
                     raw_data, parsed_data = self._parse_rtcm3(byte1 + byte2)
-                    parsing = False
-                else:
-                    # not RTCM3, discard and continue
-                    continue
+                    break
+                continue
 
             except EOFError:
                 return None, None
@@ -172,7 +171,7 @@ class RTCMReader:
 
         :param bytes hdr: first 2 bytes of RTCM3 header
         :return: tuple of (raw_data as bytes, parsed_stub as RTCMMessage)
-        :rtype: tuple[bytes | NoneType, RTCMMessage | str| NoneType]
+        :rtype: tuple[bytes | NoneType, RTCMMessage | str | NoneType]
         :raises: RTCMStreamError
         """
 
@@ -194,7 +193,10 @@ class RTCMReader:
                     labelmsm=self._labelmsm,
                 )
             elif self._parsing == PARSE_META:
-                parsed_data = f"<RTCM({msgidi}, length={len(raw_data)}, data={escapeall(raw_data)})>"
+                parsed_data = (
+                    f"<RTCM({msgidi}, length={len(raw_data)}, "
+                    f"data={escapeall(raw_data)})>"
+                )
         return raw_data, parsed_data
 
     def _read_bytes(self, size: int) -> bytes:
@@ -235,12 +237,12 @@ class RTCMReader:
                 self._errorhandler(err)
 
     @property
-    def datastream(self) -> object:
+    def datastream(self) -> Any:
         """
         Getter for stream.
 
         :return: data stream
-        :rtype: object
+        :rtype: Any
         """
 
         return self._stream

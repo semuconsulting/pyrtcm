@@ -34,13 +34,13 @@ MSM_HDR2 = {
 }
 
 MSM_SAT_123 = {
-    "groupsat0": (
+    "groupsat0_grp": (
         NSAT,
         {
             "PRN": "GNSS Satellite PRN",  # derived by pyspartn
         },
     ),
-    "groupsat1": (
+    "groupsat1_grp": (
         NSAT,
         {
             "DF398": "GNSS Satellite rough ranges modulo 1 millisecond",
@@ -49,19 +49,19 @@ MSM_SAT_123 = {
 }
 
 MSM_SAT_46 = {
-    "groupsat0": (
+    "groupsat0_grp": (
         NSAT,
         {
             "PRN": "GNSS Satellite PRN",  # derived by pyspartn
         },
     ),
-    "groupsat1": (
+    "groupsat1_grp": (
         NSAT,
         {
             "DF397": "Number of int millisecs in GNSS Satellite roughranges",
         },
     ),
-    "groupsat2": (
+    "groupsat2_grp": (
         NSAT,
         {
             "DF398": "GNSS Satellite rough ranges modulo 1 millisecond",
@@ -71,31 +71,31 @@ MSM_SAT_46 = {
 
 
 MSM_SAT_57 = {
-    "groupsat0": (
+    "groupsat0_grp": (
         NSAT,
         {
             "PRN": "GNSS Satellite PRN",  # derived by pyspartn
         },
     ),
-    "groupsat1": (
+    "groupsat1_grp": (
         NSAT,
         {
             "DF397": "The number of integer milliseconds in GNSS Satellite rough ranges",
         },
     ),
-    "groupsat2": (
+    "groupsat2_grp": (
         NSAT,
         {
             "ExtSatInfo": "Extended Satellite Information",  # Reserved for future use
         },
     ),
-    "groupsat3": (
+    "groupsat3_grp": (
         NSAT,
         {
             "DF398": "GNSS Satellite rough ranges modulo 1 millisecond",
         },
     ),
-    "groupsat4": (
+    "groupsat4_grp": (
         NSAT,
         {
             "DF399": "GNSS Satellite rough PhaseRangeRates",
@@ -104,31 +104,31 @@ MSM_SAT_57 = {
 }
 
 MSM_SAT_57_GLONASS = {
-    "groupsat0": (
+    "groupsat0_grp": (
         NSAT,
         {
             "PRN": "GNSS Satellite PRN",  # derived by pyspartn
         },
     ),
-    "groupsat1": (
+    "groupsat1_grp": (
         NSAT,
         {
             "DF397": "The number of integer milliseconds in GNSS Satellite rough ranges",
         },
     ),
-    "groupsat2": (
+    "groupsat2_grp": (
         NSAT,
         {
             "DF419": "Satellite Frequency Channel Number",
         },
     ),
-    "groupsat3": (
+    "groupsat3_grp": (
         NSAT,
         {
             "DF398": "GNSS Satellite rough ranges modulo 1 millisecond",
         },
     ),
-    "groupsat4": (
+    "groupsat4_grp": (
         NSAT,
         {
             "DF399": "GNSS Satellite rough PhaseRangeRates",
@@ -137,14 +137,14 @@ MSM_SAT_57_GLONASS = {
 }
 
 MSM_SIG_1 = {
-    "groupsig0": (
+    "groupsig0_grp": (
         NCELL,
         {
             "CELLPRN": "GNSS Satellite PRN ",  # derived by pyspartn
             "CELLSIG": "GNSS Satellite Signal ID",  # derived by pyspartn
         },
     ),
-    "groupsig1": (
+    "groupsig1_grp": (
         NCELL,
         {
             "DF400": "GNSS signal fine Pseudoranges",
@@ -153,26 +153,26 @@ MSM_SIG_1 = {
 }
 
 MSM_SIG_2 = {
-    "groupsig0": (
+    "groupsig0_grp": (
         NCELL,
         {
             "CELLPRN": "GNSS Satellite PRN ",  # derived by pyspartn
             "CELLSIG": "GNSS Satellite Signal ID",  # derived by pyspartn
         },
     ),
-    "groupsig1": (
+    "groupsig1_grp": (
         NCELL,
         {
             "DF401": "GNSS signal fine PhaseRange data",
         },
     ),
-    "groupsig2": (
+    "groupsig2_grp": (
         NCELL,
         {
             "DF402": "GNSS PhaseRange Lock",
         },
     ),
-    "groupsig3": (
+    "groupsig3_grp": (
         NCELL,
         {
             "DF420",
@@ -182,32 +182,32 @@ MSM_SIG_2 = {
 }
 
 MSM_SIG_3 = {
-    "groupsig0": (
+    "groupsig0_grp": (
         NCELL,
         {
             "CELLPRN": "GNSS Satellite PRN ",  # derived by pyspartn
             "CELLSIG": "GNSS Satellite Signal ID",  # derived by pyspartn
         },
     ),
-    "groupsig1": (
+    "groupsig1_grp": (
         NCELL,
         {
             "DF400": "GNSS signal fine Pseudoranges",
         },
     ),
-    "groupsig2": (
+    "groupsig2_grp": (
         NCELL,
         {
             "DF401": "GNSS signal fine PhaseRange data",
         },
     ),
-    "groupsig3": (
+    "groupsig3_grp": (
         NCELL,
         {
             "DF402": "GNSS PhaseRange Lock",
         },
     ),
-    "groupsig4": (
+    "groupsig4_grp": (
         NCELL,
         {
             "DF420": "Half-cycle ambiguity indicator",
@@ -216,38 +216,38 @@ MSM_SIG_3 = {
 }
 
 MSM_SIG_4 = {
-    "groupsig0": (
+    "groupsig0_grp": (
         NCELL,
         {
             "CELLPRN": "GNSS Satellite PRN ",  # derived by pyspartn
             "CELLSIG": "GNSS Satellite Signal ID",  # derived by pyspartn
         },
     ),
-    "groupsig1": (
+    "groupsig1_grp": (
         NCELL,
         {
             "DF400": "GNSS signal fine Pseudoranges",
         },
     ),
-    "groupsig2": (
+    "groupsig2_grp": (
         NCELL,
         {
             "DF401": "GNSS signal fine PhaseRange data",
         },
     ),
-    "groupsig3": (
+    "groupsig3_grp": (
         NCELL,
         {
             "DF402": "GNSS PhaseRange Lock",
         },
     ),
-    "groupsig4": (
+    "groupsig4_grp": (
         NCELL,
         {
             "DF420": "Half-cycle ambiguity indicator",
         },
     ),
-    "groupsig5": (
+    "groupsig5_grp": (
         NCELL,
         {
             "DF403": "GNSS signal CNRs",
@@ -256,44 +256,44 @@ MSM_SIG_4 = {
 }
 
 MSM_SIG_5 = {
-    "groupsig0": (
+    "groupsig0_grp": (
         NCELL,
         {
             "CELLPRN": "GNSS Satellite PRN ",  # derived by pyspartn
             "CELLSIG": "GNSS Satellite Signal ID",  # derived by pyspartn
         },
     ),
-    "groupsig1": (
+    "groupsig1_grp": (
         NCELL,
         {
             "DF400": "GNSS signal fine Pseudoranges",
         },
     ),
-    "groupsig2": (
+    "groupsig2_grp": (
         NCELL,
         {
             "DF401": "GNSS signal fine PhaseRange data",
         },
     ),
-    "groupsig3": (
+    "groupsig3_grp": (
         NCELL,
         {
             "DF402": "GNSS PhaseRange Lock",
         },
     ),
-    "groupsig4": (
+    "groupsig4_grp": (
         NCELL,
         {
             "DF420": "Half-cycle ambiguity indicator",
         },
     ),
-    "groupsig5": (
+    "groupsig5_grp": (
         NCELL,
         {
             "DF403": "GNSS signal CNRs",
         },
     ),
-    "groupsig6": (
+    "groupsig6_grp": (
         NCELL,
         {
             "DF404": "GNSS signal fine PhaseRangeRates",
@@ -302,38 +302,38 @@ MSM_SIG_5 = {
 }
 
 MSM_SIG_6 = {
-    "groupsig0": (
+    "groupsig0_grp": (
         NCELL,
         {
             "CELLPRN": "GNSS Satellite PRN ",  # derived by pyspartn
             "CELLSIG": "GNSS Satellite Signal ID",  # derived by pyspartn
         },
     ),
-    "groupsig1": (
+    "groupsig1_grp": (
         NCELL,
         {
             "DF405": "GNSS signal fine",
         },
     ),
-    "groupsig2": (
+    "groupsig2_grp": (
         NCELL,
         {
             "DF406": "GNSS signal fine PhaseRange data with extended resolution",
         },
     ),
-    "groupsig3": (
+    "groupsig3_grp": (
         NCELL,
         {
             "DF407": "GNSS PhaseRange Lock",
         },
     ),
-    "groupsig4": (
+    "groupsig4_grp": (
         NCELL,
         {
             "DF420": "Half-cycle ambiguity indicator",
         },
     ),
-    "groupsig5": (
+    "groupsig5_grp": (
         NCELL,
         {
             "DF408": "GNSS signal CNRs with extended resolution",
@@ -342,44 +342,44 @@ MSM_SIG_6 = {
 }
 
 MSM_SIG_7 = {
-    "groupsig0": (
+    "groupsig0_grp": (
         NCELL,
         {
             "CELLPRN": "GNSS Satellite PRN ",  # derived by pyspartn
             "CELLSIG": "GNSS Satellite Signal ID",  # derived by pyspartn
         },
     ),
-    "groupsig1": (
+    "groupsig1_grp": (
         NCELL,
         {
             "DF405": "GNSS signal fine",
         },
     ),
-    "groupsig2": (
+    "groupsig2_grp": (
         NCELL,
         {
             "DF406": "GNSS signal fine PhaseRange data with extended resolution",
         },
     ),
-    "groupsig3": (
+    "groupsig3_grp": (
         NCELL,
         {
             "DF407": "GNSS PhaseRange Lock",
         },
     ),
-    "groupsig4": (
+    "groupsig4_grp": (
         NCELL,
         {
             "DF420": "Half-cycle ambiguity indicator",
         },
     ),
-    "groupsig5": (
+    "groupsig5_grp": (
         NCELL,
         {
             "DF408": "GNSS signal CNRs with extended resolution",
         },
     ),
-    "groupsig6": (
+    "groupsig6_grp": (
         NCELL,
         {
             "DF404": "GNSS signal fine PhaseRangeRates",

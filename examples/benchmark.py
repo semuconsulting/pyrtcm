@@ -13,15 +13,23 @@ Created on 18 Feb 2022
 # pylint: disable=line-too-long
 
 from io import BytesIO
-from platform import python_version
-from platform import version as osver
-from sys import argv
+import os
+import sys
 from time import process_time_ns
+from platform import version as osver, python_version
+from pyrtcm.rtcmreader import RTCMReader as reader
+from pyrtcm._version import __version__ as pgmver
 
-from pyrtcm._version import __version__ as rtcmver
-from pyrtcm.rtcmreader import RTCMReader
+# get path to site-packages (source) folder within venv
+pypath = (
+    f"{os.path.expanduser('~')}/pygpsclient/lib/python"
+    f"{sys.version_info.major}.{sys.version_info.minor}/site-packages"
+)
+sys.path.insert(0, os.path.abspath(pypath))
 
-RTCMMESSAGES = [
+CYAN = "\033[1m\033[36m"
+NORM = "\033[0m"
+TESTDATA = [
     b"\xd3\x00\x93>\xb0\x00L\n\xdb\xa2\xb0\t\xaec\xb1\xe1\xde\x7f\xf0hz\x9c{\xf8`T\x15\x9f\x99>\xff\x83\x17\xf3d_\xd5\x06\x93,s\xad\xc7\xfc0-\xe7k\xfe!\xb9\xbcd\x02\xe4\x7f\xe0\x8b\x01\xdb\xb7\xf2I\x17\xfa\xe0y#\xff\x06\x1c$E?\x8c\t\xff\x91\x01c\x0f\xf8G\xe0\xf7\x8f\xfd0\x851\xc7\xdd\x8c\xff\xc1h\xf9\x7f?\xef\x85w\x00\xfe\xe1\xe3\xfe\x10\xb7\xf1Y\xffDNL\xef\xef\xf7\xbf\xf0|\xbd\x88\xd7\xf8\xe7e\x19\x90\x02@e\x87,\x10.\xaaAB_\x8c}k7\xfc\x1ao\xba\xf5\xfe\xe5\x8c/",
     b"\xd3\x00\xb4>\xc0\x00L\n\xdb\xa2\xb0\t\xaec\xb1\xe1\xde\x7f\xd2\xeb0hz\x9c{\xfb\xe8`T\x15\x9f\x99>\xfe\x8d\x8d\x83\x17\xf3d_\xf4\x15\x06\x93,s\xad\xc7\xf4\xf9\xac0-\xe7k\xfe\x9c!\xb9\xbcd\x02\xe4\x7f\xa1\xe2`\x8b\x01\xdb\xb7\xfa\xf2I\x17\xfa\xe0y#\xfd\x1f\x03\x06\x1c$E?\xe5\x0c\t\xff\x91\x01c\x0f\xe9\xd3\xf8G\xe0\xf7\x8f\xfe=0\x851\xc7\xdd\x8c\xffN\xa3\xc1h\xf9\x7f?\xed\xcf\x85w\x00\xfe\xe1\xe3\xfa}V\x10\xb7\xf1Y\xff\x94DNL\xef\xef\xf7\xbf\xd3(\xb0|\xbd\x88\xd7\xfcX\xe7e\x19\x90\x02@d\xa7\x11\x87,\x10.\xaaR\xc1B_\x8c}k7\xf4Ll\x1ao\xba\xf5\xff\xa0\xd4\x82+",
     b"\xd3\x00\x13>\xd0\x00\x03\x84\x1a\x86\x92\xbf\xb4KK\xf4\xfa\xb7\xdc7b\x8a3\x84y",
@@ -60,18 +68,18 @@ RTCMMESSAGES = [
     b'\xd3\x00n>\xa0\x00L\n\xebB\xb0\t\xafus\xe1\xde\xdf\xd2\xeb\x03\x02\xa9\xff|\xc6\xbf\xf4leA\xb8p\xbc\xeb\xdb\xfd>dCte\xe0\x05\xc5\x7fC\xc4$\x91\x07"\x07\x8d\xdf\xd1\xf0\x06\x04\xc2\x14\x00\xab\xdf\xf4\xe9\xe4\xc2\x17;\xffu\xbb\xfd:\x8d\xf0\xb19g\xdc\x8e\x7fO\xa9DN\xf1\xe5\xf0\x18\x7f\xd3(\x87:\xde\x1f\x00\x00S%8\x80P\x9f.\x1f[]\xfd\x13\x14\xd8\xe65',
 ]
 msgb = b""
-for msg in RTCMMESSAGES:
+for msg in TESTDATA:
     msgb += msg
-RTCMBYTES = msgb
+BYTESTREAM = msgb
 
 
-def progbar(i: int, lim: int, inc: int = 20):
+def progbar(i: int, lim: int, inc: int = 50):
     """
     Display progress bar on console.
 
     :param int i: iteration
     :param int lim: max iterations
-    :param int inc: bar increments (20)
+    :param int inc: bar increments (50)
     """
 
     i = min(i, lim)
@@ -83,45 +91,48 @@ def progbar(i: int, lim: int, inc: int = 20):
         )
 
 
-def benchmark(**kwargs) -> float:
+def benchmark(**kwargs) -> tuple[float,float]:
     """
     pyrtcm Performance benchmark test.
 
     :param int cycles: (kwarg) number of test cycles (10,000)
     :returns: benchmark as transactions/second
-    :rtype: float
+    :rtype: tuple[float,float]
     :raises: SBFStreamError
     """
 
     cyc = int(kwargs.get("cycles", 5000))
-    txnc = len(RTCMMESSAGES)
+    txnc = len(TESTDATA)
     txnt = txnc * cyc
 
     print(
-        f"\nOperating system: {osver()}",
-        f"\nPython version: {python_version()}",
-        f"\npyrtcm version: {rtcmver}",
-        f"\nTest cycles: {cyc:,}",
-        f"\nTxn per cycle: {txnc:,}",
+        f"\nAbsolute path: {CYAN}{pypath}{NORM}",
+        f"\nOperating system: {CYAN}{osver()}{NORM}",
+        f"\nPython version: {CYAN}{python_version()}{NORM}",
+        f"\nProgram version: {CYAN}{pgmver}{NORM}",
+        f"\nTest cycles: {CYAN}{cyc:,}{NORM}",
+        f"\nTxn per cycle: {CYAN}{txnc:,}{NORM}",
     )
 
     start = process_time_ns()
+    bars= 50
     print(f"\nBenchmark test started at {start}")
     for i in range(cyc):
-        progbar(i, cyc)
-        stream = BytesIO(RTCMBYTES)
-        rtr = RTCMReader(stream)
-        for _, _ in rtr:
+        progbar(i, cyc, bars)
+        stream = BytesIO(BYTESTREAM)
+        sbr = reader(stream)
+        for _, _ in sbr:
             pass
     end = process_time_ns()
-    print(f"Benchmark test ended at {end}.")
+    print(f"Benchmark test ended at {end}{' ' * (bars-20)}")
     duration = end - start
-    msglen = len(RTCMBYTES) * cyc
+    msglen = len(BYTESTREAM) * cyc
     txs = round(txnt * 1e9 / duration, 2)
     kbs = round(msglen * 1e9 / duration / 2**10, 2)
 
     print(
-        f"\n{txnt:,} messages processed in {duration/1e9:,.3f} seconds = {txs:,.2f} txns/second, {kbs:,.2f} kB/second.\n"
+        f"\n{txnt:,} messages processed in {duration/1e9:,.3f} seconds = "
+        f"{CYAN}{txs:,.2f}{NORM} txns/second, {CYAN}{kbs:,.2f}{NORM} kB/second ({CYAN}{kbs*8000:,.0f}{NORM} baud).\n"
     )
 
     return txs, kbs
@@ -134,7 +145,7 @@ def main():
     args as benchmark() method
     """
 
-    benchmark(**dict(arg.split("=") for arg in argv[1:]))
+    benchmark(**dict(arg.split("=") for arg in sys.argv[1:]))
 
 
 if __name__ == "__main__":

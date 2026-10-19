@@ -12,8 +12,6 @@ Information sourced from RTCM STANDARD 10403.3 © 2016 RTCM
 
 # pylint: disable=line-too-long
 
-from pynmeagps import NMEA_HDR
-
 UBX_HDR = b"\xb5\x62"
 """UBX message header"""
 RTCM_HDR = b"\xd3"
@@ -69,6 +67,9 @@ NCELL = "NCell"
 NRES = 16  # number of Residuals groups in MT1023 and MT1024
 NHARMCOEFFC = "_NHarmCoeffC"  # number of cosine harmonic coefficients in 4076
 NHARMCOEFFS = "_NHarmCoeffS"  # number of sine harmonic coefficients in 4076
+GROUP = "_grp"
+BITFIELD = "_bit"
+ALT = "_alt"
 
 # Power of 2 scaling constants
 P2_P4 = 16  # 2**4

@@ -8,13 +8,17 @@ Created on 14 Feb 2022
 :license: BSD 3-Clause
 """
 
+from typing import Any
+
 from pyrtcm.exceptions import RTCMMessageError, RTCMStreamError, RTCMTypeError
 from pyrtcm.rtcmhelpers import crc2bytes, escapeall, len2bytes
 from pyrtcm.rtcmtables import PRNSIGMAP
 from pyrtcm.rtcmtypes_core import (
+    ALT,
     CELPRN,
     CELSIG,
     CHA,
+    GROUP,
     INT,
     INTS,
     NA,
@@ -40,7 +44,7 @@ BOOL = "B"
 class RTCMMessage:
     """RTCM Message Class."""
 
-    def __init__(self, payload: bytes = None, labelmsm: int = 1):
+    def __init__(self, payload: bytes = b"", labelmsm: int = 1):
         """Constructor.
 
         :param bytes payload: message payload (mandatory)
@@ -52,14 +56,16 @@ class RTCMMessage:
         super().__setattr__("_immutable", False)
 
         self._payload = payload
-        if self._payload is None:
+        if self._payload == b"":
             raise RTCMMessageError("Payload must be specified")
         self._payloadi = int.from_bytes(self._payload, "big")  # payload as int
         self._payblen = len(self._payload) * 8  # length of payload in bits
         self._labelmsm = labelmsm
         self._unknown = False
-        self._satmap = None
-        self._cellmap = None
+        self._satmap = []
+        self._cellmap = []
+        self._offset = 0
+        self._index = []
         self._do_attributes()
 
         self._immutable = True  # once initialised, object is immutable
@@ -71,17 +77,15 @@ class RTCMMessage:
         :raises: RTCMTypeError
         """
 
-        offset = 0  # payload offset in bits
-        index = []  # array of (nested) group indices
         anam = ""
         try:
             # get payload definition dict for this message identity
             pdict = self._get_dict()
-            if pdict is None:  # unknown (or not yet implemented) message identity
+            if pdict == {}:  # unknown (or not yet implemented) message identity
                 self._do_unknown()
                 return
-            for anam in pdict:  # process each attribute in dict
-                offset, index = self._set_attribute(anam, pdict, offset, index)
+            for anam, adef in pdict.items():  # process each attribute in dict
+                self._set_attribute(anam, adef)
 
         except Exception as err:  # pragma: no cover
             raise RTCMTypeError(
@@ -91,41 +95,28 @@ class RTCMMessage:
                 )
             ) from err
 
-    def _set_attribute(self, anam: str, pdict: dict, offset: int, index: list) -> tuple:
+    def _set_attribute(self, anam: str, adef: str | tuple[str, dict]):
         """
         Recursive routine to set individual, conditional or grouped payload attributes.
 
         :param str anam: attribute name
         :param dict pdict: dict representing payload definition
-        :param int offset: payload offset in bits
-        :param list index: repeating group index array
-        :return: (offset, index[])
-        :rtype: tuple
-
         """
 
-        adef = pdict[anam]  # get attribute definition
-        if isinstance(adef, tuple):  # attribute group
-            gtyp, _ = adef
-            if isinstance(gtyp, tuple):  # conditional group of attributes
-                offset, index = self._set_attribute_optional(adef, offset, index)
-            else:  # repeating group of attributes
-                offset, index = self._set_attribute_group(adef, offset, index)
+        anamsfx = anam[-4:]
+        if anamsfx == GROUP:  # attribute group
+            self._set_attribute_group(adef)
+        elif anamsfx == ALT:  # optional attribute group
+            self._set_attribute_optional(adef)
         else:  # single attribute
-            offset = self._set_attribute_single(anam, offset, index)
+            self._set_attribute_single(anam)
 
-        return offset, index
-
-    def _set_attribute_optional(self, adef: tuple, offset: int, index: list) -> tuple:
+    def _set_attribute_optional(self, adef: tuple[tuple, dict]):
         """
         Process conditional group of attributes - group is present if attribute value
         = specific value, otherwise absent.
 
-        :param tuple adef: attribute definition - tuple of ((attribute name, condition), group dict)
-        :param int offset: payload offset in bits
-        :param list index: repeating group index array
-        :return: (offset, index[])
-        :rtype: tuple
+        :param tuple[tuple,dict] adef: attribute definition - tuple of ((attribute name, condition), group dict)
         """
 
         (anam, con), gdict = adef  # (attribute name, condition), group dictionary
@@ -140,20 +131,13 @@ class RTCMMessage:
             # recursively process each group attribute,
             # incrementing the payload offset as we go
             for anamg in gdict:
-                offset, index = self._set_attribute(anamg, gdict, offset, index)
+                self._set_attribute(anamg, gdict)
 
-        return offset, index
-
-    def _set_attribute_group(self, adef: tuple, offset: int, index: list) -> tuple:
+    def _set_attribute_group(self, adef: tuple[str, dict]):
         """
         Process (nested) group of attributes.
 
-        :param tuple adef: attribute definition - tuple of (attr name, attribute dict)
-        :param int offset: payload offset in bits
-        :param list index: repeating group index array
-        :return: (offset, index[])
-        :rtype: tuple
-
+        :param tuple[str, dict] adef: attribute definition - tuple of (attr name, attribute dict)
         """
 
         anam, gdict = adef  # attribute signifying group size, group dictionary
@@ -166,61 +150,52 @@ class RTCMMessage:
             if "+" in anam:
                 anam, nestlevel = anam.split("+")
                 for i in range(int(nestlevel)):
-                    anam += f"_{index[i]:02d}"
+                    anam += f"_{self._index[i]:02d}"
             gsiz = getattr(self, anam)
             if anam == "IDF035":  # 4076_201 range is N-1
                 gsiz += 1
 
-        index.append(0)  # add a (nested) group index level
+        self._index.append(0)  # add a (nested) group index level
         # recursively process each group attribute,
         # incrementing the payload offset and index as we go
         for i in range(gsiz):
-            index[-1] = i + 1
-            for anamg in gdict:
-                offset, index = self._set_attribute(anamg, gdict, offset, index)
+            self._index[-1] = i + 1
+            for anam1, adef1 in gdict.items():
+                self._set_attribute(anam1, adef1)
 
-        index.pop()  # remove this (nested) group index
+        self._index.pop()  # remove this (nested) group index
 
-        return offset, index
-
-    def _set_attribute_single(
-        self,
-        anam: str,
-        offset: int,
-        index: list,
-    ) -> int:
+    def _set_attribute_single(self, anam: str):
         """
         Set individual attribute value, applying scaling where appropriate.
 
         :param str anam: attribute name
-        :param int offset: payload offset in bits
-        :param list index: repeating group index array
-        :return: offset
-        :rtype: int
-
         """
 
         # pylint: disable=invalid-name, line-too-long
 
         # if attribute is part of a (nested) repeating group, suffix name with index
         anami = anam
-        for i in index:  # one index for each nested level
+        for i in self._index:  # one index for each nested level
             if i > 0:
                 anami += f"_{i:02d}"
 
         # get value of required number of bits at current payload offset
+        bits = 0
         atyp, asiz, ares, _ = RTCM_DATA_FIELDS[anam]
         if anam == "DF396":  # this MSM attribute has variable length
             asiz = getattr(self, NSAT) * getattr(self, NSIG)
         if atyp == PRN:
-            val = self._satmap[index[0]]
+            val = self._satmap[self._index[0]]
         elif atyp == CELPRN:
-            val = self._cellmap[index[0]][0]
+            val = self._cellmap[self._index[0]][0]
         elif atyp == CELSIG:
-            val = self._cellmap[index[0]][1]
+            val = self._cellmap[self._index[0]][1]
         else:
             # done inline for performance reasons...
-            bits = self._payloadi >> (self._payblen - offset - asiz) & ((1 << asiz) - 1)
+            bits = self._payloadi >> (self._payblen - self._offset - asiz) & (
+                (1 << asiz) - 1
+            )
             msb = 1 << asiz - 1 if atyp in (INTS, INT) else 0
             if atyp == INTS:  # int, MSB indicates sign
                 val = bits & msb - 1
@@ -242,7 +217,7 @@ class RTCMMessage:
             setattr(self, anam, getattr(self, anam, "") + val)
         else:
             setattr(self, anami, val)
-        offset += asiz
+        self._offset += asiz
 
         # add special attributes to keep track of
         # MSM message group sizes
@@ -263,7 +238,7 @@ class RTCMMessage:
         # set lengths of harmonic coefficient attributes for SSR messages
         if anam in SSR_COEFF:
             base1, base2 = SSR_COEFF[anam]
-            i = index[0]
+            i = self._index[0]
             N = getattr(self, f"{base1}_{i:02d}") + 1
             M = getattr(self, f"{base2}_{i:02d}") + 1
             nc = int(((N + 1) * (N + 2) / 2) - ((N - M) * (N - M + 1) / 2))
@@ -271,8 +246,6 @@ class RTCMMessage:
             # ncs = (N + 1) * (N + 1) - (N - M) * (N - M + 1)
             setattr(self, NHARMCOEFFC, nc)
             setattr(self, NHARMCOEFFS, ns)
-
-        return offset
 
     def _getsatcellmaps(self):
         """
@@ -319,10 +292,10 @@ class RTCMMessage:
         """
 
         if "1070" <= self.identity <= "1229":  # MSM types
-            return RTCM_PAYLOADS_GET_MSM.get(self.identity, None)
+            return RTCM_PAYLOADS_GET_MSM.get(self.identity, {})
         if self.identity[:4] == "4076":  # IGS types
-            return RTCM_PAYLOADS_GET_IGS.get(self.identity, None)
-        return RTCM_PAYLOADS_GET.get(self.identity, None)
+            return RTCM_PAYLOADS_GET_IGS.get(self.identity, {})
+        return RTCM_PAYLOADS_GET.get(self.identity, {})
 
     def _do_unknown(self):
         """
@@ -368,7 +341,7 @@ class RTCMMessage:
 
         return f"RTCMMessage(payload={self._payload})"
 
-    def __setattr__(self, name, value):
+    def __setattr__(self, name: str, value: Any):
         """
         Override setattr to make object immutable after instantiation.
 
