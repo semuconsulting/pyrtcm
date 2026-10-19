@@ -1,5 +1,11 @@
 # pyrtcm Release Notes
 
+### RELEASE 1.2.1
+
+1. Internal refactoring.
+1. Update docstrings, type hints and workflows.
+1. No functional changes.
+
 ### RELEASE 1.2.0
 
 ENHANCEMENTS:

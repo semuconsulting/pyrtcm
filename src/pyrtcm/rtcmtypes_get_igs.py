@@ -27,7 +27,7 @@ IGM01 = {
     "IDF009": "SSR Solution ID",
     "IDF006": "Global/Regional CRS Indicator",
     "IDF010": "No. of Satellites",
-    "groupsat": (
+    "groupsat_grp": (
         "IDF010",
         {
             "IDF011": "GNSS Satellite ID",
@@ -52,7 +52,7 @@ IGM02 = {
     "IDF008": "SSR Provider ID",
     "IDF009": "SSR Solution ID",
     "IDF010": "No. of Satellites",
-    "groupsat": (
+    "groupsat_grp": (
         "IDF010",
         {
             "IDF011": "GNSS Satellite ID",
@@ -74,7 +74,7 @@ IGM03 = {
     "IDF009": "SSR Solution ID",
     "IDF006": "Global/Regional CRS Indicator",
     "IDF010": "No. of Satellites",
-    "groupsat": (
+    "groupsat_grp": (
         "IDF010",
         {
             "IDF011": "GNSS Satellite ID",
@@ -102,7 +102,7 @@ IGM04 = {
     "IDF008": "SSR Provider ID",
     "IDF009": "SSR Solution ID",
     "IDF010": "No. of Satellites",
-    "groupsat": (
+    "groupsat_grp": (
         "IDF010",
         {
             "IDF011": "GNSS Satellite ID",
@@ -121,12 +121,12 @@ IGM05 = {
     "IDF008": "SSR Provider ID",
     "IDF009": "SSR Solution ID",
     "IDF010": "No. of Satellites",
-    "groupsat": (
+    "groupsat_grp": (
         "IDF010",
         {
             "IDF011": "GNSS Satellite ID",
             "IDF023": "No. of Biases Processed",
-            "groupbias": (  # nested group
+            "groupbias_grp": (  # nested group
                 "IDF023+1",  # +1 signifies 1 nested group index must be added
                 {
                     "IDF024": "GNSS Signal and Tracking Mode Identifier",
@@ -149,14 +149,14 @@ IGM06 = {
     "IDF032": "Dispersive Bias Consistency Indicator",
     "IDF033": "MW Consistency Indicator",
     "IDF010": "No. of Satellites",
-    "groupsat": (
+    "groupsat_grp": (
         "IDF010",
         {
             "IDF011": "GNSS Satellite ID",
             "IDF023": "No. of Biases Processed",
             "IDF026": "Yaw Angle",
             "IDF027": "Yaw Rate",
-            "groupbias": (  # nested group
+            "groupbias_grp": (  # nested group
                 "IDF023+1",  # +1 signifies 1 nested group index must be added
                 {
                     "IDF024": "GNSS Signal and Tracking Mode Identifier",
@@ -180,7 +180,7 @@ IGM07 = {
     "IDF008": "SSR Provider ID",
     "IDF009": "SSR Solution ID",
     "IDF010": "No. of Satellites",
-    "groupsat": (
+    "groupsat_grp": (
         "IDF010",
         {
             "IDF011": "GNSS Satellite ID",
@@ -247,19 +247,19 @@ RTCM_PAYLOADS_GET_IGS = {
         "IDF009": "SSR Solution ID",
         "IDF041": "VTEC Quality Indicator",
         "IDF035": "Number of Ionospheric Layers",  # Nᴵᴸ - 1
-        "groupion": (
+        "groupion_grp": (
             "IDF035",
             {
                 "IDF036": "Height of Ionospheric Layer",
                 "IDF037": "Spherical Harmonics Degree",  # N - 1
                 "IDF038": "Spherical Harmonics Order",  # M - 1
-                "groupcoeffC": (
+                "groupcoeffC_grp": (
                     NHARMCOEFFC,
                     {
                         "IDF039": "Spherical Harmonic Coefficient C",
                     },
                 ),
-                "groupcoeffS": (
+                "groupcoeffS_grp": (
                     NHARMCOEFFS,
                     {
                         "IDF040": "Spherical Harmonic Coefficient S",

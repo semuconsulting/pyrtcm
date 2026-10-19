@@ -126,7 +126,7 @@ HDR_1037_1039 = {
 RTCM_PAYLOADS_GET = {
     "1001": {
         **HDR_1001_1004,
-        "group": (
+        "group_grp": (
             "DF006",
             {
                 "DF009": "GPS Satellite ID",
@@ -139,7 +139,7 @@ RTCM_PAYLOADS_GET = {
     },
     "1002": {
         **HDR_1001_1004,
-        "group": (
+        "group_grp": (
             "DF006",
             {
                 "DF009": "GPS Satellite ID",
@@ -154,7 +154,7 @@ RTCM_PAYLOADS_GET = {
     },
     "1003": {
         **HDR_1001_1004,
-        "group": (
+        "group_grp": (
             "DF006",
             {
                 "DF009": "GPS Satellite ID",
@@ -171,7 +171,7 @@ RTCM_PAYLOADS_GET = {
     },
     "1004": {
         **HDR_1001_1004,
-        "group": (
+        "group_grp": (
             "DF006",
             {
                 "DF009": "GPS Satellite ID",
@@ -195,7 +195,7 @@ RTCM_PAYLOADS_GET = {
         "DF002": "Message Number",
         "DF003": "Reference Station ID",
         "DF029": "Descriptor Counter N",
-        "group": (
+        "group_grp": (
             "DF029",
             {
                 "DF030": "Antenna Descriptor",
@@ -207,7 +207,7 @@ RTCM_PAYLOADS_GET = {
         "DF002": "Message Number",
         "DF003": "Reference Station ID",
         "DF029": "Descriptor Counter N",
-        "group1": (
+        "group1_grp": (
             "DF029",
             {
                 "DF030": "Antenna Descriptor",
@@ -215,7 +215,7 @@ RTCM_PAYLOADS_GET = {
         ),
         "DF031": "Antenna Setup ID",
         "DF032": "Serial Number Counter M",
-        "group2": (
+        "group2_grp": (
             "DF032",
             {
                 "DF033": "Antenna Serial Number",
@@ -224,7 +224,7 @@ RTCM_PAYLOADS_GET = {
     },
     "1009": {
         **HDR_1009_1012,
-        "group": (
+        "group_grp": (
             "DF035",
             {
                 "DF038": "GLONASS Satellite ID (Satellite Slot Number)",
@@ -238,7 +238,7 @@ RTCM_PAYLOADS_GET = {
     },
     "1010": {
         **HDR_1009_1012,
-        "group": (
+        "group_grp": (
             "DF035",
             {
                 "DF038": "GLONASS Satellite ID (Satellite Slot Number)",
@@ -254,7 +254,7 @@ RTCM_PAYLOADS_GET = {
     },
     "1011": {
         **HDR_1009_1012,
-        "group": (
+        "group_grp": (
             "DF035",
             {
                 "DF038": "GLONASS Satellite ID (Satellite Slot Number)",
@@ -272,7 +272,7 @@ RTCM_PAYLOADS_GET = {
     },
     "1012": {
         **HDR_1009_1012,
-        "group": (
+        "group_grp": (
             "DF035",
             {
                 "DF038": "GLONASS Satellite ID (Satellite Slot Number)",
@@ -298,7 +298,7 @@ RTCM_PAYLOADS_GET = {
         "DF052": "Seconds of Day (UTC)",
         "DF053": "No. of Message ID Announcements to Follow (Nm)",
         "DF054": "Leap Seconds, GPS-UTC",
-        "group": (
+        "group_grp": (
             "DF053",
             {
                 "DF055": "Message ID",
@@ -320,7 +320,7 @@ RTCM_PAYLOADS_GET = {
     },
     "1015": {
         **HDR_1015_1017,
-        "group": (
+        "group_grp": (
             "DF067",
             {
                 "DF068": "GPS Satellite ID",
@@ -332,7 +332,7 @@ RTCM_PAYLOADS_GET = {
     },
     "1016": {
         **HDR_1015_1017,
-        "group": (
+        "group_grp": (
             "DF067",
             {
                 "DF068": "GPS Satellite ID",
@@ -345,7 +345,7 @@ RTCM_PAYLOADS_GET = {
     },
     "1017": {
         **HDR_1015_1017,
-        "group": (
+        "group_grp": (
             "DF067",
             {
                 "DF068": "GPS Satellite ID",
@@ -433,14 +433,14 @@ RTCM_PAYLOADS_GET = {
     "1021": {
         "DF002": "Message Number",
         "DF143": "Source-Name Counter",
-        "group1": (
+        "group1_grp": (
             "DF143",
             {
                 "DF144": "Source-Name",
             },
         ),
         "DF145": "Target-Name Counter",
-        "group2": (
+        "group2_grp": (
             "DF145",
             {
                 "DF146": "Target-Name",
@@ -472,14 +472,14 @@ RTCM_PAYLOADS_GET = {
     "1022": {
         "DF002": "Message Number",
         "DF143": "Source-Name Counter",
-        "group1": (
+        "group1_grp": (
             "DF143",
             {
                 "DF144": "Source-Name",
             },
         ),
         "DF145": "Target-Name Counter",
-        "group2": (
+        "group2_grp": (
             "DF145",
             {
                 "DF146": "Target-Name",
@@ -523,7 +523,7 @@ RTCM_PAYLOADS_GET = {
         "DF196": "Mean ∆φ - Mean Latitude Offset",
         "DF197": "Mean ∆λ - Mean Longitude Offset",
         "DF198": "Mean ∆H - Mean Height Offset",
-        "group1": (
+        "group1_grp": (
             NRES,
             {
                 "DF199": "δφi - Latitude Residual",
@@ -549,7 +549,7 @@ RTCM_PAYLOADS_GET = {
         "DF206": "Mean ∆N - Mean Local Northing Offset",
         "DF207": "Mean ∆E - Mean Local Easting Offset",
         "DF208": "Mean ∆h - Mean Local Height Offset",
-        "group1": (
+        "group1_grp": (
             NRES,
             {
                 "DF209": "δNi - Residual in Local Northing",
@@ -605,7 +605,7 @@ RTCM_PAYLOADS_GET = {
         "DF052": "Seconds of Day (UTC)",
         "DF138": "Number of Characters to Follow",
         "DF139": "Number of UTF-8 Code Units (N)",
-        "group": (
+        "group_grp": (
             "DF139",
             {
                 "DF140": "UTF-8 Character Code Units",
@@ -618,7 +618,7 @@ RTCM_PAYLOADS_GET = {
         "DF003": "Reference Station ID",
         "DF223": "N-Refs",
         "DF006": "GPS Number of Satellite Signals Processed",
-        "group": (
+        "group_grp": (
             "DF006",
             {
                 "DF009": "GPS Satellite ID",
@@ -636,7 +636,7 @@ RTCM_PAYLOADS_GET = {
         "DF003": "Reference Station ID",
         "DF223": "N-Refs",
         "DF035": "GLONASS Number of Satellite Signals Processed",
-        "group": (
+        "group_grp": (
             "DF035",
             {
                 "DF038": "GLONASS Satellite ID",
@@ -661,34 +661,34 @@ RTCM_PAYLOADS_GET = {
         "DF002": "Message Number",
         "DF003": "Reference Station ID",
         "DF029": "Antenna Descriptor Counter N",
-        "group1": (
+        "group1_grp": (
             "DF029",
             {"DF030": "Antenna Descriptor"},
         ),
         "DF031": "Antenna Setup ID",
         "DF032": "Antenna Serial Number Counter M",
-        "group2": (
+        "group2_grp": (
             "DF032",
             {
                 "DF033": "Antenna Serial Number",
             },
         ),
         "DF227": "Receiver Type Descriptor Counter I",
-        "group3": (
+        "group3_grp": (
             "DF227",
             {
                 "DF228": "Receiver Type Descriptor",
             },
         ),
         "DF229": "Receiver Firmware Version Counter J",
-        "group4": (
+        "group4_grp": (
             "DF229",
             {
                 "DF230": "Receiver Firmware Version",
             },
         ),
         "DF231": "Receiver Serial Number Counter K",
-        "group5": (
+        "group5_grp": (
             "DF231",
             {
                 "DF232": "Receiver Serial Number",
@@ -700,7 +700,7 @@ RTCM_PAYLOADS_GET = {
         "DF003": "Reference Station ID",
         "DF240": "GPS FKP Epoch Time (TOW)",
         "DF006": "No. of GPS Satellite Signals Processed",
-        "group": (
+        "group_grp": (
             "DF006",
             {
                 "DF009": "GPS Satellite ID",
@@ -717,7 +717,7 @@ RTCM_PAYLOADS_GET = {
         "DF003": "Reference Station ID",
         "DF241": "GLONASS FKP Epoch Time",
         "DF035": "No. of GLONASS Satellite Signals Processed",
-        "group": (
+        "group_grp": (
             "DF035",
             {
                 "DF038": "GLONASS Satellite ID",
@@ -732,7 +732,7 @@ RTCM_PAYLOADS_GET = {
     # "1036": {Not Used},
     "1037": {
         **HDR_1037_1039,
-        "group": (
+        "group_grp": (
             "DF234",
             {
                 "DF038": "GLONASS Satellite ID (Satellite Slot Number)",
@@ -744,7 +744,7 @@ RTCM_PAYLOADS_GET = {
     },
     "1038": {
         **HDR_1037_1039,
-        "group": (
+        "group_grp": (
             "DF234",
             {
                 "DF038": "GLONASS Satellite ID (Satellite Slot Number)",
@@ -757,7 +757,7 @@ RTCM_PAYLOADS_GET = {
     },
     "1039": {
         **HDR_1037_1039,
-        "group": (
+        "group_grp": (
             "DF234",
             {
                 "DF038": "GLONASS Satellite ID (Satellite Slot Number)",
@@ -940,7 +940,7 @@ RTCM_PAYLOADS_GET = {
         "DF414": "SSR Provider ID",
         "DF415": "SSR Solution ID",
         "DF387": "No. of Satellites",
-        "group": (
+        "group_grp": (
             "DF387",
             {
                 "DF068": "GPS Satellite ID",
@@ -963,7 +963,7 @@ RTCM_PAYLOADS_GET = {
         "DF414": "SSR Provider ID",
         "DF415": "SSR Solution ID",
         "DF387": "No. of Satellites",
-        "group": (
+        "group_grp": (
             "DF387",
             {
                 "DF068": "GPS Satellite ID",
@@ -982,12 +982,12 @@ RTCM_PAYLOADS_GET = {
         "DF414": "SSR Provider ID",
         "DF415": "SSR Solution ID",
         "DF387": "No. of Satellites",
-        "groupsat": (
+        "groupsat_grp": (
             "DF387",
             {
                 "DF068": "GPS Satellite ID",
                 "DF379": "No. of Code Biases Processed",
-                "groupbias": (  # nested group
+                "groupbias_grp": (  # nested group
                     "DF379+1",  # +1 signifies 1 nested group index must be added
                     {
                         "DF380": "GPS Signal and Tracking Mode Indicator",
@@ -1007,7 +1007,7 @@ RTCM_PAYLOADS_GET = {
         "DF414": "SSR Provider ID",
         "DF415": "SSR Solution ID",
         "DF387": "No. of Satellites",
-        "group": (
+        "group_grp": (
             "DF387",
             {
                 "DF068": "GPS Satellite ID",
@@ -1033,7 +1033,7 @@ RTCM_PAYLOADS_GET = {
         "DF414": "SSR Provider ID",
         "DF415": "SSR Solution ID",
         "DF387": "No. of Satellites",
-        "group": (
+        "group_grp": (
             "DF387",
             {
                 "DF068": "GPS Satellite ID",
@@ -1050,7 +1050,7 @@ RTCM_PAYLOADS_GET = {
         "DF414": "SSR Provider ID",
         "DF415": "SSR Solution ID",
         "DF387": "No. of Satellites",
-        "group": (
+        "group_grp": (
             "DF387",
             {
                 "DF068": "GPS Satellite ID",
@@ -1068,7 +1068,7 @@ RTCM_PAYLOADS_GET = {
         "DF414": "SSR Provider ID",
         "DF415": "SSR Solution ID",
         "DF387": "No. of Satellites",
-        "group": (
+        "group_grp": (
             "DF387",
             {
                 "DF384": "GLONASS Satellite ID",
@@ -1091,7 +1091,7 @@ RTCM_PAYLOADS_GET = {
         "DF414": "SSR Provider ID",
         "DF415": "SSR Solution ID",
         "DF387": "No. of Satellites",
-        "group": (
+        "group_grp": (
             "DF387",
             {
                 "DF384": "GLONASS Satellite ID",
@@ -1110,12 +1110,12 @@ RTCM_PAYLOADS_GET = {
         "DF414": "SSR Provider ID",
         "DF415": "SSR Solution ID",
         "DF387": "No. of Satellites",
-        "groupsat": (
+        "groupsat_grp": (
             "DF387",
             {
                 "DF384": "GLONASS Satellite ID",
                 "DF379": "No. of Code Biases Processed",
-                "groupbias": (  # nested group
+                "groupbias_grp": (  # nested group
                     "DF379+1",  # +1 signifies 1 nested group index must be added
                     {
                         "DF381": "GLONASS Signal and Tracking Mode Indicator",
@@ -1135,7 +1135,7 @@ RTCM_PAYLOADS_GET = {
         "DF414": "SSR Provider ID",
         "DF415": "SSR Solution ID",
         "DF387": "No. of Satellites",
-        "group": (
+        "group_grp": (
             "DF387",
             {
                 "DF384": "GLONASS Satellite ID",
@@ -1161,7 +1161,7 @@ RTCM_PAYLOADS_GET = {
         "DF414": "SSR Provider ID",
         "DF415": "SSR Solution ID",
         "DF387": "No. of Satellites",
-        "group": (
+        "group_grp": (
             "DF387",
             {
                 "DF384": "GLONASS Satellite ID",
@@ -1178,7 +1178,7 @@ RTCM_PAYLOADS_GET = {
         "DF414": "SSR Provider ID",
         "DF415": "SSR Solution ID",
         "DF387": "No. of Satellites",
-        "group": (
+        "group_grp": (
             "DF387",
             {
                 "DF384": "GLONASS Satellite ID",
@@ -1195,25 +1195,25 @@ RTCM_PAYLOADS_GET = {
         "DF422_2": "GLONASS FDMA signals mask L1 P",
         "DF422_3": "GLONASS FDMA signals mask L2 C/A",
         "DF422_4": "GLONASS FDMA signals mask L2 P",
-        "optL1CA": (
+        "optL1CA_alt": (
             ("DF422_1", 1),  # if DF422_1 = 1
             {
                 "DF423": "GLONASS L1 C/A Code-Phase Bias",
             },
         ),
-        "optL1P": (
+        "optL1P_alt": (
             ("DF422_2", 1),  # if DF422_2 = 1
             {
                 "DF424": "GLONASS L1 P Code-Phase Bias",
             },
         ),
-        "optL2CA": (
+        "optL2CA_alt": (
             ("DF422_3", 1),  # if DF422_3 = 1
             {
                 "DF425": "GLONASS L2 C/A Code-Phase Bias",
             },
         ),
-        "optL2P": (
+        "optL2P_alt": (
             ("DF422_4", 1),  # if DF422_4 = 1
             {
                 "DF426": "GLONASS L2 P Code-Phase Bias",
@@ -1230,7 +1230,7 @@ RTCM_PAYLOADS_GET = {
         "DF414": "SSR Provider ID",
         "DF415": "SSR Solution ID",
         "DF387": "No. of Satellites",
-        "group": (
+        "group_grp": (
             "DF387",
             {
                 "DF252": "Galileo Satellite ID",
@@ -1253,7 +1253,7 @@ RTCM_PAYLOADS_GET = {
         "DF414": "SSR Provider ID",
         "DF415": "SSR Solution ID",
         "DF387": "No. of Satellites",
-        "group": (
+        "group_grp": (
             "DF387",
             {
                 "DF252": "Galileo Satellite ID",
@@ -1272,12 +1272,12 @@ RTCM_PAYLOADS_GET = {
         "DF414": "SSR Provider ID",
         "DF415": "SSR Solution ID",
         "DF387": "No. of Satellites",
-        "groupsat": (
+        "groupsat_grp": (
             "DF387",
             {
                 "DF252": "Galileo Satellite ID",
                 "DF379": "No. of Code Biases Processed",
-                "groupbias": (  # nested group
+                "groupbias_grp": (  # nested group
                     "DF379+1",  # +1 signifies 1 nested group index must be added
                     {
                         "DF382": "Galileo Signal and Tracking Mode Indicator",
@@ -1297,7 +1297,7 @@ RTCM_PAYLOADS_GET = {
         "DF414": "SSR Provider ID",
         "DF415": "SSR Solution ID",
         "DF387": "No. of Satellites",
-        "group": (
+        "group_grp": (
             "DF387",
             {
                 "DF252": "Galileo Satellite ID",
@@ -1323,7 +1323,7 @@ RTCM_PAYLOADS_GET = {
         "DF414": "SSR Provider ID",
         "DF415": "SSR Solution ID",
         "DF387": "No. of Satellites",
-        "group": (
+        "group_grp": (
             "DF387",
             {
                 "DF252": "Galileo Satellite ID",
@@ -1340,7 +1340,7 @@ RTCM_PAYLOADS_GET = {
         "DF414": "SSR Provider ID",
         "DF415": "SSR Solution ID",
         "DF387": "No. of Satellites",
-        "group": (
+        "group_grp": (
             "DF387",
             {
                 "DF252": "Galileo Satellite ID",
@@ -1358,7 +1358,7 @@ RTCM_PAYLOADS_GET = {
         "DF414": "SSR Provider ID",
         "DF415": "SSR Solution ID",
         "DF387": "No. of Satellites",
-        "group": (
+        "group_grp": (
             "DF387",
             {
                 "DF429": "QZSS Satellite ID",
@@ -1381,7 +1381,7 @@ RTCM_PAYLOADS_GET = {
         "DF414": "SSR Provider ID",
         "DF415": "SSR Solution ID",
         "DF387": "No. of Satellites",
-        "group": (
+        "group_grp": (
             "DF387",
             {
                 "DF429": "QZSS Satellite ID",
@@ -1400,12 +1400,12 @@ RTCM_PAYLOADS_GET = {
         "DF414": "SSR Provider ID",
         "DF415": "SSR Solution ID",
         "DF387": "No. of Satellites",
-        "groupsat": (
+        "groupsat_grp": (
             "DF387",
             {
                 "DF429": "QZSS Satellite ID",
                 "DF379": "No. of Code Biases Processed",
-                "groupbias": (  # nested group
+                "groupbias_grp": (  # nested group
                     "DF379+1",  # +1 signifies 1 nested group index must be added
                     {
                         "DF461": "QZSS Signal and Tracking Mode Identifier",
@@ -1425,7 +1425,7 @@ RTCM_PAYLOADS_GET = {
         "DF414": "SSR Provider ID",
         "DF415": "SSR Solution ID",
         "DF387": "No. of Satellites",
-        "group": (
+        "group_grp": (
             "DF387",
             {
                 "DF429": "QZSS Satellite ID",
@@ -1451,7 +1451,7 @@ RTCM_PAYLOADS_GET = {
         "DF414": "SSR Provider ID",
         "DF415": "SSR Solution ID",
         "DF387": "No. of Satellites",
-        "group": (
+        "group_grp": (
             "DF387",
             {
                 "DF429": "QZSS Satellite ID",
@@ -1468,7 +1468,7 @@ RTCM_PAYLOADS_GET = {
         "DF414": "SSR Provider ID",
         "DF415": "SSR Solution ID",
         "DF387": "No. of Satellites",
-        "group": (
+        "group_grp": (
             "DF387",
             {
                 "DF429": "QZSS Satellite ID",
@@ -1486,7 +1486,7 @@ RTCM_PAYLOADS_GET = {
         "DF414": "SSR Provider ID",
         "DF415": "SSR Solution ID",
         "DF387": "No. of Satellites",
-        "group": (
+        "group_grp": (
             "DF387",
             {
                 "DF463": "SBAS Satellite ID",
@@ -1510,7 +1510,7 @@ RTCM_PAYLOADS_GET = {
         "DF414": "SSR Provider ID",
         "DF415": "SSR Solution ID",
         "DF387": "No. of Satellites",
-        "group": (
+        "group_grp": (
             "DF387",
             {
                 "DF463": "SBAS Satellite ID",
@@ -1529,12 +1529,12 @@ RTCM_PAYLOADS_GET = {
         "DF414": "SSR Provider ID",
         "DF415": "SSR Solution ID",
         "DF387": "No. of Satellites",
-        "groupsat": (
+        "groupsat_grp": (
             "DF387",
             {
                 "DF463": "SBAS Satellite ID",
                 "DF379": "No. of Code Biases Processed",
-                "groupbias": (  # nested group
+                "groupbias_grp": (  # nested group
                     "DF379+1",  # +1 signifies 1 nested group index must be added
                     {
                         "DF464": "SBAS Signal and Tracking Mode Identifier",
@@ -1554,7 +1554,7 @@ RTCM_PAYLOADS_GET = {
         "DF414": "SSR Provider ID",
         "DF415": "SSR Solution ID",
         "DF387": "No. of Satellites",
-        "group": (
+        "group_grp": (
             "DF387",
             {
                 "DF463": "SBAS Satellite ID",
@@ -1581,7 +1581,7 @@ RTCM_PAYLOADS_GET = {
         "DF414": "SSR Provider ID",
         "DF415": "SSR Solution ID",
         "DF387": "No. of Satellites",
-        "group": (
+        "group_grp": (
             "DF387",
             {
                 "DF463": "SBAS Satellite ID",
@@ -1598,7 +1598,7 @@ RTCM_PAYLOADS_GET = {
         "DF414": "SSR Provider ID",
         "DF415": "SSR Solution ID",
         "DF387": "No. of Satellites",
-        "group": (
+        "group_grp": (
             "DF387",
             {
                 "DF463": "SBAS Satellite ID",
@@ -1616,7 +1616,7 @@ RTCM_PAYLOADS_GET = {
         "DF414": "SSR Provider ID",
         "DF415": "SSR Solution ID",
         "DF387": "No. of Satellites",
-        "group": (
+        "group_grp": (
             "DF387",
             {
                 "DF488": "BDS Satellite ID",
@@ -1640,7 +1640,7 @@ RTCM_PAYLOADS_GET = {
         "DF414": "SSR Provider ID",
         "DF415": "SSR Solution ID",
         "DF387": "No. of Satellites",
-        "group": (
+        "group_grp": (
             "DF387",
             {
                 "DF488": "BDS Satellite ID",
@@ -1659,12 +1659,12 @@ RTCM_PAYLOADS_GET = {
         "DF414": "SSR Provider ID",
         "DF415": "SSR Solution ID",
         "DF387": "No. of Satellites",
-        "groupsat": (
+        "groupsat_grp": (
             "DF387",
             {
                 "DF488": "BDS Satellite ID",
                 "DF379": "No. of Code Biases Processed",
-                "groupbias": (  # nested group
+                "groupbias_grp": (  # nested group
                     "DF379+1",  # +1 signifies 1 nested group index must be added
                     {
                         "DF467": "BDS Signal and Tracking Mode Identifier",
@@ -1684,7 +1684,7 @@ RTCM_PAYLOADS_GET = {
         "DF414": "SSR Provider ID",
         "DF415": "SSR Solution ID",
         "DF387": "No. of Satellites",
-        "group": (
+        "group_grp": (
             "DF387",
             {
                 "DF488": "BDS Satellite ID",
@@ -1711,7 +1711,7 @@ RTCM_PAYLOADS_GET = {
         "DF414": "SSR Provider ID",
         "DF415": "SSR Solution ID",
         "DF387": "No. of Satellites",
-        "group": (
+        "group_grp": (
             "DF387",
             {
                 "DF488": "BDS Satellite ID",
@@ -1728,7 +1728,7 @@ RTCM_PAYLOADS_GET = {
         "DF414": "SSR Provider ID",
         "DF415": "SSR Solution ID",
         "DF387": "No. of Satellites",
-        "group": (
+        "group_grp": (
             "DF387",
             {
                 "DF488": "BDS Satellite ID",
@@ -1746,19 +1746,19 @@ RTCM_PAYLOADS_GET = {
         "DF415": "SSR Solution ID",
         "DF478": "VTEC Quality Indicator",
         "DF472": "Number of Ionospheric Layers",  # Nᴵᴸ - 1
-        "groupion": (
+        "groupion_grp": (
             "DF472",
             {
                 "DF473": "Height of Ionospheric Layer",
                 "DF474": "Spherical Harmonics Degree",  # N - 1
                 "DF475": "Spherical Harmonics Order",  # M - 1
-                "groupcoeffC": (
+                "groupcoeffC_grp": (
                     NHARMCOEFFC,
                     {
                         "DF476": "Spherical Harmonic Coefficient C",
                     },
                 ),
-                "groupcoeffS": (
+                "groupcoeffS_grp": (
                     NHARMCOEFFS,
                     {
                         "DF477": "Spherical Harmonic Coefficient S",
@@ -1770,7 +1770,7 @@ RTCM_PAYLOADS_GET = {
     "1300": {
         "DF002": "Message Number",
         "DF562": "Service CRS Name Counter",
-        "group-DF562": (
+        "group-DF562_grp": (
             "DF562",
             {
                 "DF563": "Service CRS Name",
@@ -1781,14 +1781,14 @@ RTCM_PAYLOADS_GET = {
     "1301": {
         "DF002": "Message Number",
         "DF143": "",
-        "group-DF143": (
+        "group-DF143_grp": (
             "DF143",
             {
                 "DF144": "",
             },
         ),
         "DF145": "",
-        "group-DF145": (
+        "group-DF145_grp": (
             "DF145",
             {
                 "DF146": "",
@@ -1815,7 +1815,7 @@ RTCM_PAYLOADS_GET = {
     "1302": {
         "DF002": "Message Number",
         "DF565": "RTCM CRS Name Counter",
-        "group-DF565": (
+        "group-DF565_grp": (
             "DF565",
             {
                 "DF566": "RTCM CRS Name",
@@ -1824,13 +1824,13 @@ RTCM_PAYLOADS_GET = {
         "DF567": "Anchor - Global/Plate Fixed Indicator",
         "DF149": "Plate Number",
         "DF568": "Number of Database Links",
-        "group-DF568": (
+        "group-DF568_grp": (
             "DF568",
             {
                 "DF569": "Database Link Counter",
                 # TODO check correct payload definition
                 # 1302 messages from EUREF01 appear to be truncated?
-                "group-DF569": (
+                "group-DF569_grp": (
                     "DF569+1",
                     {
                         "DF570": "Database Link",
@@ -1845,7 +1845,7 @@ RTCM_PAYLOADS_GET = {
         "DF003": "Reference Station ID",
         "DF223": "N-Refs",
         "DF572": "Beidou Number of Satellite Signals Processed",
-        "group-DF572": (
+        "group-DF572_grp": (
             "DF572",
             {
                 "DF488": "BDS Satellite ID",
@@ -1863,7 +1863,7 @@ RTCM_PAYLOADS_GET = {
         "DF003": "Reference Station ID",
         "DF223": "N-Refs",
         "DF574": "Galileo Number of Satellite Signals Processed",
-        "group-DF574": (
+        "group-DF574_grp": (
             "DF574",
             {
                 "DF252": "Galileo Satellite ID",
@@ -1881,7 +1881,7 @@ RTCM_PAYLOADS_GET = {
         "DF003": "Reference Station ID",
         "DF223": "N-Refs",
         "DF576": "QZSS Number of Satellite Signals Processed",
-        "group-DF576": (
+        "group-DF576_grp": (
             "DF576",
             {
                 "DF429": "QZSS Satellite ID",
