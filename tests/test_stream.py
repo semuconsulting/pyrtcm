@@ -397,7 +397,7 @@ class StreamTest(unittest.TestCase):
         EXPECTED_RESULT = "RTCMMessage(payload=b'>\\xd0\\x00\\x03\\x8aX\\xd9I<\\x87/4\\x10\\x9d\\x07\\xd6\\xafH ')"
         msg1 = RTCMReader.parse(self._raw1005)
         self.assertEqual(repr(msg1), EXPECTED_RESULT)
-        msg2 = eval(repr(msg1))
+        msg2 = eval(repr(msg1)) #nosec
         self.assertEqual(str(msg1), str(msg2))
 
     def testpayload(self):  # test payload getter
